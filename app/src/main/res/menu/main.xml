@@ -8,16 +8,14 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_search"
-        android:orderInCategory="100"
         android:icon="@drawable/ic_baseline_search_24"
+        android:orderInCategory="100"
         android:title="@string/search"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_search_settings"
-        android:orderInCategory="100"
         android:icon="@drawable/ic_baseline_filter_alt_24"
+        android:orderInCategory="100"
         android:title="@string/search_settings"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
 </menu>

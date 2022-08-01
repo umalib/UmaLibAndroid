@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.uma.umalibrary.ui.home.HomeFragment"
+        android:name="cn.umafan.lib.android.ui.home.HomeFragment"
         android:label="@string/home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_collections"
-        android:name="com.uma.umalibrary.ui.collections.CollectionsFragment"
+        android:name="cn.umafan.lib.android.ui.collections.CollectionsFragment"
         android:label="@string/collections"
         tools:layout="@layout/fragment_collections" />
 
     <fragment
         android:id="@+id/nav_favorites"
-        android:name="com.uma.umalibrary.ui.favorites.FavoritesFragment"
+        android:name="cn.umafan.lib.android.ui.favorites.FavoritesFragment"
         android:label="@string/my_favorites"
         tools:layout="@layout/fragment_favorites" />
 
     <fragment
         android:id="@+id/nav_thanks"
-        android:name="com.uma.umalibrary.ui.thanks.ThanksFragment"
+        android:name="cn.umafan.lib.android.ui.thanks.ThanksFragment"
         android:label="@string/thanks"
         tools:layout="@layout/fragment_favorites" />
 

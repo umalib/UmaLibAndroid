@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -20,15 +18,15 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
             android:layout_marginVertical="5dp"
-            app:cardCornerRadius="15dp"
             android:checkable="true"
             android:clickable="true"
             android:focusable="true"
             app:cardBackgroundColor="@color/lightPrimary"
+            app:cardCornerRadius="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -38,9 +36,9 @@
                     android:id="@+id/article_title_box"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:paddingHorizontal="15dp"
-                    android:layout_marginTop="10dp"
                     android:paddingVertical="5dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -48,13 +46,13 @@
                     <TextView
                         android:id="@+id/article_name"
                         style="@style/TextAppearance.Material3.TitleMedium"
-                        android:textFontWeight="900"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.75"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="西野花与東商變革 斯芬克斯" />
+                        android:text="西野花与東商變革 斯芬克斯"
+                        android:textFontWeight="900" />
 
                     <TextView
                         android:id="@+id/article_author"
@@ -80,10 +78,10 @@
                         android:id="@+id/article_translator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="15dp"
-                        android:textColor="@color/purple_500"
-                        android:text="译者： 鬼道"
                         android:layout_weight="0.3"
+                        android:paddingHorizontal="15dp"
+                        android:text="译者： 鬼道"
+                        android:textColor="@color/purple_500"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,18 +89,18 @@
                         android:id="@+id/article_upload_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="15dp"
                         android:layout_weight="0.7"
-                        android:textColor="@color/purple_500"
-                        android:text="2022/7/25 14:18:24"/>
+                        android:paddingHorizontal="15dp"
+                        android:text="2022/7/25 14:18:24"
+                        android:textColor="@color/purple_500" />
                 </LinearLayout>
 
                 <View
                     android:id="@+id/driver_up"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
                     android:layout_marginHorizontal="15dp"
+                    android:layout_marginTop="5dp"
                     android:alpha="0.5"
                     android:background="@color/grey"
                     app:layout_constraintTop_toBottomOf="@id/brief_info" />
@@ -113,8 +111,8 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="5dp"
-                    app:layout_constraintTop_toBottomOf="@id/driver_up"
-                    android:text="很久很久以前，在特雷森學園的交通要道上出現了一隻怪物 據說那被稱為斯芬克斯的怪物會向路過的人提出謎語，回答不出來的話就會被吃掉 有一天，出現了一名挑戰這個怪物的勇者，她的名字叫東商變革 如果是魔法師"/>
+                    android:text="很久很久以前，在特雷森學園的交通要道上出現了一隻怪物 據說那被稱為斯芬克斯的怪物會向路過的人提出謎語，回答不出來的話就會被吃掉 有一天，出現了一名挑戰這個怪物的勇者，她的名字叫東商變革 如果是魔法師"
+                    app:layout_constraintTop_toBottomOf="@id/driver_up" />
 
                 <View
                     android:id="@+id/driver_down"
@@ -128,12 +126,12 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="15dp"
                     android:layout_weight="0.7"
+                    android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp"
-                    app:layout_constraintTop_toBottomOf="@id/driver_down"
+                    android:text="标签栏(还没做好)"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="标签栏(还没做好)"/>
+                    app:layout_constraintTop_toBottomOf="@id/driver_down" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

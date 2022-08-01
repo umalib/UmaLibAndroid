@@ -5,14 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/normal_bg"
-    tools:context=".ui.home.HomeFragment">
+    tools:context="cn.umafan.lib.android.ui.home.HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/last_page_btn"
@@ -22,10 +21,10 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/last_page"
+        android:tooltipText="@string/last_page"
         app:layout_constraintBottom_toTopOf="@id/next_page_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_navigate_before_24"
-        android:tooltipText="@string/last_page"/>
+        app:srcCompat="@drawable/ic_baseline_navigate_before_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/next_page_btn"
@@ -35,13 +34,12 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/next_page"
+        android:tooltipText="@string/next_page"
         app:layout_constraintBottom_toTopOf="@id/page_num_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_navigate_next_24"
-        android:tooltipText="@string/next_page"/>
+        app:srcCompat="@drawable/ic_baseline_navigate_next_24" />
 
     <com.google.android.material.button.MaterialButton
-        android:textColor="@color/black"
         android:id="@+id/page_num_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,13 +47,14 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/last_page"
+        android:text="第 20 页"
+        android:textColor="@color/black"
+        android:tooltipText="@string/page_num"
+        app:backgroundTint="@color/teal_200"
+        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:cornerRadius="20dp"
-        app:srcCompat="@drawable/ic_baseline_navigate_before_24"
-        app:backgroundTint="@color/teal_200"
-        android:tooltipText="@string/page_num"
-        android:text="第 20 页">
+        app:srcCompat="@drawable/ic_baseline_navigate_before_24">
 
     </com.google.android.material.button.MaterialButton>
 

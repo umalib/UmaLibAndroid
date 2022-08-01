@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
+    tools:context="cn.umafan.lib.android.ui.main.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -24,13 +24,12 @@
             app:toolbarId="@+id/toolbar">
 
             <ImageView
-                app:layout_collapseMode="parallax"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:alpha="0.85"
                 android:scaleType="centerCrop"
                 android:src="@drawable/kitasan"
-                android:alpha="0.85"
-                />
+                app:layout_collapseMode="parallax" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -47,12 +46,12 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
-        android:hint="@string/search_hint"
         android:elevation="11dp"
-        app:voiceSearch="false"
-        />
+        android:hint="@string/search_hint"
+        app:voiceSearch="false" />
 
-    <include android:id="@+id/content_main"
+    <include
+        android:id="@+id/content_main"
         layout="@layout/content_main" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
-    <string name="app_name">赛马娘大书库</string>
+    <string name="app_name">赛马娘同人集中楼大书库</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -98,9 +98,9 @@
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="home">大书库</string>
-    <string name="my_favorites">我的收藏夹</string>
+    <string name="my_favorites">收藏夹</string>
     <string name="thanks">鸣谢</string>
-    <string name="collections">总书目</string>
+    <string name="collections">总目表</string>
     <string name="search">搜索</string>
     <string name="open_menu">打开菜单</string>
     <string name="next_page">下一页</string>
