@@ -29,5 +29,5 @@ pluginManagement {
 //        maven { url "https://maven.admobile.top/repository/maven-releases/" }
 //    }
 //}
-rootProject.name = "UmaLibrary"
+rootProject.name = "UmaLibAndroid"
 include ':app'
