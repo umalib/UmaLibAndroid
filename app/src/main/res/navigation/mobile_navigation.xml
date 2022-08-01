@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.uma.umalibrary.ui.home.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_collections"
+        android:name="com.uma.umalibrary.ui.collections.CollectionsFragment"
+        android:label="@string/collections"
+        tools:layout="@layout/fragment_collections" />
+
+    <fragment
+        android:id="@+id/nav_favorites"
+        android:name="com.uma.umalibrary.ui.favorites.FavoritesFragment"
+        android:label="@string/my_favorites"
+        tools:layout="@layout/fragment_favorites" />
+
+    <fragment
+        android:id="@+id/nav_thanks"
+        android:name="com.uma.umalibrary.ui.thanks.ThanksFragment"
+        android:label="@string/thanks"
+        tools:layout="@layout/fragment_favorites" />
+
+
+</navigation>
