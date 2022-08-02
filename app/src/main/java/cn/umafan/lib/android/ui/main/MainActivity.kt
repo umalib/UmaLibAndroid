@@ -161,6 +161,10 @@ class MainActivity : AppCompatActivity() {
             myOutput.flush()
             myOutput.close()
             myInput.close()
+
+            val bw = BufferedWriter(FileWriter(versionFile))
+            bw.write(context.getString(R.string.db_version))
+            bw.close()
         }
         println("copy database done!")
     }
