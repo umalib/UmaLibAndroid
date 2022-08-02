@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
     <string name="app_name">赛马娘同人集中楼大书库</string>
+    <string name="db_version">1.0.0</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

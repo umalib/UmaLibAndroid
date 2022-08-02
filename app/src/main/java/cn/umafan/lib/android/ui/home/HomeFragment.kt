@@ -7,8 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cn.umafan.lib.android.beans.ArtInfoDao
+import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.databinding.FragmentHomeBinding
 import cn.umafan.lib.android.model.SearchBean
+import cn.umafan.lib.android.ui.main.MainActivity
+import kotlin.math.ceil
 
 class HomeFragment : Fragment() {
 
@@ -30,7 +34,7 @@ class HomeFragment : Fragment() {
     ): View {
 
         _homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+            ViewModelProvider(this)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -47,20 +51,13 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.currentPage.observe(viewLifecycleOwner) {
-            val pageLen = 5
-            if (it <= 1) {
-                binding.lastPageBtn.isEnabled = false
-            } else if (it >= pageLen) {
-                binding.nextPageBtn.isEnabled = false
-            } else {
-                binding.lastPageBtn.isEnabled = true
-                binding.nextPageBtn.isEnabled = true
-            }
-            binding.pageNumBtn.text = "第 $it 页"
-            homeViewModel.loadArticles(
+            val pageLen: Long = loadArticles(
                 it,
                 arguments?.getSerializable("searchParams") as SearchBean?
             )
+            binding.lastPageBtn.isEnabled = it > 1
+            binding.nextPageBtn.isEnabled = it < pageLen
+            binding.pageNumBtn.text = "$it/$pageLen 页"
         }
 
         return root
@@ -71,11 +68,35 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    fun initView() {
+    private fun initView() {
         binding.recyclerView.adapter = homeViewModel.articleDataAdapter
-        homeViewModel.loadArticles(
+        loadArticles(
             homeViewModel.currentPage.value,
             arguments?.getSerializable("searchParams") as SearchBean?
         )
+    }
+
+    private fun loadArticles(page: Int?, params: SearchBean?): Long {
+        val daoSession: DaoSession? = (activity as MainActivity).daoSession()
+        var count: Long = 5
+        if (null != daoSession) {
+            val artInfoDao: ArtInfoDao = daoSession.artInfoDao
+            count = ceil(artInfoDao.count().toDouble() / 10).toLong()
+            if (0L == count) {
+                count = 1
+            }
+            var offset = 0
+            if (page != null) {
+                offset = (page - 1) * 10
+            }
+            val query = artInfoDao.queryBuilder().offset(offset)
+                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
+            val list = query.listLazy()
+            homeViewModel.loadArticles(list)
+            list.close()
+        } else {
+            homeViewModel.loadArticles(null)
+        }
+        return count
     }
 }

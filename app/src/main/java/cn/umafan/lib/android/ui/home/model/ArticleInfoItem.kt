@@ -2,8 +2,8 @@ package cn.umafan.lib.android.ui.home.model
 
 import androidx.databinding.DataBindingUtil
 import cn.umafan.lib.android.R
+import cn.umafan.lib.android.beans.ArtInfo
 import cn.umafan.lib.android.databinding.ItemArticleCardBinding
-import cn.umafan.lib.android.model.ArticleBean
 import com.angcyo.dsladapter.DslAdapterItem
 import com.angcyo.dsladapter.DslViewHolder
 import com.google.android.material.snackbar.Snackbar
@@ -13,15 +13,16 @@ import java.util.*
 
 /**
  * @ClassName ArticleInfoItem
- * @author ForeverDdB 835236331@qq.com
+ * @author Forever-DdB everddb@gmail.com
  * @Description
- * @createTime 2022年 07月31日 23:19
+ * @createTime 2022-07-31 23:19
  **/
 class ArticleInfoItem(
-    val articleInfo: ArticleBean
+    private val articleInfo: ArtInfo
 ) : DslAdapterItem() {
 
     override var itemLayoutId = R.layout.item_article_card
+    private val timeStampFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
 
     init {
         itemData = articleInfo
@@ -42,13 +43,15 @@ class ArticleInfoItem(
         super.onItemBind(itemHolder, itemPosition, adapterItem, payloads)
         itemHolder.view(R.id.item_article_card)?.let {
             DataBindingUtil.bind<ItemArticleCardBinding>(it)?.apply {
-                val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINA)
                 articleName.text = articleInfo.name
                 articleNote.text = articleInfo.note
                 articleAuthor.text = articleInfo.author
-                articleTranslator.text = "译者： ${articleInfo.translator}"
-                articleUploadTime.text = articleInfo.uploadTime?.let { date ->
-                    formatter.format(date * 1000)
+                articleTranslator.text = String.format("译者：%s", articleInfo.translator)
+                articleUploadTime.text = articleInfo.uploadTime.let { date ->
+                    timeStampFormatter.format(date.toLong() * 1000)
+                }
+                articleTags.text = articleInfo.taggedList.joinToString("，") { tagged ->
+                    tagged.tag.name
                 }
                 itemArticleCardBox.setOnClickListener { view ->
                     Snackbar.make(view, "点击了id为${articleInfo.id}的卡片", Snackbar.LENGTH_SHORT)

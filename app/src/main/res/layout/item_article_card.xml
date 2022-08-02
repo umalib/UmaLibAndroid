@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.7"
                         android:paddingHorizontal="15dp"
-                        android:text="2022/7/25 14:18:24"
+                        android:text="2022-7-25 14:18"
                         android:textColor="@color/purple_500" />
                 </LinearLayout>
 
@@ -124,12 +124,13 @@
                     app:layout_constraintTop_toBottomOf="@id/article_note" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/article_tags"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp"
-                    android:text="标签栏(还没做好)"
+                    android:text="西野花，东商变革"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/driver_down" />
 

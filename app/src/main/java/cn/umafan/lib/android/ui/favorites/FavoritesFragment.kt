@@ -23,7 +23,7 @@ class FavoritesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val slideshowViewModel =
-            ViewModelProvider(this).get(FavoritesViewModel::class.java)
+            ViewModelProvider(this)[FavoritesViewModel::class.java]
 
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         val root: View = binding.root

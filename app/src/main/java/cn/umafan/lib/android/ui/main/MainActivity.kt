@@ -1,5 +1,6 @@
 package cn.umafan.lib.android.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -13,10 +14,14 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cn.umafan.lib.android.R
+import cn.umafan.lib.android.beans.DaoMaster
+import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.databinding.ActivityMainBinding
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
+import org.greenrobot.greendao.database.Database
+import java.io.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private var _mViewModel: MainViewModel? = null
     private val mViewModel get() = _mViewModel!!
+    private var daoSession: DaoSession? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,9 +80,7 @@ class MainActivity : AppCompatActivity() {
                     return false
                 }
             })
-
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -116,5 +120,57 @@ class MainActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putSerializable("searchParams", mViewModel.searchParams.value)
         navController.navigate(R.id.nav_home, bundle)
+    }
+
+    fun daoSession(): DaoSession? {
+        if (null == daoSession) {
+            copyDataBase(this)
+
+            val helper = LibOpenHelper(this, "main.db")
+            val db: Database = helper.readableDb
+            daoSession = DaoMaster(db).newSession()
+        }
+        return daoSession
+    }
+
+    private fun copyDataBase(context: Context) {
+        val versionFile = getDatabasePath("version")
+        var copy = true
+        if (versionFile.exists()) {
+            val br = BufferedReader(FileReader(versionFile))
+            val version = br.readLine()
+            br.close()
+            println("db version: $version")
+            if (version.equals(context.getString(R.string.db_version))) {
+                copy = false
+            }
+        }
+
+        if (copy) {
+            val myInput: InputStream = assets.open("db/main.db")
+            val outFile: File = getDatabasePath("main.db")
+
+            outFile.parentFile?.mkdirs()
+            val myOutput: OutputStream = FileOutputStream(outFile)
+            val buffer = ByteArray(5)
+            var length: Int = myInput.read(buffer)
+            while (length > 0) {
+                myOutput.write(buffer, 0, length)
+                length = myInput.read(buffer)
+            }
+            myOutput.flush()
+            myOutput.close()
+            myInput.close()
+        }
+        println("copy database done!")
+    }
+
+    class LibOpenHelper(val context: Context, val name: String) :
+        DaoMaster.OpenHelper(context, name) {
+
+        override fun onCreate(db: Database?) {
+
+            super.onCreate(db)
+        }
     }
 }

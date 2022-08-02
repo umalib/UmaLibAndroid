@@ -23,7 +23,7 @@ class CollectionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val galleryViewModel =
-            ViewModelProvider(this).get(CollectionsViewModel::class.java)
+            ViewModelProvider(this)[CollectionsViewModel::class.java]
 
         _binding = FragmentCollectionsBinding.inflate(inflater, container, false)
         val root: View = binding.root

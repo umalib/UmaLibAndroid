@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.greenrobot.greendao'
     id 'org.jetbrains.kotlin.android'
 }
 
@@ -51,6 +52,7 @@ dependencies {
     implementation 'com.github.angcyo:DslAdapter:4.1.0'
     implementation 'com.github.Ferfalk:SimpleSearchView:0.2.0'
     implementation 'com.google.android.material:material:1.6.0-alpha02'
+    implementation 'org.greenrobot:greendao:3.3.0'
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

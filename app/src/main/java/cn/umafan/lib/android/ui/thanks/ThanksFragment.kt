@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import cn.umafan.lib.android.databinding.FragmentThanksBinding
 
 class ThanksFragment : Fragment() {
@@ -21,8 +20,8 @@ class ThanksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this)[ThanksViewModel::class.java]
+//        val homeViewModel =
+//            ViewModelProvider(this)[ThanksViewModel::class.java]
 
         _binding = FragmentThanksBinding.inflate(inflater, container, false)
 
