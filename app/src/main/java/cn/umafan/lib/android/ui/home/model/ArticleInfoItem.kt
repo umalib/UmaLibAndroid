@@ -50,9 +50,14 @@ class ArticleInfoItem(
                 articleUploadTime.text = articleInfo.uploadTime.let { date ->
                     timeStampFormatter.format(date.toLong() * 1000)
                 }
-                articleTags.text = articleInfo.taggedList.joinToString("，") { tagged ->
-                    tagged.tag.name
-                }
+                articleTags.text =
+                    articleInfo.taggedList.map { tagged -> tagged.tag }
+                        .sortedWith { a, b ->
+                            if (a.type == b.type)
+                                a.name.compareTo(b.name)
+                            else
+                                b.type.compareTo(a.type)
+                        }.joinToString("，") { tag -> tag.name }
                 itemArticleCardBox.setOnClickListener { view ->
                     Snackbar.make(view, "点击了id为${articleInfo.id}的卡片", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show()
