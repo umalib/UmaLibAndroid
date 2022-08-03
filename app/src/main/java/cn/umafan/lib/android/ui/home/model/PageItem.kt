@@ -1,6 +1,5 @@
 package cn.umafan.lib.android.ui.home.model
 
-import android.util.Log
 import androidx.databinding.DataBindingUtil
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ItemPageButtonBinding

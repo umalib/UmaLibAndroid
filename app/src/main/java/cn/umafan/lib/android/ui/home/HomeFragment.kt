@@ -1,31 +1,34 @@
 package cn.umafan.lib.android.ui.home
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.beans.ArtInfoDao
 import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.databinding.FragmentHomeBinding
+import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.home.model.PageItem
+import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.launch
-import kotlin.math.ceil
+import java.lang.Math.ceil
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
+
+    private lateinit var dialog: AlertDialog
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -37,15 +40,16 @@ class HomeFragment : Fragment() {
 
     private var pageLen: Int = 0
 
-    fun mPageSelectorDialog() {
+    var daoSession: DaoSession? = null
+
+    private val mPageSelectorDialog by lazy {
         val view = LayoutInflater.from(activity).inflate(R.layout.dialog_page_selector, null)
         val data = mutableListOf<PageItem>()
         homeViewModel.checkedList.clear()
-        for(i in 0 until pageLen) {
+        for (i in 0 until pageLen) {
             if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
             else homeViewModel.checkedList.add(true)
         }
-        Log.d("fucka", "mPageSelectorDialog: ${homeViewModel.checkedList}")
         for (i in 1 until pageLen + 1) {
             data.add(PageItem(i, homeViewModel))
         }
@@ -57,12 +61,12 @@ class HomeFragment : Fragment() {
             .setTitle("${getString(R.string.select)}${getString(R.string.page_num)}")
             .setPositiveButton(
                 R.string.confirm,
-                DialogInterface.OnClickListener { dialogInterface, i ->
-                    homeViewModel.currentPage.postValue(homeViewModel.selectedPage.value)
-                })
+            ) { _, _ ->
+                homeViewModel.currentPage.postValue(homeViewModel.selectedPage.value)
+            }
             .setNegativeButton(R.string.cancel, null)
             .setView(view)
-            .create().show()
+            .create()
     }
 
     @SuppressLint("SetTextI18n")
@@ -90,7 +94,7 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.currentPage.observe(viewLifecycleOwner) {
-            pageLen = loadArticles(
+            loadArticles(
                 it,
                 arguments?.getSerializable("searchParams") as SearchBean?
             )
@@ -98,6 +102,14 @@ class HomeFragment : Fragment() {
             binding.nextPageBtn.isEnabled = it < pageLen
             binding.pageNumBtn.text = "$it/$pageLen 页"
         }
+
+        dialog = MaterialAlertDialogBuilder(
+            activity as MainActivity,
+            com.google.android.material.R.style.MaterialAlertDialog_Material3
+        )
+            .setTitle("${getString(R.string.prepare_database)}")
+            .setMessage("")
+            .create()
 
         return root
     }
@@ -109,34 +121,51 @@ class HomeFragment : Fragment() {
 
     private fun initView() {
         binding.recyclerView.adapter = homeViewModel.articleDataAdapter
-        binding.pageNumBtn.setOnClickListener { mPageSelectorDialog() }
+        binding.pageNumBtn.setOnClickListener { mPageSelectorDialog.show() }
         loadArticles(
             homeViewModel.currentPage.value,
             arguments?.getSerializable("searchParams") as SearchBean?
         )
     }
 
-    private fun loadArticles(page: Int?, params: SearchBean?): Int {
-        val daoSession: DaoSession? = (activity as MainActivity).daoSession()
-        var count: Int = 5
-        if (null != daoSession) {
-            val artInfoDao: ArtInfoDao = daoSession.artInfoDao
-            count = ceil(artInfoDao.count().toDouble() / 10).toInt()
-            if (0 == count) {
-                count = 1
+    private fun loadArticles(page: Int?, params: SearchBean?){
+        val handler = Handler{
+            when(it.what) {
+                MyApplication.DATABASE_LOADING -> {
+                    dialog.setMessage("${getString(R.string.prepare_database)}${getString(R.string.progress)}：${String.format("%.2f",it.obj)}% \n${getString(R.string.prepare_database_hint)}")
+                    dialog.show()
+                }
+                MyApplication.DATABASE_LOADED -> {
+                    daoSession = it.obj as DaoSession
+                    var count = 5
+                    if (null != daoSession) {
+                        val artInfoDao: ArtInfoDao = daoSession!!.artInfoDao
+                        count = ceil(artInfoDao.count().toDouble() / 10).toInt()
+                        if (0 == count) {
+                            count = 1
+                        }
+                        var offset = 0
+                        if (page != null) {
+                            offset = (page - 1) * 10
+                        }
+                        val query = artInfoDao.queryBuilder().offset(offset)
+                            .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
+                        val list = query.listLazy()
+                        homeViewModel.loadArticles(list)
+                        list.close()
+                    } else {
+                        homeViewModel.loadArticles(null)
+                    }
+                    pageLen = count
+                    with(homeViewModel.currentPage.value){
+                        binding.lastPageBtn.isEnabled = this!! > 1
+                        binding.nextPageBtn.isEnabled = this < pageLen
+                        binding.pageNumBtn.text = "$this/$pageLen 页"
+                    }
+                }
             }
-            var offset = 0
-            if (page != null) {
-                offset = (page - 1) * 10
-            }
-            val query = artInfoDao.queryBuilder().offset(offset)
-                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
-            val list = query.listLazy()
-            homeViewModel.loadArticles(list)
-            list.close()
-        } else {
-            homeViewModel.loadArticles(null)
+            false
         }
-        return count
+        DatabaseCopyThread(handler).start()
     }
 }
