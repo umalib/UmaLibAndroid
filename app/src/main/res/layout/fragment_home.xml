@@ -11,7 +11,8 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_article_card"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/last_page_btn"

@@ -10,13 +10,6 @@ import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-/**
- * @ClassName ArticleInfoItem
- * @author Forever-DdB everddb@gmail.com
- * @Description
- * @createTime 2022-07-31 23:19
- **/
 class ArticleInfoItem(
     private val articleInfo: ArtInfo
 ) : DslAdapterItem() {

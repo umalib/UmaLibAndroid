@@ -1,15 +1,18 @@
 package cn.umafan.lib.android.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.umafan.lib.android.beans.ArtInfo
 import cn.umafan.lib.android.ui.home.model.ArticleInfoItem
+import cn.umafan.lib.android.ui.home.model.PageItem
 import com.angcyo.dsladapter.DslAdapter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.*
 
 class HomeViewModel : ViewModel() {
 
@@ -21,6 +24,12 @@ class HomeViewModel : ViewModel() {
     private val articleData = MutableStateFlow(listOf<ArtInfo>())
 
     val currentPage = MutableLiveData(1)
+
+    val selectedPage = MutableLiveData(1)
+
+    val checkedButton = MutableLiveData<com.google.android.material.card.MaterialCardView>()
+
+    var checkedList = mutableListOf<Boolean>()
 
     val articleDataAdapter = DslAdapter()
 

@@ -32,68 +32,60 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:id="@+id/article_title_box"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/article_name"
+                    style="@style/TextAppearance.Material3.TitleMedium"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
+                    android:layout_weight="0.75"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:paddingHorizontal="15dp"
-                    android:paddingVertical="5dp"
+                    android:maxEms="12"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:text="西野花与東商變革 斯芬克斯"
+                    android:textFontWeight="900" />
 
-                    <TextView
-                        android:id="@+id/article_name"
-                        style="@style/TextAppearance.Material3.TitleMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.75"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="西野花与東商變革 斯芬克斯"
-                        android:textFontWeight="900" />
-
-                    <TextView
-                        android:id="@+id/article_author"
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:paddingHorizontal="8dp"
-                        android:text="匿名"
-                        android:textColor="@color/grey"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/article_name" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/brief_info"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/article_author"
+                    style="@style/TextAppearance.Material3.BodyMedium"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/article_title_box">
+                    android:layout_weight="0.25"
+                    android:paddingHorizontal="15dp"
+                    android:text="匿名"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:maxEms="6"
+                    android:textColor="@color/grey"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/article_translator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:paddingHorizontal="15dp"
-                        android:text="译者： 鬼道"
-                        android:textColor="@color/purple_500"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/article_translator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:paddingHorizontal="15dp"
+                    android:text="译者： 鬼道"
+                    android:textColor="@color/purple_500"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/article_name" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/article_upload_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:paddingHorizontal="15dp"
-                        android:text="2022-7-25 14:18"
-                        android:textColor="@color/purple_500" />
-                </LinearLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/article_upload_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:paddingHorizontal="15dp"
+                    android:text="2022-7-25 14:18"
+                    android:textColor="@color/purple_500"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/article_name" />
 
                 <View
                     android:id="@+id/driver_up"
@@ -103,7 +95,7 @@
                     android:layout_marginTop="5dp"
                     android:alpha="0.5"
                     android:background="@color/grey"
-                    app:layout_constraintTop_toBottomOf="@id/brief_info" />
+                    app:layout_constraintTop_toBottomOf="@id/article_translator" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/article_note"
