@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import cn.umafan.lib.android.databinding.FragmentCollectionsBinding
 
 class CollectionsFragment : Fragment() {
-
     private var _binding: FragmentCollectionsBinding? = null
 
     // This property is only valid between onCreateView and

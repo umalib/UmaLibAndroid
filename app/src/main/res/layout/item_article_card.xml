@@ -40,30 +40,29 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="0.75"
                     android:ellipsize="end"
-                    android:singleLine="true"
-                    android:paddingHorizontal="15dp"
                     android:maxEms="12"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:paddingHorizontal="15dp"
+                    android:singleLine="true"
                     android:text="西野花与東商變革 斯芬克斯"
-                    android:textFontWeight="900" />
+                    android:textFontWeight="900"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/article_author"
                     style="@style/TextAppearance.Material3.BodyMedium"
-                    android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="0.25"
-                    android:paddingHorizontal="15dp"
-                    android:text="匿名"
                     android:ellipsize="end"
-                    android:singleLine="true"
                     android:maxEms="6"
+                    android:paddingHorizontal="15dp"
+                    android:singleLine="true"
+                    android:text="匿名"
                     android:textColor="@color/grey"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/article_translator"

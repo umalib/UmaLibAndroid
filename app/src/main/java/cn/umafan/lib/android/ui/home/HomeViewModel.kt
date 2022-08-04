@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
-
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
     }
@@ -52,5 +51,4 @@ class HomeViewModel : ViewModel() {
             articleData.emit(data)
         }
     }
-
 }

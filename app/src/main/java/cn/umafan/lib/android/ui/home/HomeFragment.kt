@@ -3,6 +3,7 @@ package cn.umafan.lib.android.ui.home
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,7 +73,8 @@ class HomeFragment : Fragment() {
     private var mDataBaseLoadingProgressNum: AppCompatTextView? = null
 
     private val mDataBaseLoadingProgressDialog by lazy {
-        mDataBaseLoadingProgressView = LayoutInflater.from(activity).inflate(R.layout.dialog_loading_database, null)
+        mDataBaseLoadingProgressView =
+            LayoutInflater.from(activity).inflate(R.layout.dialog_loading_database, null)
         with(mDataBaseLoadingProgressView) {
             mDataBaseLoadingProgressIndicator = this?.findViewById(R.id.progress_indicator)
             mDataBaseLoadingProgressNum = this?.findViewById(R.id.progress_num)
@@ -139,12 +141,12 @@ class HomeFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun loadArticles(page: Int?, params: SearchBean?){
-        val handler = Handler{
-            when(it.what) {
+    private fun loadArticles(page: Int?, params: SearchBean?) {
+        val handler = Handler(Looper.getMainLooper()) {
+            when (it.what) {
                 MyApplication.DATABASE_LOADING -> {
                     mDataBaseLoadingProgressIndicator?.progress = (it.obj as Double).toInt()
-                    mDataBaseLoadingProgressNum?.text = "${String.format("%.2f",it.obj)}%"
+                    mDataBaseLoadingProgressNum?.text = "${String.format("%.2f", it.obj)}%"
                     mDataBaseLoadingProgressDialog.show()
                 }
                 MyApplication.DATABASE_LOADED -> {
@@ -170,7 +172,7 @@ class HomeFragment : Fragment() {
                         homeViewModel.loadArticles(null)
                     }
                     pageLen = count
-                    with(homeViewModel.currentPage.value){
+                    with(homeViewModel.currentPage.value) {
                         binding.lastPageBtn.isEnabled = this!! > 1
                         binding.nextPageBtn.isEnabled = this < pageLen
                         binding.pageNumBtn.text = "$this/$pageLen 页"

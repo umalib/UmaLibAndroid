@@ -1,13 +1,8 @@
 package cn.umafan.lib.android.ui.main
 
-import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -18,18 +13,10 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.beans.DaoMaster
-import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.databinding.ActivityMainBinding
-import cn.umafan.lib.android.model.MyApplication
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.greenrobot.greendao.database.Database
-import java.io.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private var _mViewModel: MainViewModel? = null
     private val mViewModel get() = _mViewModel!!
-    private var daoSession: DaoSession? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,25 +115,4 @@ class MainActivity : AppCompatActivity() {
         bundle.putSerializable("searchParams", mViewModel.searchParams.value)
         navController.navigate(R.id.nav_home, bundle)
     }
-
-//    fun daoSession(): DaoSession? {
-//        if (null == daoSession) {
-//
-////            copyDataBase(this@MainActivity)
-//
-//            val helper = LibOpenHelper(this, "main.db")
-//            val db: Database = helper.readableDb
-//            daoSession = DaoMaster(db).newSession()
-//        }
-//        return daoSession
-//    }
-//
-//    class LibOpenHelper(val context: Context, val name: String) :
-//        DaoMaster.OpenHelper(context, name) {
-//
-//        override fun onCreate(db: Database?) {
-//
-//            super.onCreate(db)
-//        }
-//    }
 }

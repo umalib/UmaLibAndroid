@@ -5,7 +5,5 @@ import androidx.lifecycle.ViewModel
 import cn.umafan.lib.android.model.SearchBean
 
 class MainViewModel : ViewModel() {
-
     var searchParams = MutableLiveData(SearchBean())
-
 }

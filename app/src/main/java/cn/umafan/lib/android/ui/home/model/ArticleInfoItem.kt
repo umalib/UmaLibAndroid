@@ -13,7 +13,6 @@ import java.util.*
 class ArticleInfoItem(
     private val articleInfo: ArtInfo
 ) : DslAdapterItem() {
-
     override var itemLayoutId = R.layout.item_article_card
     private val timeStampFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
 
@@ -55,13 +54,8 @@ class ArticleInfoItem(
                     Snackbar.make(view, "点击了id为${articleInfo.id}的卡片", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show()
                 }
-//                val calendar = CalendarUtil.getCalendarByTimeMills(gradeDetail.startTime.toLong())
-//                textDate.text = calendar.toNearDayString()?.let { nearDay ->
-//                    nearDay + " " + calendar.dayOfWeek
-//                } ?: CalendarUtil.toCompleteDateString(calendar)
                 invalidateAll()
             }
         }
     }
-
 }

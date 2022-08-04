@@ -11,7 +11,6 @@ class PageItem(
     private val page: Int,
     private val mViewModel: HomeViewModel
 ) : DslAdapterItem() {
-
     override var itemLayoutId = R.layout.item_page_button
 
     init {

@@ -27,17 +27,21 @@ public class Tag {
     @ToMany(referencedJoinProperty = "tagId")
     private List<Tagged> taggedList;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 2076396065)
     private transient TagDao myDao;
 
     @Generated(hash = 1132560429)
     public Tag(Long id, String name, Integer type, String cover,
-            String description) {
+               String description) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -111,7 +115,9 @@ public class Tag {
         return taggedList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 300101849)
     public synchronized void resetTaggedList() {
         taggedList = null;
