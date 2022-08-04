@@ -11,26 +11,26 @@ import org.greenrobot.greendao.database.Database
 import java.io.*
 
 class DatabaseCopyThread(
-    val handler: Handler
+    private val handler: Handler
 ) : Thread() {
     val context = MyApplication.context
-    private var daoSession: DaoSession? = null
+
+    companion object {
+        private var daoSession: DaoSession? = null
+    }
 
     override fun run() {
         super.run()
         if (null == daoSession) {
-
             copyDatabase()
-
             val helper = LibOpenHelper(context, "main.db")
             val db: Database = helper.readableDb
             daoSession = DaoMaster(db).newSession()
-            val message = handler.obtainMessage()
-            message.what = MyApplication.DATABASE_LOADED
-            message.obj = daoSession
-            handler.sendMessage(message)
         }
-
+        val message = handler.obtainMessage()
+        message.what = MyApplication.DATABASE_LOADED
+        message.obj = daoSession
+        handler.sendMessage(message)
     }
 
     private fun copyDatabase() {
@@ -41,7 +41,7 @@ class DatabaseCopyThread(
             val version = br.readLine()
             br.close()
             println("db version: $version")
-            if (version.equals(context.getString(R.string.db_version))) {
+            if (version >= context.getString(R.string.db_version)) {
                 copy = false
             }
         }
@@ -88,9 +88,7 @@ class DatabaseCopyThread(
         DaoMaster.OpenHelper(context, name) {
 
         override fun onCreate(db: Database?) {
-
             super.onCreate(db)
         }
     }
-
 }
