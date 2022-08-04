@@ -42,6 +42,9 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    /**
+     * 异步加载文章
+     */
     fun loadArticles(list: List<ArtInfo>?) {
         viewModelScope.launch {
             var data = list

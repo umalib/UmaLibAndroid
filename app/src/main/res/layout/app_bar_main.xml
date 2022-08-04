@@ -55,12 +55,13 @@
         layout="@layout/content_main" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_up"
+        android:id="@+id/refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:tooltipText="@string/refresh"
+        app:srcCompat="@drawable/ic_baseline_refresh_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

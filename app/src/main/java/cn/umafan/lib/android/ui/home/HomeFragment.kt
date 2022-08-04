@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
+import cn.umafan.lib.android.beans.ArtInfo
 import cn.umafan.lib.android.beans.ArtInfoDao
 import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.databinding.FragmentHomeBinding
@@ -23,6 +24,7 @@ import cn.umafan.lib.android.ui.main.MainActivity
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import org.greenrobot.greendao.query.Query
 
 @SuppressLint("InflateParams")
 class HomeFragment : Fragment() {
@@ -140,15 +142,22 @@ class HomeFragment : Fragment() {
         )
     }
 
+    /**
+     * 从数据库中查询内容
+     * @param page 查询页数
+     * @param params 查询主要参数
+     */
     @SuppressLint("SetTextI18n")
     private fun loadArticles(page: Int?, params: SearchBean?) {
         val handler = Handler(Looper.getMainLooper()) {
             when (it.what) {
+                // 若数据库在加载中，则展示进度条
                 MyApplication.DATABASE_LOADING -> {
                     mDataBaseLoadingProgressIndicator?.progress = (it.obj as Double).toInt()
                     mDataBaseLoadingProgressNum?.text = "${String.format("%.2f", it.obj)}%"
                     mDataBaseLoadingProgressDialog.show()
                 }
+                // 若数据库已加载完成，则执行查询操作
                 MyApplication.DATABASE_LOADED -> {
                     mDataBaseLoadingProgressDialog.hide()
                     daoSession = it.obj as DaoSession
@@ -163,8 +172,20 @@ class HomeFragment : Fragment() {
                         if (page != null) {
                             offset = (page - 1) * 10
                         }
-                        val query = artInfoDao.queryBuilder().offset(offset)
-                            .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
+                        val query: Query<ArtInfo>
+                        if (null != params) {
+                            query = artInfoDao.queryBuilder()
+                                .where(ArtInfoDao.Properties.Name.like("%${params.keyword}%"))
+                                .offset(offset)
+                                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
+                            count = (artInfoDao.queryBuilder()
+                                .where(ArtInfoDao.Properties.Name.like("%${params.keyword}%"))
+                                .offset(offset)
+                                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).count().toDouble() / 10).toInt() + 1
+                        } else {
+                            query = artInfoDao.queryBuilder().offset(offset)
+                                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
+                        }
                         val list = query.listLazy()
                         homeViewModel.loadArticles(list)
                         list.close()

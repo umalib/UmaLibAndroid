@@ -1,6 +1,7 @@
 package cn.umafan.lib.android.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -69,16 +70,20 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onQueryTextSubmit(query: String): Boolean {
+                    Log.d("fucka", "onQueryTextSubmit: $query")
                     mViewModel.searchParams.value?.keyword = query
                     search()
                     return false
                 }
             })
+            appBarMain.refresh.setOnClickListener {
+                mViewModel.searchParams.value?.keyword = ""
+                search()
+            }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
 
         val item = menu.findItem(R.id.action_search)

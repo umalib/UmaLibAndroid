@@ -27,5 +27,6 @@
     <string name="search_hint">请输入搜索关键词</string>
     <string name="prepare_database">加载数据库</string>
     <string name="progress">进度</string>
+    <string name="refresh">重置</string>
     <string name="prepare_database_hint">本数据库保存在应用本地，为未联网的内嵌数据库，加载期间不消耗流量。仅第一次打开应用或数据库版本更新时需要加载，后续无需加载。</string>
 </resources>
