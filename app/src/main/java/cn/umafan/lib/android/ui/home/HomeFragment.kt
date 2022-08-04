@@ -3,11 +3,10 @@ package cn.umafan.lib.android.ui.home
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -22,16 +21,13 @@ import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.lang.Math.ceil
+import com.google.android.material.progressindicator.LinearProgressIndicator
 
+@SuppressLint("InflateParams")
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
-    private lateinit var dialog: AlertDialog
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     private var _homeViewModel: HomeViewModel? = null
@@ -40,7 +36,7 @@ class HomeFragment : Fragment() {
 
     private var pageLen: Int = 0
 
-    var daoSession: DaoSession? = null
+    private var daoSession: DaoSession? = null
 
     private val mPageSelectorDialog by lazy {
         val view = LayoutInflater.from(activity).inflate(R.layout.dialog_page_selector, null)
@@ -66,6 +62,28 @@ class HomeFragment : Fragment() {
             }
             .setNegativeButton(R.string.cancel, null)
             .setView(view)
+            .create()
+    }
+
+    private var mDataBaseLoadingProgressView: View? = null
+
+    private var mDataBaseLoadingProgressIndicator: LinearProgressIndicator? = null
+
+    private var mDataBaseLoadingProgressNum: AppCompatTextView? = null
+
+    private val mDataBaseLoadingProgressDialog by lazy {
+        mDataBaseLoadingProgressView = LayoutInflater.from(activity).inflate(R.layout.dialog_loading_database, null)
+        with(mDataBaseLoadingProgressView) {
+            mDataBaseLoadingProgressIndicator = this?.findViewById(R.id.progress_indicator)
+            mDataBaseLoadingProgressNum = this?.findViewById(R.id.progress_num)
+        }
+
+        MaterialAlertDialogBuilder(
+            activity as MainActivity,
+            com.google.android.material.R.style.MaterialAlertDialog_Material3
+        )
+            .setTitle(getString(R.string.prepare_database))
+            .setView(mDataBaseLoadingProgressView)
             .create()
     }
 
@@ -103,14 +121,6 @@ class HomeFragment : Fragment() {
             binding.pageNumBtn.text = "$it/$pageLen 页"
         }
 
-        dialog = MaterialAlertDialogBuilder(
-            activity as MainActivity,
-            com.google.android.material.R.style.MaterialAlertDialog_Material3
-        )
-            .setTitle("${getString(R.string.prepare_database)}")
-            .setMessage("")
-            .create()
-
         return root
     }
 
@@ -128,19 +138,22 @@ class HomeFragment : Fragment() {
         )
     }
 
+    @SuppressLint("SetTextI18n")
     private fun loadArticles(page: Int?, params: SearchBean?){
         val handler = Handler{
             when(it.what) {
                 MyApplication.DATABASE_LOADING -> {
-                    dialog.setMessage("${getString(R.string.prepare_database)}${getString(R.string.progress)}：${String.format("%.2f",it.obj)}% \n${getString(R.string.prepare_database_hint)}")
-                    dialog.show()
+                    mDataBaseLoadingProgressIndicator?.progress = (it.obj as Double).toInt()
+                    mDataBaseLoadingProgressNum?.text = "${String.format("%.2f",it.obj)}%"
+                    mDataBaseLoadingProgressDialog.show()
                 }
                 MyApplication.DATABASE_LOADED -> {
+                    mDataBaseLoadingProgressDialog.hide()
                     daoSession = it.obj as DaoSession
                     var count = 5
                     if (null != daoSession) {
                         val artInfoDao: ArtInfoDao = daoSession!!.artInfoDao
-                        count = ceil(artInfoDao.count().toDouble() / 10).toInt()
+                        count = kotlin.math.ceil(artInfoDao.count().toDouble() / 10).toInt()
                         if (0 == count) {
                             count = 1
                         }
