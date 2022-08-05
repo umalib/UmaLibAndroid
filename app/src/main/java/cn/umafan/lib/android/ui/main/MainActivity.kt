@@ -1,10 +1,16 @@
 package cn.umafan.lib.android.ui.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -14,18 +20,46 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cn.umafan.lib.android.R
+import cn.umafan.lib.android.beans.ArtInfoDao
+import cn.umafan.lib.android.beans.CreatorDao
+import cn.umafan.lib.android.beans.DaoSession
+import cn.umafan.lib.android.beans.TagDao
 import cn.umafan.lib.android.databinding.ActivityMainBinding
+import cn.umafan.lib.android.model.MyApplication
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.progressindicator.LinearProgressIndicator
 
 
+@SuppressLint("InflateParams")
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private var _mViewModel: MainViewModel? = null
     private val mViewModel get() = _mViewModel!!
+    private var daoSession: DaoSession? = null
+
+    private var mDataBaseLoadingProgressView: View? = null
+    private var mDataBaseLoadingProgressIndicator: LinearProgressIndicator? = null
+    private var mDataBaseLoadingProgressNum: AppCompatTextView? = null
+    private val mDataBaseLoadingProgressDialog by lazy {
+        mDataBaseLoadingProgressView =
+            LayoutInflater.from(this).inflate(R.layout.dialog_loading_database, null)
+        with(mDataBaseLoadingProgressView) {
+            mDataBaseLoadingProgressIndicator = this?.findViewById(R.id.progress_indicator)
+            mDataBaseLoadingProgressNum = this?.findViewById(R.id.progress_num)
+        }
+
+        MaterialAlertDialogBuilder(
+            this,
+            com.google.android.material.R.style.MaterialAlertDialog_Material3
+        )
+            .setTitle(getString(R.string.prepare_database))
+            .setView(mDataBaseLoadingProgressView)
+            .create()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,17 +94,12 @@ class MainActivity : AppCompatActivity() {
             appBarMain.searchView.setOnQueryTextListener(object :
                 SimpleSearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String): Boolean {
-                    mViewModel.searchParams.value?.keyword = newText
                     return false
                 }
-
                 override fun onQueryTextCleared(): Boolean {
-                    mViewModel.searchParams.value?.keyword = ""
                     return false
                 }
-
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    Log.d("fucka", "onQueryTextSubmit: $query")
                     mViewModel.searchParams.value?.keyword = query
                     search()
                     return false
@@ -81,6 +110,13 @@ class MainActivity : AppCompatActivity() {
                 search()
             }
         }
+
+        // 新建一个守护线程，每个数据库操作任务自动进入队列排队处理
+        val dataBaseThread = DatabaseCopyThread()
+        dataBaseThread.isDaemon = true
+        dataBaseThread.start()
+
+        loadSearchOptions()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -115,9 +151,56 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    /**
+     * 执行搜索
+     */
     fun search() {
         val bundle = Bundle()
         bundle.putSerializable("searchParams", mViewModel.searchParams.value)
         navController.navigate(R.id.nav_home, bundle)
+    }
+
+    /**
+     * 用于展示数据库加载进度条
+     */
+    @SuppressLint("SetTextI18n")
+    fun dataBaseLoadingDialog(progress: Double) {
+        if (progress < 100.0) {
+            mDataBaseLoadingProgressIndicator?.progress = progress.toInt()
+            mDataBaseLoadingProgressNum?.text = "${String.format("%.2f", progress)}%"
+            mDataBaseLoadingProgressDialog.show()
+        } else mDataBaseLoadingProgressDialog.hide()
+    }
+
+    /**
+     * 加载可用的搜索选项
+     */
+    private fun loadSearchOptions() {
+        val handler = Handler(Looper.getMainLooper()) {
+            when (it.what) {
+                // 若数据库在加载中，则展示进度条
+                MyApplication.DATABASE_LOADING -> {
+                    this.dataBaseLoadingDialog(it.obj as Double)
+                    Log.d("fucka", "这是Main")
+                }
+                // 若数据库已加载完成，则执行查询操作
+                MyApplication.DATABASE_LOADED -> {
+                    this.dataBaseLoadingDialog(100.0)
+                    Log.d("fucka", "Main已完成啊啊啊")
+                    daoSession = it.obj as DaoSession
+                    var count = 5
+                    if (null != daoSession) {
+                        with(daoSession!!) {
+                            val artInfoDao: ArtInfoDao = artInfoDao
+                            val tagDao: TagDao = tagDao
+                            val creatorDao: CreatorDao = creatorDao
+                        }
+                    } else {
+                    }
+                }
+            }
+            false
+        }
+        MyApplication.queue.add(handler)
     }
 }

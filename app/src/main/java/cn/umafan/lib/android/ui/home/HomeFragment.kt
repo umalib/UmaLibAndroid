@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +23,6 @@ import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.progressindicator.LinearProgressIndicator
 import org.greenrobot.greendao.query.Query
 
 @SuppressLint("InflateParams")
@@ -68,28 +67,7 @@ class HomeFragment : Fragment() {
             .create()
     }
 
-    private var mDataBaseLoadingProgressView: View? = null
 
-    private var mDataBaseLoadingProgressIndicator: LinearProgressIndicator? = null
-
-    private var mDataBaseLoadingProgressNum: AppCompatTextView? = null
-
-    private val mDataBaseLoadingProgressDialog by lazy {
-        mDataBaseLoadingProgressView =
-            LayoutInflater.from(activity).inflate(R.layout.dialog_loading_database, null)
-        with(mDataBaseLoadingProgressView) {
-            mDataBaseLoadingProgressIndicator = this?.findViewById(R.id.progress_indicator)
-            mDataBaseLoadingProgressNum = this?.findViewById(R.id.progress_num)
-        }
-
-        MaterialAlertDialogBuilder(
-            activity as MainActivity,
-            com.google.android.material.R.style.MaterialAlertDialog_Material3
-        )
-            .setTitle(getString(R.string.prepare_database))
-            .setView(mDataBaseLoadingProgressView)
-            .create()
-    }
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -153,13 +131,11 @@ class HomeFragment : Fragment() {
             when (it.what) {
                 // 若数据库在加载中，则展示进度条
                 MyApplication.DATABASE_LOADING -> {
-                    mDataBaseLoadingProgressIndicator?.progress = (it.obj as Double).toInt()
-                    mDataBaseLoadingProgressNum?.text = "${String.format("%.2f", it.obj)}%"
-                    mDataBaseLoadingProgressDialog.show()
+                    (activity as MainActivity).dataBaseLoadingDialog(it.obj as Double)
                 }
                 // 若数据库已加载完成，则执行查询操作
                 MyApplication.DATABASE_LOADED -> {
-                    mDataBaseLoadingProgressDialog.hide()
+                    (activity as MainActivity).dataBaseLoadingDialog(100.0)
                     daoSession = it.obj as DaoSession
                     var count = 5
                     if (null != daoSession) {
@@ -174,14 +150,12 @@ class HomeFragment : Fragment() {
                         }
                         val query: Query<ArtInfo>
                         if (null != params) {
-                            query = artInfoDao.queryBuilder()
+                            val tmpQuery =artInfoDao.queryBuilder()
                                 .where(ArtInfoDao.Properties.Name.like("%${params.keyword}%"))
                                 .offset(offset)
-                                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
-                            count = (artInfoDao.queryBuilder()
-                                .where(ArtInfoDao.Properties.Name.like("%${params.keyword}%"))
-                                .offset(offset)
-                                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).count().toDouble() / 10).toInt() + 1
+                                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
+                            count = (tmpQuery.count().toDouble() / 10).toInt() + 1
+                            query = tmpQuery.build()
                         } else {
                             query = artInfoDao.queryBuilder().offset(offset)
                                 .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
@@ -202,6 +176,6 @@ class HomeFragment : Fragment() {
             }
             false
         }
-        DatabaseCopyThread(handler).start()
+        MyApplication.queue.add(handler)
     }
 }

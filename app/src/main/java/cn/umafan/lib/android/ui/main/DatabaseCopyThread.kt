@@ -11,9 +11,9 @@ import org.greenrobot.greendao.database.Database
 import java.io.*
 
 class DatabaseCopyThread(
-    private val handler: Handler
 ) : Thread() {
     val context = MyApplication.context
+    lateinit var handler: Handler
 
     companion object {
         private var daoSession: DaoSession? = null
@@ -21,16 +21,22 @@ class DatabaseCopyThread(
 
     override fun run() {
         super.run()
-        if (null == daoSession) {
-            copyDatabase()
-            val helper = LibOpenHelper(context, "main.db")
-            val db: Database = helper.readableDb
-            daoSession = DaoMaster(db).newSession()
+        while (true) {
+            if (MyApplication.queue.size > 0) {
+                handler = MyApplication.queue.first()
+                MyApplication.queue.removeFirst()
+                if (null == daoSession) {
+                    copyDatabase()
+                    val helper = LibOpenHelper(context, "main.db")
+                    val db: Database = helper.readableDb
+                    daoSession = DaoMaster(db).newSession()
+                }
+                val message = handler.obtainMessage()
+                message.what = MyApplication.DATABASE_LOADED
+                message.obj = daoSession
+                handler.sendMessage(message)
+            }
         }
-        val message = handler.obtainMessage()
-        message.what = MyApplication.DATABASE_LOADED
-        message.obj = daoSession
-        handler.sendMessage(message)
     }
 
     private fun copyDatabase() {
