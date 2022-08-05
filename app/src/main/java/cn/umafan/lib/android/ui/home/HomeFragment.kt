@@ -21,6 +21,7 @@ import cn.umafan.lib.android.ui.main.MainActivity
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.greenrobot.greendao.query.QueryBuilder
+import org.greenrobot.greendao.query.WhereCondition
 
 @SuppressLint("InflateParams")
 class HomeFragment : Fragment() {
@@ -133,9 +134,17 @@ class HomeFragment : Fragment() {
                 val query: QueryBuilder<ArtInfo>
                 if (null != params) {
                     query = artInfoDao.queryBuilder()
-                        .whereOr(
-                            ArtInfoDao.Properties.Name.like("%${params.keyword}%"),
-                            ArtInfoDao.Properties.Note.like("%${params.keyword}%")
+                    val keywordCond = query.or(
+                        ArtInfoDao.Properties.Name.like("%${params.keyword}%"),
+                        ArtInfoDao.Properties.Note.like("%${params.keyword}%")
+                    )
+                    val creatorCond = query.or(
+                        ArtInfoDao.Properties.Author.like("%${params.creator}%"),
+                        ArtInfoDao.Properties.Translator.like("%${params.creator}%"),
+                    )
+                    val cond = query.and(keywordCond, creatorCond)
+                    query.where(
+                        cond
                         )
                         .offset(offset)
                         .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,16 +18,15 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.beans.ArtInfoDao
-import cn.umafan.lib.android.beans.CreatorDao
-import cn.umafan.lib.android.beans.DaoSession
-import cn.umafan.lib.android.beans.TagDao
+import cn.umafan.lib.android.beans.*
 import cn.umafan.lib.android.databinding.ActivityMainBinding
 import cn.umafan.lib.android.model.DataBaseHandler
+import cn.umafan.lib.android.model.SearchBean
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 
 
 @SuppressLint("InflateParams")
@@ -37,6 +37,9 @@ class MainActivity : AppCompatActivity() {
     private var _mViewModel: MainViewModel? = null
     private val mViewModel get() = _mViewModel!!
     private var daoSession: DaoSession? = null
+
+    private var creatorList = mutableSetOf<String>()
+    private var tagList = mutableSetOf<String>()
 
     private var mDataBaseLoadingProgressView: View? = null
     private var mDataBaseLoadingProgressIndicator: LinearProgressIndicator? = null
@@ -93,11 +96,9 @@ class MainActivity : AppCompatActivity() {
                 override fun onQueryTextChange(newText: String): Boolean {
                     return false
                 }
-
                 override fun onQueryTextCleared(): Boolean {
                     return false
                 }
-
                 override fun onQueryTextSubmit(query: String): Boolean {
                     mViewModel.searchParams.value?.keyword = query
                     search()
@@ -105,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
             appBarMain.refresh.setOnClickListener {
-                mViewModel.searchParams.value?.keyword = ""
+                mViewModel.searchParams.value = SearchBean()
                 search()
             }
         }
@@ -131,12 +132,39 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             // 搜索过滤项
             R.id.action_search_settings -> {
+                val tagAdapter = ArrayAdapter(
+                    this@MainActivity,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    tagList.toTypedArray()
+                )
+                val creatorAdapter = ArrayAdapter(
+                    this@MainActivity,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    creatorList.toTypedArray()
+                )
+                val view = LayoutInflater.from(this).inflate(R.layout.dialog_search_filter, null)
+
+                view.findViewById<MaterialAutoCompleteTextView>(R.id.tag_textView).setAdapter(tagAdapter)
+                view.findViewById<MaterialAutoCompleteTextView>(R.id.tag_except_textView).setAdapter(tagAdapter)
+
+                val creatorTextView =
+                    view.findViewById<MaterialAutoCompleteTextView>(R.id.creator_textView)
+                creatorTextView.setAdapter(creatorAdapter)
+
+                if (null != mViewModel.searchParams.value) {
+                    creatorTextView.setText(mViewModel.searchParams.value?.creator)
+                }
+
                 MaterialAlertDialogBuilder(
                     this@MainActivity,
                     com.google.android.material.R.style.MaterialAlertDialog_Material3
                 )
                     .setTitle(R.string.search_settings)
-                    .setPositiveButton(R.string.confirm) { _, _ -> }
+                    .setView(view)
+                    .setPositiveButton(R.string.confirm) { _, _ ->
+                        mViewModel.searchParams.value?.creator = creatorTextView.text.toString()
+                        search()
+                    }
                     .setNegativeButton(R.string.cancel, null)
                     .show()
             }
@@ -174,14 +202,23 @@ class MainActivity : AppCompatActivity() {
      * 加载可用的搜索选项
      */
     private fun loadSearchOptions() {
-        DatabaseCopyThread.addHandler(DataBaseHandler(this) {
+        DatabaseCopyThread.addHandler(DataBaseHandler(this) { it ->
             daoSession = it.obj as DaoSession
             var count = 5
             if (null != daoSession) {
                 with(daoSession!!) {
                     val artInfoDao: ArtInfoDao = artInfoDao
                     val tagDao: TagDao = tagDao
-                    val creatorDao: CreatorDao = creatorDao
+                    // 获取创作者列表
+                    artInfoDao.queryBuilder().orderDesc(ArtInfoDao.Properties.Name).listLazy().forEach {
+                        if (it.author.isNotBlank()) creatorList.add(it.author)
+                        if (it.translator.isNotBlank()) creatorList.add(it.translator)
+                    }
+                    creatorList = creatorList.toSortedSet()
+                    // 获取tag
+                    tagDao.queryBuilder().orderDesc(TagDao.Properties.Name).listLazy().forEach {
+                        tagList.add(it.name)
+                    }
                 }
             }
         })
