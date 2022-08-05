@@ -12,12 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_collections"
-        android:name="cn.umafan.lib.android.ui.collections.CollectionsFragment"
-        android:label="@string/collections"
-        tools:layout="@layout/fragment_collections" />
-
-    <fragment
         android:id="@+id/nav_favorites"
         android:name="cn.umafan.lib.android.ui.favorites.FavoritesFragment"
         android:label="@string/my_favorites"

@@ -80,10 +80,6 @@ class DatabaseCopyThread : Thread() {
                     message.what = MyApplication.DATABASE_LOADING
                     message.obj = progress
                     handler.sendMessage(message)
-                    Log.d(
-                        "fucka",
-                        "copyDataBase: $progress%"
-                    )
                 }
                 myOutput.write(buffer, 0, length)
                 length = myInput.read(buffer)

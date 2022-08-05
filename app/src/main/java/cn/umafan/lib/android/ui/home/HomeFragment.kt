@@ -110,10 +110,6 @@ class HomeFragment : Fragment() {
     private fun initView() {
         binding.recyclerView.adapter = homeViewModel.articleDataAdapter
         binding.pageNumBtn.setOnClickListener { mPageSelectorDialog.show() }
-        loadArticles(
-            homeViewModel.currentPage.value,
-            arguments?.getSerializable("searchParams") as SearchBean?
-        )
     }
 
     /**
@@ -133,7 +129,7 @@ class HomeFragment : Fragment() {
                 } else {
                     0
                 }
-                println("offset: $offset")
+                println("search-params: $params")
                 val query: QueryBuilder<ArtInfo>
                 if (null != params) {
                     query = artInfoDao.queryBuilder()
