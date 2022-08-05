@@ -2,8 +2,6 @@ package cn.umafan.lib.android.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +14,13 @@ import cn.umafan.lib.android.beans.ArtInfoDao
 import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.databinding.FragmentHomeBinding
 import cn.umafan.lib.android.model.DataBaseHandler
-import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.home.model.PageItem
+import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import org.greenrobot.greendao.query.Query
+import org.greenrobot.greendao.query.QueryBuilder
 
 @SuppressLint("InflateParams")
 class HomeFragment : Fragment() {
@@ -65,7 +63,6 @@ class HomeFragment : Fragment() {
             .setView(view)
             .create()
     }
-
 
 
     @SuppressLint("SetTextI18n")
@@ -128,42 +125,48 @@ class HomeFragment : Fragment() {
     private fun loadArticles(page: Int?, params: SearchBean?) {
         val handler = DataBaseHandler(activity as MainActivity) {
             daoSession = it.obj as DaoSession
-            var count = 5
+            var count = 5L
             if (null != daoSession) {
                 val artInfoDao: ArtInfoDao = daoSession!!.artInfoDao
-                count = kotlin.math.ceil(artInfoDao.count().toDouble() / 10).toInt()
-                if (0 == count) {
-                    count = 1
+                val offset = if (page != null) {
+                    (page - 1) * 10
+                } else {
+                    0
                 }
-                var offset = 0
-                if (page != null) {
-                    offset = (page - 1) * 10
-                }
-                val query: Query<ArtInfo>
+                println("offset: $offset")
+                val query: QueryBuilder<ArtInfo>
                 if (null != params) {
-                    val tmpQuery =artInfoDao.queryBuilder()
-                        .where(ArtInfoDao.Properties.Name.like("%${params.keyword}%"))
+                    query = artInfoDao.queryBuilder()
+                        .whereOr(
+                            ArtInfoDao.Properties.Name.like("%${params.keyword}%"),
+                            ArtInfoDao.Properties.Note.like("%${params.keyword}%")
+                        )
                         .offset(offset)
                         .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
-                    count = (tmpQuery.count().toDouble() / 10).toInt() + 1
-                    query = tmpQuery.build()
+                    count = query.count()
                 } else {
                     query = artInfoDao.queryBuilder().offset(offset)
-                        .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
+                        .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
+                    count = artInfoDao.count()
                 }
-                val list = query.listLazy()
+                if (0L == count || 0L != count % 10L) {
+                    count = count / 10L + 1
+                } else {
+                    count /= 10
+                }
+                val list = query.build().listLazy()
                 homeViewModel.loadArticles(list)
                 list.close()
             } else {
                 homeViewModel.loadArticles(null)
             }
-            pageLen = count
+            pageLen = count.toInt()
             with(homeViewModel.currentPage.value) {
                 binding.lastPageBtn.isEnabled = this!! > 1
                 binding.nextPageBtn.isEnabled = this < pageLen
                 binding.pageNumBtn.text = "$this/$pageLen 页"
             }
         }
-        MyApplication.queue.add(handler)
+        DatabaseCopyThread.addHandler(handler)
     }
 }

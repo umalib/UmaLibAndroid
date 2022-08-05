@@ -2,9 +2,6 @@ package cn.umafan.lib.android.ui.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -26,7 +23,6 @@ import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.beans.TagDao
 import cn.umafan.lib.android.databinding.ActivityMainBinding
 import cn.umafan.lib.android.model.DataBaseHandler
-import cn.umafan.lib.android.model.MyApplication
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
@@ -178,7 +174,7 @@ class MainActivity : AppCompatActivity() {
      * 加载可用的搜索选项
      */
     private fun loadSearchOptions() {
-        val handler = DataBaseHandler(this) {
+        DatabaseCopyThread.addHandler(DataBaseHandler(this) {
             daoSession = it.obj as DaoSession
             var count = 5
             if (null != daoSession) {
@@ -187,9 +183,7 @@ class MainActivity : AppCompatActivity() {
                     val tagDao: TagDao = tagDao
                     val creatorDao: CreatorDao = creatorDao
                 }
-            } else {
             }
-        }
-        MyApplication.queue.add(handler)
+        })
     }
 }

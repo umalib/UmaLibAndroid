@@ -51,7 +51,11 @@ class ArticleInfoItem(
                                 b.type.compareTo(a.type)
                         }.joinToString("，") { tag -> tag.name }
                 itemArticleCardBox.setOnClickListener { view ->
-                    Snackbar.make(view, "点击了id为${articleInfo.id}的卡片", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(
+                        view,
+                        "作品[${articleInfo.id}] ${articleInfo.name}",
+                        Snackbar.LENGTH_SHORT
+                    )
                         .setAction("Action", null).show()
                 }
                 invalidateAll()

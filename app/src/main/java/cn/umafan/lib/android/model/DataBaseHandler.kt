@@ -11,7 +11,7 @@ import cn.umafan.lib.android.ui.main.MainActivity
 class DataBaseHandler(
     private val activity: MainActivity,
     private val unit: (Message) -> Unit
-): Handler(Looper.getMainLooper()) {
+) : Handler(Looper.getMainLooper()) {
     override fun handleMessage(msg: Message) {
         super.handleMessage(msg)
         when (msg.what) {

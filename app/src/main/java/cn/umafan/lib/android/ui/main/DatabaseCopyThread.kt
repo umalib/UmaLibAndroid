@@ -16,14 +16,22 @@ class DatabaseCopyThread : Thread() {
 
     companion object {
         private var daoSession: DaoSession? = null
+        private val queue = mutableListOf<Handler>()
+        private val lock = Object()
+
+        fun addHandler(_handler: Handler) {
+            queue.add(_handler)
+            synchronized(lock) {
+                lock.notify()
+            }
+        }
     }
 
     override fun run() {
-        super.run()
         while (true) {
-            if (MyApplication.queue.size > 0) {
-                handler = MyApplication.queue.first()
-                MyApplication.queue.removeFirst()
+            while (queue.size > 0) {
+                handler = queue.first()
+                queue.removeFirst()
                 if (null == daoSession) {
                     copyDatabase()
                     val helper = LibOpenHelper(context, "main.db")
@@ -34,6 +42,9 @@ class DatabaseCopyThread : Thread() {
                 message.what = MyApplication.DATABASE_LOADED
                 message.obj = daoSession
                 handler.sendMessage(message)
+            }
+            synchronized(lock) {
+                lock.wait()
             }
         }
     }

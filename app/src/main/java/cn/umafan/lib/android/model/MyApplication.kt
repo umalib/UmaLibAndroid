@@ -9,7 +9,6 @@ class MyApplication : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
-        val queue = mutableListOf<Handler>()
         const val DATABASE_LOADING = 0
         const val DATABASE_LOADED = 1
     }
