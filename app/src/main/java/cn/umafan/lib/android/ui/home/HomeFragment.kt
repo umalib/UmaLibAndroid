@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +15,10 @@ import cn.umafan.lib.android.beans.ArtInfo
 import cn.umafan.lib.android.beans.ArtInfoDao
 import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.databinding.FragmentHomeBinding
+import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.home.model.PageItem
-import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -127,54 +126,43 @@ class HomeFragment : Fragment() {
      */
     @SuppressLint("SetTextI18n")
     private fun loadArticles(page: Int?, params: SearchBean?) {
-        val handler = Handler(Looper.getMainLooper()) {
-            when (it.what) {
-                // 若数据库在加载中，则展示进度条
-                MyApplication.DATABASE_LOADING -> {
-                    (activity as MainActivity).dataBaseLoadingDialog(it.obj as Double)
+        val handler = DataBaseHandler(activity as MainActivity) {
+            daoSession = it.obj as DaoSession
+            var count = 5
+            if (null != daoSession) {
+                val artInfoDao: ArtInfoDao = daoSession!!.artInfoDao
+                count = kotlin.math.ceil(artInfoDao.count().toDouble() / 10).toInt()
+                if (0 == count) {
+                    count = 1
                 }
-                // 若数据库已加载完成，则执行查询操作
-                MyApplication.DATABASE_LOADED -> {
-                    (activity as MainActivity).dataBaseLoadingDialog(100.0)
-                    daoSession = it.obj as DaoSession
-                    var count = 5
-                    if (null != daoSession) {
-                        val artInfoDao: ArtInfoDao = daoSession!!.artInfoDao
-                        count = kotlin.math.ceil(artInfoDao.count().toDouble() / 10).toInt()
-                        if (0 == count) {
-                            count = 1
-                        }
-                        var offset = 0
-                        if (page != null) {
-                            offset = (page - 1) * 10
-                        }
-                        val query: Query<ArtInfo>
-                        if (null != params) {
-                            val tmpQuery =artInfoDao.queryBuilder()
-                                .where(ArtInfoDao.Properties.Name.like("%${params.keyword}%"))
-                                .offset(offset)
-                                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
-                            count = (tmpQuery.count().toDouble() / 10).toInt() + 1
-                            query = tmpQuery.build()
-                        } else {
-                            query = artInfoDao.queryBuilder().offset(offset)
-                                .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
-                        }
-                        val list = query.listLazy()
-                        homeViewModel.loadArticles(list)
-                        list.close()
-                    } else {
-                        homeViewModel.loadArticles(null)
-                    }
-                    pageLen = count
-                    with(homeViewModel.currentPage.value) {
-                        binding.lastPageBtn.isEnabled = this!! > 1
-                        binding.nextPageBtn.isEnabled = this < pageLen
-                        binding.pageNumBtn.text = "$this/$pageLen 页"
-                    }
+                var offset = 0
+                if (page != null) {
+                    offset = (page - 1) * 10
                 }
+                val query: Query<ArtInfo>
+                if (null != params) {
+                    val tmpQuery =artInfoDao.queryBuilder()
+                        .where(ArtInfoDao.Properties.Name.like("%${params.keyword}%"))
+                        .offset(offset)
+                        .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
+                    count = (tmpQuery.count().toDouble() / 10).toInt() + 1
+                    query = tmpQuery.build()
+                } else {
+                    query = artInfoDao.queryBuilder().offset(offset)
+                        .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime).build()
+                }
+                val list = query.listLazy()
+                homeViewModel.loadArticles(list)
+                list.close()
+            } else {
+                homeViewModel.loadArticles(null)
             }
-            false
+            pageLen = count
+            with(homeViewModel.currentPage.value) {
+                binding.lastPageBtn.isEnabled = this!! > 1
+                binding.nextPageBtn.isEnabled = this < pageLen
+                binding.pageNumBtn.text = "$this/$pageLen 页"
+            }
         }
         MyApplication.queue.add(handler)
     }

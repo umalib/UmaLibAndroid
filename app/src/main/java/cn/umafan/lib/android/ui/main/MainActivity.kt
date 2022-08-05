@@ -25,6 +25,7 @@ import cn.umafan.lib.android.beans.CreatorDao
 import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.beans.TagDao
 import cn.umafan.lib.android.databinding.ActivityMainBinding
+import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyApplication
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -96,9 +97,11 @@ class MainActivity : AppCompatActivity() {
                 override fun onQueryTextChange(newText: String): Boolean {
                     return false
                 }
+
                 override fun onQueryTextCleared(): Boolean {
                     return false
                 }
+
                 override fun onQueryTextSubmit(query: String): Boolean {
                     mViewModel.searchParams.value?.keyword = query
                     search()
@@ -137,7 +140,6 @@ class MainActivity : AppCompatActivity() {
                     com.google.android.material.R.style.MaterialAlertDialog_Material3
                 )
                     .setTitle(R.string.search_settings)
-                    .setMessage("DAJKlad")
                     .setPositiveButton(R.string.confirm) { _, _ -> }
                     .setNegativeButton(R.string.cancel, null)
                     .show()
@@ -176,30 +178,17 @@ class MainActivity : AppCompatActivity() {
      * 加载可用的搜索选项
      */
     private fun loadSearchOptions() {
-        val handler = Handler(Looper.getMainLooper()) {
-            when (it.what) {
-                // 若数据库在加载中，则展示进度条
-                MyApplication.DATABASE_LOADING -> {
-                    this.dataBaseLoadingDialog(it.obj as Double)
-                    Log.d("fucka", "这是Main")
+        val handler = DataBaseHandler(this) {
+            daoSession = it.obj as DaoSession
+            var count = 5
+            if (null != daoSession) {
+                with(daoSession!!) {
+                    val artInfoDao: ArtInfoDao = artInfoDao
+                    val tagDao: TagDao = tagDao
+                    val creatorDao: CreatorDao = creatorDao
                 }
-                // 若数据库已加载完成，则执行查询操作
-                MyApplication.DATABASE_LOADED -> {
-                    this.dataBaseLoadingDialog(100.0)
-                    Log.d("fucka", "Main已完成啊啊啊")
-                    daoSession = it.obj as DaoSession
-                    var count = 5
-                    if (null != daoSession) {
-                        with(daoSession!!) {
-                            val artInfoDao: ArtInfoDao = artInfoDao
-                            val tagDao: TagDao = tagDao
-                            val creatorDao: CreatorDao = creatorDao
-                        }
-                    } else {
-                    }
-                }
+            } else {
             }
-            false
         }
         MyApplication.queue.add(handler)
     }

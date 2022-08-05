@@ -10,10 +10,9 @@ import cn.umafan.lib.android.model.MyApplication
 import org.greenrobot.greendao.database.Database
 import java.io.*
 
-class DatabaseCopyThread(
-) : Thread() {
+class DatabaseCopyThread : Thread() {
     val context = MyApplication.context
-    lateinit var handler: Handler
+    private lateinit var handler: Handler
 
     companion object {
         private var daoSession: DaoSession? = null
