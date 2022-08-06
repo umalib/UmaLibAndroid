@@ -191,8 +191,8 @@ class MainActivity : AppCompatActivity() {
                 with(mViewModel) {
                     viewModelScope.launch {
                         searchParams.value = SearchBean()
-                        selectedTags.emit(searchParams.value?.tags!!)
-                        selectedExceptTags.emit(searchParams.value?.exceptedTags!!)
+                        selectedTags.emit(mutableSetOf())
+                        selectedExceptTags.emit(mutableSetOf())
                     }
                 }
                 tagTextView?.setText("")
