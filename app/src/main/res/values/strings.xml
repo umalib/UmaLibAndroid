@@ -33,4 +33,13 @@
     <string name="creator_label">选择作者/译者</string>
     <string name="selected_tags">已选标签：</string>
     <string name="prepare_database_hint">本数据库保存在应用本地，为未联网的内嵌数据库，加载期间不消耗流量。仅第一次打开应用或数据库版本更新时需要加载，后续无需加载。</string>
+    <string name="title_activity_reader">ReaderActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

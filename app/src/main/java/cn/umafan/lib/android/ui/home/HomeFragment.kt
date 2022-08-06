@@ -191,6 +191,7 @@ class HomeFragment : Fragment() {
                 binding.pageNumBtn.text = "$this/$pageLen 页"
             }
         }
+        (activity as MainActivity).shapeLoadingDialog?.show()
         DatabaseCopyThread.addHandler(handler)
     }
 }

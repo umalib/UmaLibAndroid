@@ -24,6 +24,7 @@ import cn.umafan.lib.android.R
 import cn.umafan.lib.android.beans.*
 import cn.umafan.lib.android.databinding.ActivityMainBinding
 import cn.umafan.lib.android.model.DataBaseHandler
+import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.main.model.TagSelectedItem
 import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter
@@ -39,7 +40,7 @@ import kotlinx.coroutines.launch
 
 
 @SuppressLint("InflateParams")
-class MainActivity : AppCompatActivity() {
+class MainActivity : MyBaseActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -49,8 +50,6 @@ class MainActivity : AppCompatActivity() {
 
     private var creatorList = mutableSetOf<String>()
     private var tagList = mutableSetOf<Tag>()
-
-    var shapeLoadingDialog: ShapeLoadingDialog? = null
 
     /**
      * 搜索选项dialog
@@ -122,28 +121,7 @@ class MainActivity : AppCompatActivity() {
             .create()
     }
 
-    /**
-     * 数据库操作进度dialog
-     */
-    private var mDataBaseLoadingProgressView: View? = null
-    private var mDataBaseLoadingProgressIndicator: LinearProgressIndicator? = null
-    private var mDataBaseLoadingProgressNum: AppCompatTextView? = null
-    private val mDataBaseLoadingProgressDialog by lazy {
-        mDataBaseLoadingProgressView =
-            LayoutInflater.from(this).inflate(R.layout.dialog_loading_database, null)
-        with(mDataBaseLoadingProgressView) {
-            mDataBaseLoadingProgressIndicator = this?.findViewById(R.id.progress_indicator)
-            mDataBaseLoadingProgressNum = this?.findViewById(R.id.progress_num)
-        }
 
-        MaterialAlertDialogBuilder(
-            this,
-            com.google.android.material.R.style.MaterialAlertDialog_Material3
-        )
-            .setTitle(getString(R.string.prepare_database))
-            .setView(mDataBaseLoadingProgressView)
-            .create()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -232,9 +210,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        shapeLoadingDialog = ShapeLoadingDialog(this)
-        shapeLoadingDialog?.dialog?.setCanceledOnTouchOutside(false)
-
         // 新建一个守护线程，每个数据库操作任务自动进入队列排队处理
         val dataBaseThread = DatabaseCopyThread()
         dataBaseThread.isDaemon = true
@@ -275,18 +250,6 @@ class MainActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putSerializable("searchParams", mViewModel.searchParams.value)
         navController.navigate(R.id.nav_home, bundle)
-    }
-
-    /**
-     * 用于展示数据库加载进度条
-     */
-    @SuppressLint("SetTextI18n")
-    fun dataBaseLoadingDialog(progress: Double) {
-        if (progress < 100.0) {
-            mDataBaseLoadingProgressIndicator?.progress = progress.toInt()
-            mDataBaseLoadingProgressNum?.text = "${String.format("%.2f", progress)}%"
-            mDataBaseLoadingProgressDialog.show()
-        } else mDataBaseLoadingProgressDialog.hide()
     }
 
     /**

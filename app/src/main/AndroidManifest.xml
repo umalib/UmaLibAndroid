@@ -11,6 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UmaLibrary">
         <activity
+            android:name=".ui.reader.ReaderActivity"
+            android:exported="false"
+            android:label="@string/title_activity_reader"
+            android:theme="@style/Theme.UmaLibrary.NoActionBar" />
+        <activity
             android:name="cn.umafan.lib.android.ui.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.UmaLibrary.NoActionBar">
