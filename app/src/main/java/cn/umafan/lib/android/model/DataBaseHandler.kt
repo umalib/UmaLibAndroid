@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import cn.umafan.lib.android.ui.main.MainActivity
+import com.angcyo.dsladapter.hash
 
 /**
  * 自定义handler模板，每个数据库的操作都通过此handler构建
@@ -21,6 +22,7 @@ class DataBaseHandler(
             }
             MyApplication.DATABASE_LOADED -> {
                 activity.dataBaseLoadingDialog(100.0)
+                activity.shapeLoadingDialog?.dialog?.hide()
                 unit(msg)
             }
         }

@@ -33,6 +33,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.mingle.widget.ShapeLoadingDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -48,6 +49,8 @@ class MainActivity : AppCompatActivity() {
 
     private var creatorList = mutableSetOf<String>()
     private var tagList = mutableSetOf<Tag>()
+
+    var shapeLoadingDialog: ShapeLoadingDialog? = null
 
     /**
      * 搜索选项dialog
@@ -221,7 +224,6 @@ class MainActivity : AppCompatActivity() {
                     it.forEach { tag ->
                         tagSelectedList.add(TagSelectedItem(tag, mViewModel, false))
                     }
-                    Log.d("fuck", ": $tagSelectedList")
                     if (null != searchFilterView) {
                         val selectedExceptTagRecyclerView = searchFilterView!!.findViewById<RecyclerView>(R.id.selected_except_tags_recycler_view)
                         selectedExceptTagRecyclerView.adapter = DslAdapter(tagSelectedList)
@@ -229,6 +231,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        shapeLoadingDialog = ShapeLoadingDialog(this)
+        shapeLoadingDialog?.dialog?.setCanceledOnTouchOutside(false)
 
         // 新建一个守护线程，每个数据库操作任务自动进入队列排队处理
         val dataBaseThread = DatabaseCopyThread()
@@ -266,6 +271,7 @@ class MainActivity : AppCompatActivity() {
      * 执行搜索
      */
     fun search() {
+        shapeLoadingDialog?.show()
         val bundle = Bundle()
         bundle.putSerializable("searchParams", mViewModel.searchParams.value)
         navController.navigate(R.id.nav_home, bundle)
