@@ -125,6 +125,7 @@ class HomeFragment : Fragment() {
             var count = 5L
             if (null != daoSession) {
                 val artInfoDao: ArtInfoDao = daoSession!!.artInfoDao
+                val taggedDao = daoSession!!.taggedDao
                 val offset = if (page != null) {
                     (page - 1) * 10
                 } else {
@@ -150,21 +151,18 @@ class HomeFragment : Fragment() {
                         )
                     }
                     if (params.tags.isNotEmpty()) {
-                        val taggedList = daoSession!!.taggedDao.queryBuilder()
-                            .where(TaggedDao.Properties.TagId.`in`(params.tags.map { tag -> tag.id }))
-                            .build().list()
-                        val taggedMap = HashMap<Long, Int>()
-                        taggedList.forEach { tagged ->
-                            taggedMap[tagged.artId] =
-                                taggedMap.getOrDefault(tagged.artId, 0) + 1
-                        }
-                        query.where(ArtInfoDao.Properties.Id.`in`(
-                            taggedMap.filter { e -> e.value == params.tags.size }
-                                .map { e -> e.key })
+                        val taggedList = taggedDao.queryRaw(
+                            "where tagId in ${
+                                params.tags.map { tag -> tag.id }.joinToString(",", "(", ")")
+                            } group by artId having count(id) = ${params.tags.size}"
+                        )
+                        query.where(
+                            ArtInfoDao.Properties.Id.`in`(
+                                taggedList.map { tagged -> tagged.artId })
                         )
                     }
                     if (params.exceptedTags.isNotEmpty()) {
-                        val taggedList = daoSession!!.taggedDao.queryBuilder()
+                        val taggedList = taggedDao.queryBuilder()
                             .where(TaggedDao.Properties.TagId.`in`(params.exceptedTags.map { tag -> tag.id }))
                             .build().list()
                         query.where(
