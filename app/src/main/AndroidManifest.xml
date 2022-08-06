@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.umafan.lib.android">
 
+    <!-- 联网权限以获取网络图片资源 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".model.MyApplication"
         android:allowBackup="true"

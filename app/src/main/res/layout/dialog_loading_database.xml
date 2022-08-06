@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:layout_marginTop="20dp"
         android:id="@+id/progress_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:layout_marginTop="20dp"
         android:id="@+id/progress_num"
         style="@style/TextAppearance.Material3.BodyLarge"
         android:layout_width="wrap_content"

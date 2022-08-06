@@ -37,6 +37,7 @@ open class MyBaseActivity : AppCompatActivity(){
         )
             .setTitle(getString(R.string.prepare_database))
             .setView(mDataBaseLoadingProgressView)
+            .setCancelable(false)
             .create()
     }
 

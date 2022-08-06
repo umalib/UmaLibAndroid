@@ -55,8 +55,8 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.3.0'
 
     implementation 'com.github.zzz40500:android-shapeLoadingView:1.0.3.2'
-
     implementation 'com.github.ldh-star:AndroidKit:0.1.5'
+    implementation 'com.github.open-android:BridgeWebView:v1.0'
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

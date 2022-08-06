@@ -21,6 +21,23 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.itheima.view.BridgeWebView
+        android:id="@+id/article_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/collect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_gravity="bottom|end"
+        android:tooltipText="@string/collect"
+        app:srcCompat="@drawable/ic_baseline_star_outline_24"
+        />
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

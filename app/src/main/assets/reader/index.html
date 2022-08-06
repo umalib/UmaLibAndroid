@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="file:///android_asset/reader/js/index.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="file:///android_asset/reader/css/element-ui.css">
+</head>
+<body>
+<div id="main">
+    <el-button>Test Button</el-button>
+    <div v-html="article.content"></div>
+</div>
+</body>
+<!-- 由于vue3逐渐放弃了对浏览器支持，请使用vue2语法 -->
+<script src="file:///android_asset/reader/js/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="file:///android_asset/reader/js/element-ui.js"></script>
+<script>
+    var vue = new Vue({
+        el: '#main',
+        data: {
+            article: {}
+        },
+        methods: {
+
+        },
+        // 页面绑定完成时，渲染页面数据
+        mounted: function() {
+            params = {'callback': 'renderPage'}
+            callAndroidMethod('getArticle', params)
+        }
+    })
+    // 获取回调得到的article数据并渲染
+    function renderPage(json) {
+        vue.$data.article = json
+    }
+
+</script>
+</html>
