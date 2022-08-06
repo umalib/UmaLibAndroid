@@ -7,10 +7,12 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity(createInDb = false)
-public class Tag {
+public class Tag implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @Property(nameInDb = "id")
     private Long id;
