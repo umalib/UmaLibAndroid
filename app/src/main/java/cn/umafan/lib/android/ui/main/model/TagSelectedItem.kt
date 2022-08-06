@@ -43,14 +43,14 @@ class TagSelectedItem(
                         viewModelScope.launch {
                             if (flag) {
                                 searchParams.value?.tags?.remove(tag)
-                                val tmp = mutableListOf<Tag>()
+                                val tmp = mutableSetOf<Tag>()
                                 searchParams.value?.tags?.forEach {
                                     tmp.add(it)
                                 }
                                 selectedTags.emit(tmp)
                             } else {
                                 searchParams.value?.exceptedTags?.remove(tag)
-                                val tmp = mutableListOf<Tag>()
+                                val tmp = mutableSetOf<Tag>()
                                 searchParams.value?.exceptedTags?.forEach {
                                     tmp.add(it)
                                 }

@@ -55,9 +55,11 @@ class MainActivity : AppCompatActivity() {
     private var searchFilterView: View? = null
     private var tagTextView: MaterialAutoCompleteTextView? = null
     private var tagExceptTextView: MaterialAutoCompleteTextView? = null
+    private var creatorTextView: MaterialAutoCompleteTextView? = null
     private val searchFilterDialog by lazy {
         val tags = tagList.toList()
         val tagAdapter = TagSuggestionAdapter(tags)
+        val tagExceptAdapter = TagSuggestionAdapter(tags)
         val creatorAdapter = ArrayAdapter(
             this@MainActivity,
             android.R.layout.simple_spinner_dropdown_item,
@@ -68,11 +70,13 @@ class MainActivity : AppCompatActivity() {
 
         tagTextView = searchFilterView!!.findViewById(R.id.tag_textView)
         tagTextView?.setAdapter(tagAdapter)
-        tagTextView?.setOnItemClickListener { _, _, i, _ ->
+        tagTextView?.setOnItemClickListener { adaptorView, _, i, _ ->
+            val item = tags.find { tag -> tag.name == adaptorView.adapter.getItem(i) }
             with(mViewModel) {
                 viewModelScope.launch {
-                    searchParams.value?.tags?.add(tags[i])
-                    val tmp = mutableListOf<Tag>()
+                    searchParams.value?.tags?.add(item!!)
+                    // 为使flow数据得到相应，这里必须使用一个新的对象
+                    val tmp = mutableSetOf<Tag>()
                     searchParams.value?.tags?.forEach {
                         tmp.add(it)
                     }
@@ -81,12 +85,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
         tagExceptTextView = searchFilterView!!.findViewById(R.id.tag_except_textView)
-        tagExceptTextView?.setAdapter(tagAdapter)
-        tagExceptTextView?.setOnItemClickListener { _, _, i, _ ->
+        tagExceptTextView?.setAdapter(tagExceptAdapter)
+        tagExceptTextView?.setOnItemClickListener { adaptorView, _, i, _ ->
+            val item = tags.find { tag -> tag.name == adaptorView.adapter.getItem(i) }
             with(mViewModel) {
                 viewModelScope.launch {
-                    searchParams.value?.exceptedTags?.add(tags[i])
-                    val tmp = mutableListOf<Tag>()
+                    searchParams.value?.exceptedTags?.add(item!!)
+                    // 为使flow数据得到相应，这里必须使用一个新的对象
+                    val tmp = mutableSetOf<Tag>()
                     searchParams.value?.exceptedTags?.forEach {
                         tmp.add(it)
                     }
@@ -95,13 +101,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val creatorTextView =
-            searchFilterView!!.findViewById<MaterialAutoCompleteTextView>(R.id.creator_textView)
-        creatorTextView.setAdapter(creatorAdapter)
+        creatorTextView =
+            searchFilterView!!.findViewById(R.id.creator_textView)
+        creatorTextView?.setAdapter(creatorAdapter)
 
-        if (null != mViewModel.searchParams.value) {
-            creatorTextView.setText(mViewModel.searchParams.value?.creator)
-        }
         MaterialAlertDialogBuilder(
             this@MainActivity,
             com.google.android.material.R.style.MaterialAlertDialog_Material3
@@ -109,7 +112,7 @@ class MainActivity : AppCompatActivity() {
             .setTitle(R.string.search_settings)
             .setView(searchFilterView)
             .setPositiveButton(R.string.confirm) { _, _ ->
-                mViewModel.searchParams.value?.creator = creatorTextView.text.toString()
+                mViewModel.searchParams.value?.creator = creatorTextView?.text.toString()
                 search()
             }
             .setNegativeButton(R.string.cancel, null)
@@ -185,7 +188,16 @@ class MainActivity : AppCompatActivity() {
             })
             //重置搜索选项
             appBarMain.refresh.setOnClickListener {
-                mViewModel.searchParams.value = SearchBean()
+                with(mViewModel) {
+                    viewModelScope.launch {
+                        searchParams.value = SearchBean()
+                        selectedTags.emit(searchParams.value?.tags!!)
+                        selectedExceptTags.emit(searchParams.value?.exceptedTags!!)
+                    }
+                }
+                tagTextView?.setText("")
+                tagExceptTextView?.setText("")
+                creatorTextView?.setText("")
                 search()
             }
         }

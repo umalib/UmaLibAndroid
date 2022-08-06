@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainViewModel : ViewModel() {
     var searchParams = MutableLiveData(SearchBean())
-    var selectedTags = MutableStateFlow(mutableListOf<Tag>())
-    var selectedExceptTags = MutableStateFlow(mutableListOf<Tag>())
+    var selectedTags = MutableStateFlow(mutableSetOf<Tag>())
+    var selectedExceptTags = MutableStateFlow(mutableSetOf<Tag>())
 }
