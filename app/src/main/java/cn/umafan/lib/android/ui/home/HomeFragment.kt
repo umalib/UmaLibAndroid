@@ -12,6 +12,7 @@ import cn.umafan.lib.android.R
 import cn.umafan.lib.android.beans.ArtInfo
 import cn.umafan.lib.android.beans.ArtInfoDao
 import cn.umafan.lib.android.beans.DaoSession
+import cn.umafan.lib.android.beans.TaggedDao
 import cn.umafan.lib.android.databinding.FragmentHomeBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.SearchBean
@@ -21,7 +22,6 @@ import cn.umafan.lib.android.ui.main.MainActivity
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.greenrobot.greendao.query.QueryBuilder
-import org.greenrobot.greendao.query.WhereCondition
 
 @SuppressLint("InflateParams")
 class HomeFragment : Fragment() {
@@ -131,38 +131,50 @@ class HomeFragment : Fragment() {
                     0
                 }
                 println("search-params: $params")
-                val query: QueryBuilder<ArtInfo>
+                val query: QueryBuilder<ArtInfo> = artInfoDao.queryBuilder()
                 if (null != params) {
-                    query = artInfoDao.queryBuilder()
-                    val keywordCond = query.or(
-                        ArtInfoDao.Properties.Name.like("%${params.keyword}%"),
-                        ArtInfoDao.Properties.Note.like("%${params.keyword}%")
-                    )
-                    val creatorCond: WhereCondition?
                     if (params.creator!!.isNotBlank()) {
-                        creatorCond = query.or(
-                            ArtInfoDao.Properties.Author.eq(params.creator),
-                            ArtInfoDao.Properties.Translator.eq(params.creator)
-                        )
-                    } else {
-                        creatorCond = query.or(
-                            ArtInfoDao.Properties.Author.like("%%"),
-                            ArtInfoDao.Properties.Translator.like("%%")
+                        query.where(
+                            query.or(
+                                ArtInfoDao.Properties.Author.eq(params.creator),
+                                ArtInfoDao.Properties.Translator.eq(params.creator)
+                            )
                         )
                     }
-
-                    val cond = query.and(keywordCond, creatorCond)
-                    query.where(
-                        cond
-                    )
-                        .offset(offset)
-                        .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
-                    count = query.count()
-                } else {
-                    query = artInfoDao.queryBuilder().offset(offset)
-                        .limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
-                    count = artInfoDao.count()
+                    if (params.keyword!!.isNotBlank()) {
+                        query.where(
+                            query.or(
+                                ArtInfoDao.Properties.Name.like("%${params.keyword}%"),
+                                ArtInfoDao.Properties.Note.like("%${params.keyword}%")
+                            )
+                        )
+                    }
+                    if (params.tags.isNotEmpty()) {
+                        val taggedList = daoSession!!.taggedDao.queryBuilder()
+                            .where(TaggedDao.Properties.TagId.`in`(params.tags.map { tag -> tag.id }))
+                            .build().list()
+                        val taggedMap = HashMap<Long, Int>()
+                        taggedList.forEach { tagged ->
+                            taggedMap[tagged.artId] =
+                                taggedMap.getOrDefault(tagged.artId, 0) + 1
+                        }
+                        query.where(ArtInfoDao.Properties.Id.`in`(
+                            taggedMap.filter { e -> e.value == params.tags.size }
+                                .map { e -> e.key })
+                        )
+                    }
+                    if (params.exceptedTags.isNotEmpty()) {
+                        val taggedList = daoSession!!.taggedDao.queryBuilder()
+                            .where(TaggedDao.Properties.TagId.`in`(params.exceptedTags.map { tag -> tag.id }))
+                            .build().list()
+                        query.where(
+                            ArtInfoDao.Properties.Id.notIn(taggedList.map { tagged -> tagged.artId })
+                        )
+                    }
                 }
+
+                query.offset(offset).limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
+                count = query.count()
                 if (0L == count || 0L != count % 10L) {
                     count = count / 10L + 1
                 } else {
