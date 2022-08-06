@@ -31,5 +31,6 @@
     <string name="tag_label">选择需要检索的标签</string>
     <string name="tag_except_label">选择需要筛去的标签</string>
     <string name="creator_label">选择作者/译者</string>
+    <string name="selected_tags">已选标签：</string>
     <string name="prepare_database_hint">本数据库保存在应用本地，为未联网的内嵌数据库，加载期间不消耗流量。仅第一次打开应用或数据库版本更新时需要加载，后续无需加载。</string>
 </resources>

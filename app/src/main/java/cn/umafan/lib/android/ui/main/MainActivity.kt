@@ -2,6 +2,7 @@ package cn.umafan.lib.android.ui.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -11,22 +12,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.beans.*
 import cn.umafan.lib.android.databinding.ActivityMainBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.SearchBean
+import cn.umafan.lib.android.ui.main.model.TagSelectedItem
+import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter
+import com.angcyo.dsladapter.DslAdapter
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("InflateParams")
@@ -39,8 +47,78 @@ class MainActivity : AppCompatActivity() {
     private var daoSession: DaoSession? = null
 
     private var creatorList = mutableSetOf<String>()
-    private var tagList = mutableSetOf<String>()
+    private var tagList = mutableSetOf<Tag>()
 
+    /**
+     * 搜索选项dialog
+     */
+    private var searchFilterView: View? = null
+    private var tagTextView: MaterialAutoCompleteTextView? = null
+    private var tagExceptTextView: MaterialAutoCompleteTextView? = null
+    private val searchFilterDialog by lazy {
+        val tags = tagList.toList()
+        val tagAdapter = TagSuggestionAdapter(tags)
+        val creatorAdapter = ArrayAdapter(
+            this@MainActivity,
+            android.R.layout.simple_spinner_dropdown_item,
+            creatorList.toTypedArray()
+        )
+
+        searchFilterView = LayoutInflater.from(this).inflate(R.layout.dialog_search_filter, null)
+
+        tagTextView = searchFilterView!!.findViewById(R.id.tag_textView)
+        tagTextView?.setAdapter(tagAdapter)
+        tagTextView?.setOnItemClickListener { _, _, i, _ ->
+            with(mViewModel) {
+                viewModelScope.launch {
+                    searchParams.value?.tags?.add(tags[i])
+                    val tmp = mutableListOf<Tag>()
+                    searchParams.value?.tags?.forEach {
+                        tmp.add(it)
+                    }
+                    selectedTags.emit(tmp)
+                }
+            }
+        }
+        tagExceptTextView = searchFilterView!!.findViewById(R.id.tag_except_textView)
+        tagExceptTextView?.setAdapter(tagAdapter)
+        tagExceptTextView?.setOnItemClickListener { _, _, i, _ ->
+            with(mViewModel) {
+                viewModelScope.launch {
+                    searchParams.value?.exceptedTags?.add(tags[i])
+                    val tmp = mutableListOf<Tag>()
+                    searchParams.value?.exceptedTags?.forEach {
+                        tmp.add(it)
+                    }
+                    selectedExceptTags.emit(tmp)
+                }
+            }
+        }
+
+        val creatorTextView =
+            searchFilterView!!.findViewById<MaterialAutoCompleteTextView>(R.id.creator_textView)
+        creatorTextView.setAdapter(creatorAdapter)
+
+        if (null != mViewModel.searchParams.value) {
+            creatorTextView.setText(mViewModel.searchParams.value?.creator)
+        }
+        MaterialAlertDialogBuilder(
+            this@MainActivity,
+            com.google.android.material.R.style.MaterialAlertDialog_Material3
+        )
+            .setTitle(R.string.search_settings)
+            .setView(searchFilterView)
+            .setPositiveButton(R.string.confirm) { _, _ ->
+                mViewModel.searchParams.value?.creator = creatorTextView.text.toString()
+                search()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+    }
+
+    /**
+     * 数据库操作进度dialog
+     */
     private var mDataBaseLoadingProgressView: View? = null
     private var mDataBaseLoadingProgressIndicator: LinearProgressIndicator? = null
     private var mDataBaseLoadingProgressNum: AppCompatTextView? = null
@@ -105,9 +183,38 @@ class MainActivity : AppCompatActivity() {
                     return false
                 }
             })
+            //重置搜索选项
             appBarMain.refresh.setOnClickListener {
                 mViewModel.searchParams.value = SearchBean()
                 search()
+            }
+        }
+
+        with(mViewModel) {
+            viewModelScope.launch {
+                selectedTags.collect {
+                    val tagSelectedList = mutableListOf<TagSelectedItem>()
+                    it.forEach { tag ->
+                        tagSelectedList.add(TagSelectedItem(tag, mViewModel, true))
+                    }
+                    if (null != searchFilterView) {
+                        val selectedTagRecyclerView = searchFilterView!!.findViewById<RecyclerView>(R.id.selected_tags_recycler_view)
+                        selectedTagRecyclerView.adapter = DslAdapter(tagSelectedList)
+                    }
+                }
+            }
+            viewModelScope.launch {
+                selectedExceptTags.collect {
+                    val tagSelectedList = mutableListOf<TagSelectedItem>()
+                    it.forEach { tag ->
+                        tagSelectedList.add(TagSelectedItem(tag, mViewModel, false))
+                    }
+                    Log.d("fuck", ": $tagSelectedList")
+                    if (null != searchFilterView) {
+                        val selectedExceptTagRecyclerView = searchFilterView!!.findViewById<RecyclerView>(R.id.selected_except_tags_recycler_view)
+                        selectedExceptTagRecyclerView.adapter = DslAdapter(tagSelectedList)
+                    }
+                }
             }
         }
 
@@ -132,41 +239,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             // 搜索过滤项
             R.id.action_search_settings -> {
-                val tagAdapter = ArrayAdapter(
-                    this@MainActivity,
-                    android.R.layout.simple_spinner_dropdown_item,
-                    tagList.toTypedArray()
-                )
-                val creatorAdapter = ArrayAdapter(
-                    this@MainActivity,
-                    android.R.layout.simple_spinner_dropdown_item,
-                    creatorList.toTypedArray()
-                )
-                val view = LayoutInflater.from(this).inflate(R.layout.dialog_search_filter, null)
-
-                view.findViewById<MaterialAutoCompleteTextView>(R.id.tag_textView).setAdapter(tagAdapter)
-                view.findViewById<MaterialAutoCompleteTextView>(R.id.tag_except_textView).setAdapter(tagAdapter)
-
-                val creatorTextView =
-                    view.findViewById<MaterialAutoCompleteTextView>(R.id.creator_textView)
-                creatorTextView.setAdapter(creatorAdapter)
-
-                if (null != mViewModel.searchParams.value) {
-                    creatorTextView.setText(mViewModel.searchParams.value?.creator)
-                }
-
-                MaterialAlertDialogBuilder(
-                    this@MainActivity,
-                    com.google.android.material.R.style.MaterialAlertDialog_Material3
-                )
-                    .setTitle(R.string.search_settings)
-                    .setView(view)
-                    .setPositiveButton(R.string.confirm) { _, _ ->
-                        mViewModel.searchParams.value?.creator = creatorTextView.text.toString()
-                        search()
-                    }
-                    .setNegativeButton(R.string.cancel, null)
-                    .show()
+                searchFilterDialog.show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -204,7 +277,6 @@ class MainActivity : AppCompatActivity() {
     private fun loadSearchOptions() {
         DatabaseCopyThread.addHandler(DataBaseHandler(this) { it ->
             daoSession = it.obj as DaoSession
-            var count = 5
             if (null != daoSession) {
                 with(daoSession!!) {
                     val artInfoDao: ArtInfoDao = artInfoDao
@@ -217,7 +289,7 @@ class MainActivity : AppCompatActivity() {
                     creatorList = creatorList.toSortedSet()
                     // 获取tag
                     tagDao.queryBuilder().orderDesc(TagDao.Properties.Name).listLazy().forEach {
-                        tagList.add(it.name)
+                        tagList.add(it)
                     }
                 }
             }

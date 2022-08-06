@@ -40,7 +40,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="0.75"
                     android:ellipsize="end"
-                    android:maxEms="12"
+                    android:maxEms="14"
                     android:paddingHorizontal="15dp"
                     android:singleLine="true"
                     android:text="西野花与東商變革 斯芬克斯"
