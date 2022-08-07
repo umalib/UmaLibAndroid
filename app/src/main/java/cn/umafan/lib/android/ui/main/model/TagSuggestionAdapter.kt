@@ -9,6 +9,7 @@ import android.widget.Filterable
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.beans.Tag
 import cn.umafan.lib.android.model.MyApplication
+import cn.umafan.lib.android.util.PinyinUtil
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
 
@@ -84,7 +85,10 @@ class TagSuggestionAdapter(
                 val str = constraint.toString().lowercase(Locale.getDefault())
                 //循环变量数据源，如果有属性满足过滤条件，则添加到result中
                 for (tag in mFilterTags!!) {
-                    if (tag.name.contains(str)
+                    var tagName = tag.name
+                    tagName = PinyinUtil.getPinyin(tagName, "").lowercase(Locale.getDefault())
+                    println(tagName)
+                    if (tagName.contains(str)
                     ) {
                         retList.add(tag)
                     }
