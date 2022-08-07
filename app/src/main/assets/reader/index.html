@@ -10,31 +10,19 @@
 </head>
 <body>
 <div id="main">
-    <div class="block" style="text-align: right">
-        <el-dropdown :hide-on-click="false" @command="handleCommand">
-            <el-button type="primary">
-                界面设置
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :disabled="fontSize === 'small'" command="font:small">
-                    字号：小
-                </el-dropdown-item>
-                <el-dropdown-item :disabled="fontSize === 'normal'" command="font:normal">
-                    字号：中
-                </el-dropdown-item>
-                <el-dropdown-item :disabled="fontSize === 'large'" command="font:large">
-                    字号：大
-                </el-dropdown-item>
-                <el-dropdown-item :disabled="segmentSpace === 'normal'" command="space:normal"
-                                  divided>
-                    段间距：标准
-                </el-dropdown-item>
-                <el-dropdown-item :disabled="segmentSpace === 'wider'" command="space:wider">
-                    段间距：大
-                </el-dropdown-item>
-            </el-dropdown-menu>
-        </el-dropdown>
-    </div>
+    <el-descriptions :column="1" border>
+        <el-descriptions-item label="标题">{{ article.name }}</el-descriptions-item>
+        <el-descriptions-item label="作者">{{ article.author }}</el-descriptions-item>
+        <el-descriptions-item label="译者">{{ article.translator }}</el-descriptions-item>
+        <el-descriptions-item label="上传时间">{{ article.time }}</el-descriptions-item>
+        <el-descriptions-item label="标签">
+            <template style="margin: 5px;" v-for="tag in article.tags">
+                <el-tag size="small">{{ tag }}</el-tag>
+            </template>
+        </el-descriptions-item>
+        <el-descriptions-item label="来源">{{ article.source }}</el-descriptions-item>
+        <el-descriptions-item label="备注">{{ article.note }}</el-descriptions-item>
+    </el-descriptions>
     <div class='ql-snow' v-bind:class="`${fontSize}-font ${segmentSpace}-space`">
         <div class="ql-editor">
             <div v-html="article.content"></div>
@@ -88,10 +76,14 @@
     // 获取回调得到的article数据并渲染
     function renderPage(json) {
         vue.$data.article = json
+        vue.$data.fontSize = json.setting.fontSize
+        vue.$data.segmentSpace = json.setting.segmentSpace
     }
 
-
-
+    function renderAct(json) {
+        vue.$data.fontSize = json.setting.fontSize
+        vue.$data.segmentSpace = json.setting.segmentSpace
+    }
 
 </script>
 </html>

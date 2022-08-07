@@ -58,12 +58,6 @@ class ArticleInfoItem(
                     ReaderActivity::class.startNewActivity() {
                         putExtra("id", articleInfo.id.toInt())
                     }
-                    Snackbar.make(
-                        view,
-                        "作品[${articleInfo.id}] ${articleInfo.name}",
-                        Snackbar.LENGTH_SHORT
-                    )
-                        .setAction("Action", null).show()
                 }
                 invalidateAll()
             }

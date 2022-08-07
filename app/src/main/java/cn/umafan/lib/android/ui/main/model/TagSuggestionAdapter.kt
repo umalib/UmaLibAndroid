@@ -32,7 +32,7 @@ class TagSuggestionAdapter(
     }
 
     override fun getItem(p0: Int): Any {
-        return filterTags[p0].name
+        return filterTags[p0]
     }
 
     override fun getItemId(p0: Int): Long {

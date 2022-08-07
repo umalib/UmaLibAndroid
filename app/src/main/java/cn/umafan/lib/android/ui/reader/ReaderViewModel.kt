@@ -12,4 +12,8 @@ import androidx.lifecycle.ViewModel
  **/
 class ReaderViewModel: ViewModel() {
     val collected = MutableLiveData(true)
+
+    val fontSize = MutableLiveData("normal")
+
+    val segmentSpace = MutableLiveData("normal")
 }

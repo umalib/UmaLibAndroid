@@ -2,7 +2,7 @@
     <string name="app_name">赛马娘同人集中楼大书库</string>
     <string name="db_version">1.0.0</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">设置</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -36,5 +36,14 @@
     <string name="title_activity_reader">作品加载中……</string>
     <string name="no_data">暂无数据！</string>
     <string name="collect">收藏</string>
+    <string name="collect_success">收藏成功！</string>
+    <string name="collect_fail">收藏失败！</string>
+    <string name="cancel_collect_success">取消收藏成功！</string>
+    <string name="cancel_collect_fail">取消收藏失败！</string>
+    <string name="reader_setting">阅读界面设置</string>
+    <string name="font_size">字体大小</string>
+    <string name="segment_space">段落间距</string>
+    <string name="text_preview">大书库真是太好用了！</string>
+    <string name="reader_setting_fail">样式设置失败！</string>
 
 </resources>

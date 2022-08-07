@@ -78,10 +78,11 @@ class MainActivity : MyBaseActivity() {
         tagTextView = searchFilterView!!.findViewById(R.id.tag_textView)
         tagTextView?.setAdapter(tagAdapter)
         tagTextView?.setOnItemClickListener { adaptorView, _, i, _ ->
-            val item = tags.find { tag -> tag.name == adaptorView.adapter.getItem(i) }
+            tagTextView?.setText("")
+            val item = adaptorView.adapter.getItem(i) as Tag
             with(mViewModel) {
                 viewModelScope.launch {
-                    searchParams.value?.tags?.add(item!!)
+                    searchParams.value?.tags?.add(item)
                     // 为使flow数据得到相应，这里必须使用一个新的对象
                     val tmp = mutableSetOf<Tag>()
                     searchParams.value?.tags?.forEach {
@@ -94,10 +95,11 @@ class MainActivity : MyBaseActivity() {
         tagExceptTextView = searchFilterView!!.findViewById(R.id.tag_except_textView)
         tagExceptTextView?.setAdapter(tagExceptAdapter)
         tagExceptTextView?.setOnItemClickListener { adaptorView, _, i, _ ->
-            val item = tags.find { tag -> tag.name == adaptorView.adapter.getItem(i) }
+            tagExceptTextView?.setText("")
+            val item = adaptorView.adapter.getItem(i) as Tag
             with(mViewModel) {
                 viewModelScope.launch {
-                    searchParams.value?.exceptedTags?.add(item!!)
+                    searchParams.value?.exceptedTags?.add(item)
                     // 为使flow数据得到相应，这里必须使用一个新的对象
                     val tmp = mutableSetOf<Tag>()
                     searchParams.value?.exceptedTags?.forEach {
