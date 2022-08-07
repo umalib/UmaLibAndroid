@@ -1,0 +1,48 @@
+div.ql-editor img {
+  max-width: 100%;
+}
+div.normal-font div.ql-editor h1 {
+  font-size: 28px;
+  line-height: 2;
+}
+div.normal-font div.ql-editor h2 {
+  font-size: 23px;
+  line-height: 2;
+}
+div.normal-font div.ql-editor p,
+div.normal-font div.ql-editor li {
+  font-size: 16px;
+  line-height: 2;
+}
+div.normal-font div.ql-editor span.ql-size-large {
+  font-size: 20px;
+}
+div.normal-font div.ql-editor span.ql-size-small,
+div.normal-font div.ql-editor blockquote {
+  font-size: 12px;
+}
+div.large-font div.ql-editor h1 {
+    font-size: 32px;
+    line-height: 2;
+}
+div.large-font div.ql-editor h2 {
+    font-size: 27px;
+    line-height: 2;
+}
+div.large-font div.ql-editor p,
+div.large-font div.ql-editor li {
+    font-size: 20px;
+    line-height: 2;
+}
+div.large-font div.ql-editor span.ql-size-large {
+    font-size: 24px;
+}
+div.large-font div.ql-editor span.ql-size-small,
+div.large-font div.ql-editor blockquote {
+    font-size: 16px;
+}
+div.wider-space div.ql-editor p,
+div.wider-space div.ql-editor h1,
+div.wider-space div.ql-editor h2 {
+    margin-bottom: 5px;
+}

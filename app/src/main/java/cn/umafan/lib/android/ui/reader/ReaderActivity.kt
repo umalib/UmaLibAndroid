@@ -3,7 +3,6 @@ package cn.umafan.lib.android.ui.reader
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
-import android.webkit.WebView
 import cn.umafan.lib.android.beans.Article
 import cn.umafan.lib.android.beans.ArticleDao
 import cn.umafan.lib.android.beans.DaoSession

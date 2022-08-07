@@ -3,26 +3,34 @@
 <head>
     <script src="file:///android_asset/reader/js/index.js"></script>
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="file:///android_asset/reader/css/element-ui.css">
+    <!--    <link rel="stylesheet" href="file:///android_asset/reader/css/element-ui.css">-->
+    <link rel="stylesheet" href="file:///android_asset/reader/css/quill.core.css">
+    <link rel="stylesheet" href="file:///android_asset/reader/css/quill.snow.css">
+    <link rel="stylesheet" href="file:///android_asset/reader/css/umalib.reader.css">
 </head>
 <body>
 <div id="main">
-    <el-button>Test Button</el-button>
-    <div v-html="article.content"></div>
+    <!--    <el-button>Test Button</el-button>-->
+    <div class="ql-snow large-font wider-space">
+        <div class="ql-editor">
+            <div v-html="article.content"></div>
+        </div>
+    </div>
 </div>
 </body>
 <!-- 由于vue3逐渐放弃了对浏览器支持，请使用vue2语法 -->
 <script src="file:///android_asset/reader/js/vue.js"></script>
 <!-- 引入组件库 -->
-<script src="file:///android_asset/reader/js/element-ui.js"></script>
+<!--<script src="file:///android_asset/reader/js/element-ui.js"></script>-->
 <script>
-    var vue = new Vue({
+    const vue = new Vue({
         el: '#main',
         data: {
-            article: {}
+            article: {},
+            fontSize: 'normal',
+            segmentSpace: 'wider'
         },
         methods: {
-
         },
         // 页面绑定完成时，渲染页面数据
         mounted: function() {

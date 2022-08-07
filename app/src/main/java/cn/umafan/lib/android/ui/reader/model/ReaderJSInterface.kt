@@ -19,12 +19,12 @@ class ReaderJSInterface(
         val json = JSONObject()
         json.put("content", article.content)
         json.put("name", article.name)
-        json.put("source", article.source)
-        json.put("note", article.note)
-        json.put("translator", article.translator)
-        json.put("author", article.author)
-        json.put("tags", article.taggedList)
-        json.put("time", article.uploadTime)
+//        json.put("source", article.source)
+//        json.put("note", article.note)
+//        json.put("translator", article.translator)
+//        json.put("author", article.author)
+//        json.put("tags", article.taggedList)
+//        json.put("time", article.uploadTime)
 
         invokeJavaScript(callback, json.toString())
     }
@@ -39,6 +39,6 @@ class ReaderJSInterface(
         println("callbackName: $callback  data: $json")
         if (TextUtils.isEmpty(callback)) return
         //调用js方法必须在主线程
-        webView.post(Runnable { webView.loadUrl("javascript:$callback($json)") })
+        webView.post { webView.loadUrl("javascript:$callback($json)") }
     }
 }
