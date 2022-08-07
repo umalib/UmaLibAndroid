@@ -1,15 +1,12 @@
 package cn.umafan.lib.android.ui.main
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.os.Handler
+import android.os.Looper
+import android.view.*
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -32,10 +29,8 @@ import com.angcyo.dsladapter.DslAdapter
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
-import com.mingle.widget.ShapeLoadingDialog
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -47,6 +42,12 @@ class MainActivity : MyBaseActivity() {
     private var _mViewModel: MainViewModel? = null
     private val mViewModel get() = _mViewModel!!
     private var daoSession: DaoSession? = null
+    //是否退出的flag
+    private var isExit = false
+    private val mHandler = Handler(Looper.getMainLooper()) {
+        isExit = false
+        false
+    }
 
     private var creatorList = mutableSetOf<String>()
     private var tagList = mutableSetOf<Tag>()
@@ -147,7 +148,7 @@ class MainActivity : MyBaseActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { navController, destination, _ ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.appBarMain.toolbarLayout.title = destination.label
         }
 
@@ -222,6 +223,33 @@ class MainActivity : MyBaseActivity() {
         loadSearchOptions()
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            exit()
+            return false
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    fun exit(){
+        if (!isExit) {
+            isExit = true
+            Snackbar.make(
+                window.decorView,
+                "再按一次返回键退出程序",
+                Snackbar.LENGTH_SHORT
+            )
+                .setAction("Action", null).show()
+            //利用handler延迟发送更改状态信息
+            mHandler.sendEmptyMessageDelayed(0, 3000)
+        } else {
+            //在后台运行程序，不退出程序，只返回桌面
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_HOME)
+            startActivity(intent)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
 
@@ -254,7 +282,9 @@ class MainActivity : MyBaseActivity() {
         shapeLoadingDialog?.show()
         val bundle = Bundle()
         bundle.putSerializable("searchParams", mViewModel.searchParams.value)
-        navController.popBackStack()
+        while (navController.backStack.size >= 2) {
+            navController.popBackStack()
+        }
         navController.navigate(R.id.nav_home, bundle)
         println(navController.backStack.last.destination.label)
     }
