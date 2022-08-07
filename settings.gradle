@@ -31,3 +31,4 @@ pluginManagement {
 //}
 rootProject.name = "UmaLibAndroid"
 include ':app'
+include ':preference'

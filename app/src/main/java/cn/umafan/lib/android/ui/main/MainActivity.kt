@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.*
 import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -156,6 +157,8 @@ class MainActivity : MyBaseActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.appBarMain.toolbarLayout.title = destination.label
+            binding.appBarMain.refresh.isVisible =
+                !(null != destination.label && destination.label!! == getString(R.string.thanks))
         }
 
         with(binding) {
