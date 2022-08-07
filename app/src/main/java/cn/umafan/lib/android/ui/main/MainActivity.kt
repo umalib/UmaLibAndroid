@@ -147,8 +147,9 @@ class MainActivity : MyBaseActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+        navController.addOnDestinationChangedListener { navController, destination, _ ->
             binding.appBarMain.toolbarLayout.title = destination.label
+            navController.popBackStack()
         }
 
         with(binding) {
