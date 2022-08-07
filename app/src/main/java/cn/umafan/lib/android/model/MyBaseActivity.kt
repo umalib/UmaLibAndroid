@@ -2,7 +2,6 @@ package cn.umafan.lib.android.model
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.mingle.widget.ShapeLoadingDialog
 
 
-open class MyBaseActivity : AppCompatActivity(){
+open class MyBaseActivity : AppCompatActivity() {
 
     var shapeLoadingDialog: ShapeLoadingDialog? = null
 
@@ -45,6 +44,11 @@ open class MyBaseActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         shapeLoadingDialog = ShapeLoadingDialog(this)
         shapeLoadingDialog?.dialog?.setCanceledOnTouchOutside(false)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        shapeLoadingDialog?.dismiss()
     }
 
     /**

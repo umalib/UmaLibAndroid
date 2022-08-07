@@ -1,8 +1,6 @@
 package cn.umafan.lib.android.ui.favorites
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.umafan.lib.android.beans.ArtInfo
 import cn.umafan.lib.android.model.PageSelectorViewModel

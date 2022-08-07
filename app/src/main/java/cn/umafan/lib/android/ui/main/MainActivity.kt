@@ -18,7 +18,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.beans.*
+import cn.umafan.lib.android.beans.ArtInfoDao
+import cn.umafan.lib.android.beans.DaoSession
+import cn.umafan.lib.android.beans.Tag
+import cn.umafan.lib.android.beans.TagDao
 import cn.umafan.lib.android.databinding.ActivityMainBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
@@ -29,7 +32,6 @@ import com.angcyo.dsladapter.DslAdapter
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.liangguo.androidkit.app.ToastUtil
 import kotlinx.coroutines.launch
@@ -43,6 +45,7 @@ class MainActivity : MyBaseActivity() {
     private var _mViewModel: MainViewModel? = null
     private val mViewModel get() = _mViewModel!!
     private var daoSession: DaoSession? = null
+
     //是否退出的flag
     private var isExit = false
     private val mHandler = Handler(Looper.getMainLooper()) {
@@ -173,7 +176,7 @@ class MainActivity : MyBaseActivity() {
             })
             //重置搜索选项
             appBarMain.refresh.setOnClickListener {
-                when(navController.currentDestination?.label) {
+                when (navController.currentDestination?.label) {
                     getString(R.string.home) -> {
                         with(mViewModel) {
                             viewModelScope.launch {
@@ -232,14 +235,14 @@ class MainActivity : MyBaseActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             exit()
             return false
         }
         return super.onKeyDown(keyCode, event)
     }
 
-    fun exit(){
+    fun exit() {
         if (!isExit) {
             isExit = true
             ToastUtil.info("再按一次返回键退出程序")

@@ -1,11 +1,9 @@
 package cn.umafan.lib.android.ui.favorites
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +14,6 @@ import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.databinding.FragmentFavoritesBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
-import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.home.model.PageItem
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
@@ -24,7 +21,6 @@ import cn.umafan.lib.android.util.FavoriteArticleUtil
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.liangguo.androidkit.app.ToastUtil
-import org.greenrobot.greendao.query.QueryBuilder
 
 class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
@@ -44,7 +40,9 @@ class FavoritesFragment : Fragment() {
         val data = mutableListOf<PageItem>()
         favoritesViewModel.checkedList.clear()
         for (i in 0 until pageLen) {
-            if (i + 1 != favoritesViewModel.currentPage.value) favoritesViewModel.checkedList.add(false)
+            if (i + 1 != favoritesViewModel.currentPage.value) favoritesViewModel.checkedList.add(
+                false
+            )
             else favoritesViewModel.checkedList.add(true)
         }
         for (i in 1 until pageLen + 1) {
@@ -106,7 +104,7 @@ class FavoritesFragment : Fragment() {
 
     private fun loadArticles(page: Int?) {
         val idList = FavoriteArticleUtil.getFavorites()
-        if (idList.isEmpty()){
+        if (idList.isEmpty()) {
             ToastUtil.info(getString(R.string.no_data))
         }
         pageLen = idList.size / 10 + 1
@@ -122,11 +120,10 @@ class FavoritesFragment : Fragment() {
                 val list = if (offset + 10 > idList.size) idList.subList(offset, idList.size)
                 else idList.subList(offset, offset + 10)
                 val data = mutableListOf<ArtInfo>()
-                list.forEach {
-                    data.add(artInfoDao.queryBuilder().where(
-                        ArtInfoDao.Properties.Id.eq(it)
-                    ).build().unique())
-                }
+                data.addAll(
+                    artInfoDao.queryBuilder().where(ArtInfoDao.Properties.Id.`in`(list)).build()
+                        .list().sortedBy { artInfo -> list.indexOf(artInfo.id.toInt()) }
+                )
                 favoritesViewModel.loadArticles(data)
             }
         }
