@@ -3,13 +3,13 @@ package cn.umafan.lib.android.ui.home.model
 import androidx.databinding.DataBindingUtil
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ItemPageButtonBinding
-import cn.umafan.lib.android.ui.home.HomeViewModel
+import cn.umafan.lib.android.model.PageSelectorViewModel
 import com.angcyo.dsladapter.DslAdapterItem
 import com.angcyo.dsladapter.DslViewHolder
 
 class PageItem(
     private val page: Int,
-    private val mViewModel: HomeViewModel
+    private val mViewModel: PageSelectorViewModel
 ) : DslAdapterItem() {
     override var itemLayoutId = R.layout.item_page_button
 

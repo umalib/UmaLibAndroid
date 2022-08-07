@@ -31,6 +31,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.liangguo.androidkit.app.ToastUtil
 import kotlinx.coroutines.launch
 
 
@@ -172,17 +173,24 @@ class MainActivity : MyBaseActivity() {
             })
             //重置搜索选项
             appBarMain.refresh.setOnClickListener {
-                with(mViewModel) {
-                    viewModelScope.launch {
-                        searchParams.value = SearchBean()
-                        selectedTags.emit(mutableSetOf())
-                        selectedExceptTags.emit(mutableSetOf())
+                when(navController.currentDestination?.label) {
+                    getString(R.string.home) -> {
+                        with(mViewModel) {
+                            viewModelScope.launch {
+                                searchParams.value = SearchBean()
+                                selectedTags.emit(mutableSetOf())
+                                selectedExceptTags.emit(mutableSetOf())
+                            }
+                        }
+                        tagTextView?.setText("")
+                        tagExceptTextView?.setText("")
+                        creatorTextView?.setText("")
+                        search()
+                    }
+                    getString(R.string.my_favorites) -> {
+                        navController.navigate(R.id.nav_favorites)
                     }
                 }
-                tagTextView?.setText("")
-                tagExceptTextView?.setText("")
-                creatorTextView?.setText("")
-                search()
             }
         }
 
@@ -234,12 +242,7 @@ class MainActivity : MyBaseActivity() {
     fun exit(){
         if (!isExit) {
             isExit = true
-            Snackbar.make(
-                window.decorView,
-                "再按一次返回键退出程序",
-                Snackbar.LENGTH_SHORT
-            )
-                .setAction("Action", null).show()
+            ToastUtil.info("再按一次返回键退出程序")
             //利用handler延迟发送更改状态信息
             mHandler.sendEmptyMessageDelayed(0, 3000)
         } else {

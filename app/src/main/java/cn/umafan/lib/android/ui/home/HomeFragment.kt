@@ -81,15 +81,6 @@ class HomeFragment : Fragment() {
 
         initView()
 
-        with(binding) {
-            nextPageBtn.setOnClickListener {
-                homeViewModel.currentPage.postValue(homeViewModel.currentPage.value!! + 1)
-            }
-            lastPageBtn.setOnClickListener {
-                homeViewModel.currentPage.postValue(homeViewModel.currentPage.value!! - 1)
-            }
-        }
-
         homeViewModel.currentPage.observe(viewLifecycleOwner) {
             loadArticles(
                 it,
@@ -109,8 +100,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun initView() {
-        binding.recyclerView.adapter = homeViewModel.articleDataAdapter
-        binding.pageNumBtn.setOnClickListener { mPageSelectorDialog.show() }
+        with(binding) {
+            nextPageBtn.setOnClickListener {
+                homeViewModel.currentPage.postValue(homeViewModel.currentPage.value!! + 1)
+            }
+            lastPageBtn.setOnClickListener {
+                homeViewModel.currentPage.postValue(homeViewModel.currentPage.value!! - 1)
+            }
+            recyclerView.adapter = homeViewModel.articleDataAdapter
+            pageNumBtn.setOnClickListener { mPageSelectorDialog.show() }
+        }
     }
 
     /**
