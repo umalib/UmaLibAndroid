@@ -10,44 +10,26 @@
 </head>
 <body>
 <div id="main">
-    <div class="block" style="text-align: center">
-        <el-dropdown
-                :hide-on-click="false"
-                @command="handleCommand"
-        >
+    <div class="block" style="text-align: right">
+        <el-dropdown :hide-on-click="false" @command="handleCommand">
             <el-button type="primary">
                 界面设置
             </el-button>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                        :disabled="fontSize === 'small'"
-                        command="font:small"
-                >
+                <el-dropdown-item :disabled="fontSize === 'small'" command="font:small">
                     字号：小
                 </el-dropdown-item>
-                <el-dropdown-item
-                        :disabled="fontSize === 'normal'"
-                        command="font:normal"
-                >
+                <el-dropdown-item :disabled="fontSize === 'normal'" command="font:normal">
                     字号：中
                 </el-dropdown-item>
-                <el-dropdown-item
-                        :disabled="fontSize === 'large'"
-                        command="font:large"
-                >
+                <el-dropdown-item :disabled="fontSize === 'large'" command="font:large">
                     字号：大
                 </el-dropdown-item>
-                <el-dropdown-item
-                        :disabled="segmentSpace === 'normal'"
-                        command="space:normal"
-                        divided
-                >
+                <el-dropdown-item :disabled="segmentSpace === 'normal'" command="space:normal"
+                                  divided>
                     段间距：标准
                 </el-dropdown-item>
-                <el-dropdown-item
-                        :disabled="segmentSpace === 'wider'"
-                        command="space:wider"
-                >
+                <el-dropdown-item :disabled="segmentSpace === 'wider'" command="space:wider">
                     段间距：大
                 </el-dropdown-item>
             </el-dropdown-menu>
@@ -107,6 +89,8 @@
     function renderPage(json) {
         vue.$data.article = json
     }
+
+
 
 
 </script>
