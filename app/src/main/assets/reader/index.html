@@ -3,15 +3,57 @@
 <head>
     <script src="file:///android_asset/reader/js/index.js"></script>
     <!-- 引入样式 -->
-    <!--    <link rel="stylesheet" href="file:///android_asset/reader/css/element-ui.css">-->
+    <link rel="stylesheet" href="file:///android_asset/reader/css/element-ui.css">
     <link rel="stylesheet" href="file:///android_asset/reader/css/quill.core.css">
     <link rel="stylesheet" href="file:///android_asset/reader/css/quill.snow.css">
     <link rel="stylesheet" href="file:///android_asset/reader/css/umalib.reader.css">
 </head>
 <body>
 <div id="main">
-    <!--    <el-button>Test Button</el-button>-->
-    <div class="ql-snow large-font wider-space">
+    <div class="block" style="text-align: center">
+        <el-dropdown
+                :hide-on-click="false"
+                @command="handleCommand"
+        >
+            <el-button type="primary">
+                界面设置
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                        :disabled="fontSize === 'small'"
+                        command="font:small"
+                >
+                    字号：小
+                </el-dropdown-item>
+                <el-dropdown-item
+                        :disabled="fontSize === 'normal'"
+                        command="font:normal"
+                >
+                    字号：中
+                </el-dropdown-item>
+                <el-dropdown-item
+                        :disabled="fontSize === 'large'"
+                        command="font:large"
+                >
+                    字号：大
+                </el-dropdown-item>
+                <el-dropdown-item
+                        :disabled="segmentSpace === 'normal'"
+                        command="space:normal"
+                        divided
+                >
+                    段间距：标准
+                </el-dropdown-item>
+                <el-dropdown-item
+                        :disabled="segmentSpace === 'wider'"
+                        command="space:wider"
+                >
+                    段间距：大
+                </el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+    </div>
+    <div class='ql-snow' v-bind:class="`${fontSize}-font ${segmentSpace}-space`">
         <div class="ql-editor">
             <div v-html="article.content"></div>
         </div>
@@ -21,16 +63,39 @@
 <!-- 由于vue3逐渐放弃了对浏览器支持，请使用vue2语法 -->
 <script src="file:///android_asset/reader/js/vue.js"></script>
 <!-- 引入组件库 -->
-<!--<script src="file:///android_asset/reader/js/element-ui.js"></script>-->
+<script src="file:///android_asset/reader/js/element-ui.js"></script>
 <script>
     const vue = new Vue({
         el: '#main',
-        data: {
-            article: {},
-            fontSize: 'normal',
-            segmentSpace: 'wider'
+        data() {
+            return {
+                article: {},
+                fontSize: 'normal',
+                segmentSpace: 'wider'
+            };
         },
         methods: {
+            handleCommand(command) {
+                const commandArr = command.split(':');
+                switch (commandArr[0]) {
+                    case 'font':
+                        this.fontSize = commandArr[1];
+                        switch (this.fontSize) {
+                    case 'small':
+                        this.descriptionSize = 'mini';
+                        break;
+                    case 'normal':
+                        this.descriptionSize = 'small';
+                        break;
+                    case 'large':
+                        this.descriptionSize = 'medium';
+                        break;
+                    }
+                    break;
+                case 'space':
+                    this.segmentSpace = commandArr[1];
+              }
+            },
         },
         // 页面绑定完成时，渲染页面数据
         mounted: function() {
@@ -42,6 +107,7 @@
     function renderPage(json) {
         vue.$data.article = json
     }
+
 
 </script>
 </html>

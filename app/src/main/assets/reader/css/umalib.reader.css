@@ -2,47 +2,51 @@ div.ql-editor img {
   max-width: 100%;
 }
 div.normal-font div.ql-editor h1 {
-  font-size: 28px;
-  line-height: 2;
+  font-size: 2.5em;
 }
 div.normal-font div.ql-editor h2 {
-  font-size: 23px;
-  line-height: 2;
+  font-size: 2.25em;
 }
 div.normal-font div.ql-editor p,
 div.normal-font div.ql-editor li {
-  font-size: 16px;
-  line-height: 2;
+  font-size: 1.5em;
 }
 div.normal-font div.ql-editor span.ql-size-large {
-  font-size: 20px;
+  font-size: 2em;
 }
 div.normal-font div.ql-editor span.ql-size-small,
 div.normal-font div.ql-editor blockquote {
-  font-size: 12px;
+  font-size: 1em;
 }
 div.large-font div.ql-editor h1 {
-    font-size: 32px;
-    line-height: 2;
+    font-size: 3.75em;
 }
 div.large-font div.ql-editor h2 {
-    font-size: 27px;
-    line-height: 2;
+    font-size: 3.375em;
 }
 div.large-font div.ql-editor p,
 div.large-font div.ql-editor li {
-    font-size: 20px;
-    line-height: 2;
+    font-size: 2.25em;
 }
 div.large-font div.ql-editor span.ql-size-large {
-    font-size: 24px;
+    font-size: 3em;
 }
 div.large-font div.ql-editor span.ql-size-small,
 div.large-font div.ql-editor blockquote {
-    font-size: 16px;
+    font-size: 1.5em;
 }
-div.wider-space div.ql-editor p,
-div.wider-space div.ql-editor h1,
-div.wider-space div.ql-editor h2 {
+div.small-font.wider-space div.ql-editor p,
+div.small-font.wider-space div.ql-editor h1,
+div.small-font.wider-space div.ql-editor h2 {
     margin-bottom: 5px;
+}
+div.normal-font.wider-space div.ql-editor p,
+div.normal-font.wider-space div.ql-editor h1,
+div.normal-font.wider-space div.ql-editor h2 {
+    margin-bottom: 10px;
+}
+div.large-font.wider-space div.ql-editor p,
+div.large-font.wider-space div.ql-editor h1,
+div.large-font.wider-space div.ql-editor h2 {
+    margin-bottom: 15px;
 }

@@ -1,6 +1,5 @@
 package cn.umafan.lib.android.ui.main.model
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import cn.umafan.lib.android.beans.Tag
 import cn.umafan.lib.android.model.MyApplication
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -45,11 +43,12 @@ class TagSuggestionAdapter(
     }
 
     override fun getView(positon: Int, convertView: View?, parent: ViewGroup?): View {
-        var viewHolder: ViewHolder? = null
+        val viewHolder: ViewHolder?
         var mConvertView: View? = convertView
         if (null == mConvertView) {
             viewHolder = ViewHolder()
-            mConvertView = LayoutInflater.from(MyApplication.context).inflate(R.layout.item_tag_suggestion, null)
+            mConvertView = LayoutInflater.from(MyApplication.context)
+                .inflate(R.layout.item_tag_suggestion, null)
             viewHolder.tagName = mConvertView.findViewById(R.id.item_tag_suggestion_name)
             mConvertView.tag = viewHolder
         } else {
