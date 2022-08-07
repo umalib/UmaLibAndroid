@@ -21,6 +21,7 @@ import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.liangguo.androidkit.app.ToastUtil
 import org.greenrobot.greendao.query.QueryBuilder
 
 @SuppressLint("InflateParams")
@@ -172,6 +173,9 @@ class HomeFragment : Fragment() {
 
                 query.offset(offset).limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
                 count = query.count()
+                if (count == 0L) {
+                    ToastUtil.info(getString(R.string.no_data))
+                }
                 if (0L == count || 0L != count % 10L) {
                     count = count / 10L + 1
                 } else {

@@ -23,6 +23,7 @@ import cn.umafan.lib.android.ui.main.MainActivity
 import cn.umafan.lib.android.util.FavoriteArticleUtil
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.liangguo.androidkit.app.ToastUtil
 import org.greenrobot.greendao.query.QueryBuilder
 
 class FavoritesFragment : Fragment() {
@@ -101,11 +102,13 @@ class FavoritesFragment : Fragment() {
             recyclerView.adapter = favoritesViewModel.articleDataAdapter
             pageNumBtn.setOnClickListener { mPageSelectorDialog.show() }
         }
-        loadArticles(1)
     }
 
     private fun loadArticles(page: Int?) {
         val idList = FavoriteArticleUtil.getFavorites()
+        if (idList.isEmpty()){
+            ToastUtil.info(getString(R.string.no_data))
+        }
         pageLen = idList.size / 10 + 1
         val handler = DataBaseHandler(activity as MyBaseActivity) {
             daoSession = it.obj as DaoSession

@@ -34,6 +34,7 @@
     <string name="selected_tags">已选标签：</string>
     <string name="prepare_database_hint">本数据库保存在应用本地，为未联网的内嵌数据库，加载期间不消耗流量。仅第一次打开应用或数据库版本更新时需要加载，后续无需加载。</string>
     <string name="title_activity_reader">作品加载中……</string>
+    <string name="no_data">暂无数据！</string>
     <string name="collect">收藏</string>
 
 </resources>
