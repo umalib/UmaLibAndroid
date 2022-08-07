@@ -122,7 +122,7 @@ class MainActivity : MyBaseActivity() {
     }
 
 
-
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -149,7 +149,6 @@ class MainActivity : MyBaseActivity() {
 
         navController.addOnDestinationChangedListener { navController, destination, _ ->
             binding.appBarMain.toolbarLayout.title = destination.label
-            navController.popBackStack()
         }
 
         with(binding) {
@@ -159,9 +158,11 @@ class MainActivity : MyBaseActivity() {
                 override fun onQueryTextChange(newText: String): Boolean {
                     return false
                 }
+
                 override fun onQueryTextCleared(): Boolean {
                     return false
                 }
+
                 override fun onQueryTextSubmit(query: String): Boolean {
                     mViewModel.searchParams.value?.keyword = query
                     search()
@@ -192,7 +193,8 @@ class MainActivity : MyBaseActivity() {
                         tagSelectedList.add(TagSelectedItem(tag, mViewModel, true))
                     }
                     if (null != searchFilterView) {
-                        val selectedTagRecyclerView = searchFilterView!!.findViewById<RecyclerView>(R.id.selected_tags_recycler_view)
+                        val selectedTagRecyclerView =
+                            searchFilterView!!.findViewById<RecyclerView>(R.id.selected_tags_recycler_view)
                         selectedTagRecyclerView.adapter = DslAdapter(tagSelectedList)
                     }
                 }
@@ -204,7 +206,8 @@ class MainActivity : MyBaseActivity() {
                         tagSelectedList.add(TagSelectedItem(tag, mViewModel, false))
                     }
                     if (null != searchFilterView) {
-                        val selectedExceptTagRecyclerView = searchFilterView!!.findViewById<RecyclerView>(R.id.selected_except_tags_recycler_view)
+                        val selectedExceptTagRecyclerView =
+                            searchFilterView!!.findViewById<RecyclerView>(R.id.selected_except_tags_recycler_view)
                         selectedExceptTagRecyclerView.adapter = DslAdapter(tagSelectedList)
                     }
                 }
@@ -246,11 +249,14 @@ class MainActivity : MyBaseActivity() {
     /**
      * 执行搜索
      */
+    @SuppressLint("RestrictedApi")
     fun search() {
         shapeLoadingDialog?.show()
         val bundle = Bundle()
         bundle.putSerializable("searchParams", mViewModel.searchParams.value)
+        navController.popBackStack()
         navController.navigate(R.id.nav_home, bundle)
+        println(navController.backStack.last.destination.label)
     }
 
     /**
@@ -264,10 +270,11 @@ class MainActivity : MyBaseActivity() {
                     val artInfoDao: ArtInfoDao = artInfoDao
                     val tagDao: TagDao = tagDao
                     // 获取创作者列表
-                    artInfoDao.queryBuilder().orderDesc(ArtInfoDao.Properties.Name).listLazy().forEach {
-                        if (it.author.isNotBlank()) creatorList.add(it.author)
-                        if (it.translator.isNotBlank()) creatorList.add(it.translator)
-                    }
+                    artInfoDao.queryBuilder().orderDesc(ArtInfoDao.Properties.Name).listLazy()
+                        .forEach {
+                            if (it.author.isNotBlank()) creatorList.add(it.author)
+                            if (it.translator.isNotBlank()) creatorList.add(it.translator)
+                        }
                     creatorList = creatorList.toSortedSet()
                     // 获取tag
                     tagDao.queryBuilder().orderDesc(TagDao.Properties.Name).listLazy().forEach {
