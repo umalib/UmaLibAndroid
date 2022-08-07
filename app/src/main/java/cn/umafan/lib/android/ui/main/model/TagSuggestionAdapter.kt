@@ -22,7 +22,7 @@ class TagSuggestionAdapter(
 ) : BaseAdapter(), Filterable {
 
     private var mArrayFilter: ArrayFilter? = null
-    private var filtetTags: List<Tag> = tags
+    private var filterTags: List<Tag> = tags
 
     override fun getFilter(): Filter {
         if (mArrayFilter == null) {
@@ -32,7 +32,7 @@ class TagSuggestionAdapter(
     }
 
     override fun getItem(p0: Int): Any {
-        return filtetTags[p0].name
+        return filterTags[p0].name
     }
 
     override fun getItemId(p0: Int): Long {
@@ -40,7 +40,7 @@ class TagSuggestionAdapter(
     }
 
     override fun getCount(): Int {
-        return filtetTags.size
+        return filterTags.size
     }
 
     override fun getView(positon: Int, convertView: View?, parent: ViewGroup?): View {
@@ -55,7 +55,7 @@ class TagSuggestionAdapter(
         } else {
             viewHolder = mConvertView.tag as ViewHolder
         }
-        val tag = filtetTags[positon]
+        val tag = filterTags[positon]
         viewHolder.tagName?.text = tag.name
 
         return mConvertView!!
@@ -82,15 +82,27 @@ class TagSuggestionAdapter(
             } else {
                 val retList: MutableList<Tag> = ArrayList()
                 //过滤条件
-                val str = constraint.toString().lowercase(Locale.getDefault())
+                val str = constraint.toString()
                 //循环变量数据源，如果有属性满足过滤条件，则添加到result中
                 for (tag in mFilterTags!!) {
-                    var tagName = tag.name
-                    tagName = PinyinUtil.getPinyin(tagName, "").lowercase(Locale.getDefault())
-                    println(tagName)
-                    if (tagName.contains(str)
+                    val tagName = tag.name
+                    if (PinyinUtil.getPinyin(tagName, "").lowercase(Locale.getDefault()).contains(
+                            PinyinUtil.getPinyin(str, "").lowercase(Locale.getDefault())
+                    )
                     ) {
-                        retList.add(tag)
+                        val chars: CharArray = str.toCharArray()
+                        var count = 0
+                        for (i in chars.indices) {
+                            // 判断是否为汉字字符
+                            if (chars[i].toString().matches(Regex("[\\u4E00-\\u9FA5]+"))) {
+                                count ++
+                            }
+                        }
+                        if (count > 0) {
+                            if (tagName.contains(str)) {
+                                retList.add(tag)
+                            }
+                        } else retList.add(tag)
                     }
                 }
                 results.values = retList
@@ -104,7 +116,7 @@ class TagSuggestionAdapter(
             constraint: CharSequence?,
             results: FilterResults
         ) {
-            adapter.filtetTags = results.values as List<Tag>
+            adapter.filterTags = results.values as List<Tag>
             if (results.count > 0) {
                 adapter.notifyDataSetChanged()
             } else {
