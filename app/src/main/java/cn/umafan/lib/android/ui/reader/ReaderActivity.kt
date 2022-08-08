@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.view.marginBottom
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import cn.umafan.lib.android.R
@@ -46,7 +45,12 @@ class ReaderActivity : MyBaseActivity() {
         ).setTitle(getString(R.string.reader_setting))
             .setView(readerSettingView)
             .setPositiveButton(R.string.confirm) { _, _ ->
-                if (!ReaderSettingUtil.setSetting("default", mViewModel.fontSize.value!!, mViewModel.segmentSpace.value!!))
+                if (!ReaderSettingUtil.setSetting(
+                        "default",
+                        mViewModel.fontSize.value!!,
+                        mViewModel.segmentSpace.value!!
+                    )
+                )
                     ToastUtil.error(getString(R.string.reader_setting_fail))
                 else ReaderJSInterface.initiativeStyle(webView)
             }
@@ -97,7 +101,7 @@ class ReaderActivity : MyBaseActivity() {
             }
         }
         segmentSpaceSlider?.addOnChangeListener { _, value, _ ->
-            when(value.toInt()) {
+            when (value.toInt()) {
                 1 -> {
                     textPreview1!!.setPadding(5)
                     textPreview2!!.setPadding(5)

@@ -39,7 +39,7 @@ public class PinyinUtil {
                         continue;
                     }
                 }
-                sb.append(String.valueOf(chars[i]));
+                sb.append(chars[i]);
                 if ((i + 1 >= chars.length) || String.valueOf(chars[i + 1]).matches("[\\u4E00-\\u9FA5]+")) {
                     sb.append(separator);
                 }

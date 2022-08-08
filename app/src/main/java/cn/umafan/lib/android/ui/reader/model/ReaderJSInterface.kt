@@ -27,9 +27,20 @@ class ReaderJSInterface(
         json.put("note", article.note)
         json.put("translator", article.translator)
         json.put("author", article.author)
-        val tagList = JSONArray(article.taggedList.map { tagged -> tagged.tag.name })
+        val tagList = JSONArray(article.taggedList.sortedWith { a, b ->
+            if (a.tag.type == b.tag.type)
+                a.tag.name.compareTo(b.tag.name)
+            else
+                b.tag.type.compareTo(a.tag.type)
+        }.map { tagged -> tagged.tag.name })
         json.put("tags", tagList)
-        json.put("time", SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA).format(article.uploadTime))
+        json.put(
+            "time",
+            SimpleDateFormat(
+                "yyyy-MM-dd HH:mm",
+                Locale.CHINA
+            ).format(article.uploadTime.toLong() * 1000)
+        )
         json.put("setting", ReaderSettingUtil.getSetting("default"))
 
         invokeJavaScript(callback, json.toString())

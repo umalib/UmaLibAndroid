@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.google.android.material.card.MaterialCardView
 
 
-open class PageSelectorViewModel: ViewModel() {
+open class PageSelectorViewModel : ViewModel() {
     var checkedList = mutableListOf<Boolean>()
 
     val checkedButton = MutableLiveData<MaterialCardView>()

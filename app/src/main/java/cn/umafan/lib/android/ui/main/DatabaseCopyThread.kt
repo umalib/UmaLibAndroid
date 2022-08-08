@@ -2,7 +2,6 @@ package cn.umafan.lib.android.ui.main
 
 import android.content.Context
 import android.os.Handler
-import android.util.Log
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.beans.DaoMaster
 import cn.umafan.lib.android.beans.DaoSession
@@ -57,7 +56,7 @@ class DatabaseCopyThread : Thread() {
             val version = br.readLine()
             br.close()
             println("db version: $version")
-            if (version >= context.getString(R.string.db_version)) {
+            if (version >= context.getString(R.string.app_version)) {
                 copy = false
             }
         }
@@ -90,7 +89,7 @@ class DatabaseCopyThread : Thread() {
             myInput.close()
 
             val bw = BufferedWriter(FileWriter(versionFile))
-            bw.write(context.getString(R.string.db_version))
+            bw.write(context.getString(R.string.app_version))
             bw.close()
         }
         println("copy database done!")

@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel
  * @Description
  * @createTime 2022年 08月07日 19:36
  **/
-class ReaderViewModel: ViewModel() {
+class ReaderViewModel : ViewModel() {
     val collected = MutableLiveData(true)
 
     val fontSize = MutableLiveData("normal")

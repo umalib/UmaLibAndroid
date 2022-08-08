@@ -88,14 +88,14 @@ class TagSuggestionAdapter(
                     val tagName = tag.name
                     if (PinyinUtil.getPinyin(tagName, "").lowercase(Locale.getDefault()).contains(
                             PinyinUtil.getPinyin(str, "").lowercase(Locale.getDefault())
-                    )
+                        )
                     ) {
                         val chars: CharArray = str.toCharArray()
                         var count = 0
                         for (i in chars.indices) {
                             // 判断是否为汉字字符
                             if (chars[i].toString().matches(Regex("[\\u4E00-\\u9FA5]+"))) {
-                                count ++
+                                count++
                             }
                         }
                         if (count > 0) {
