@@ -8,6 +8,7 @@ import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.util.network.UpdateUtil
 import cn.umafan.lib.android.util.network.model.UpdateBean
+import com.liangguo.androidkit.app.ToastUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -21,9 +22,13 @@ class MainViewModel : ViewModel() {
     fun getUpdate(initiative: Boolean) {
         viewModelScope.launch {
             UpdateUtil.getUpdate().apply {
-                this.show = this.currentVersion > MyApplication.getVersion().code || this.currentVersionName > MyApplication.getVersion().name
-                this.initiative = initiative
-                updateInfo.value = this
+                if (null != this) {
+                    this.show = this.currentVersion > MyApplication.getVersion().code || this.currentVersionName > MyApplication.getVersion().name
+                    this.initiative = initiative
+                    updateInfo.value = this
+                } else {
+                    ToastUtil.error("获取更新失败，请检查网络！")
+                }
             }
         }
     }
