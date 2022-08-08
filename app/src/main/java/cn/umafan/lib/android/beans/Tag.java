@@ -161,9 +161,7 @@ public class Tag implements Serializable {
         myDao.update(this);
     }
 
-    /**
-     * called by internal mechanisms, do not call yourself.
-     */
+    /** called by internal mechanisms, do not call yourself. */
     @Generated(hash = 441429822)
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;

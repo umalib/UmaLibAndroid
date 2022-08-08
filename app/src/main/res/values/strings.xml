@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
     <string name="app_name">赛马娘同人集中楼大书库</string>
-    <string name="app_version">1.0.0</string>
 
     <string name="action_settings">设置</string>
     <string name="title_activity_main">MainActivity</string>
@@ -59,5 +58,7 @@
     <string name="record_assist_content">byslm | ChibaNils | ken啊我 | NagatoSnake | nameabcd | STROHEIM | Takatoshi | Tye_sine | z2566687 | 万碎碎碎碎碎 | 千綿奏 | 女人的名字 | 风之低吟 | 东方季枫 | 华生宇 | 进击的南村群童 | 南极洲老土著 | 陨落赤炎 | 莫名的不知火 | 提里奥·屠鸡者 | 黑羽仙洛</string>
     <string name="record_single_content">黑羽仙洛 | 风之低吟 | ChibaNils | byslm | Alanポポ | 提里奥·屠鸡者 | 盈盈星尘 | 女人的名字 | NagatoSnake</string>
     <string name="record_check_content">我就是雷gay的化身 | nameabcd</string>
+    <string name="no_update">您已经是最新版本啦！</string>
+    <string name="check_update">检查更新</string>
 
 </resources>

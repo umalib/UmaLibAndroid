@@ -57,7 +57,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginVertical="5dp"
-                    android:text="@string/app_version"
                     android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                     app:layout_constraintStart_toEndOf="@id/app_icon"
                     app:layout_constraintTop_toBottomOf="@id/app_name" />
@@ -323,6 +322,18 @@
                     app:showEndIcon="false"
                     app:subtitle="本软件源代码已在Github公开"
                     app:title="开源地址" />
+
+                <com.liangguo.preference.views.CommonSettingView
+                    android:id="@+id/setting_item_check_update"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:icon="@drawable/ic_baseline_system_update_24"
+                    app:showEndIcon="false"
+                    app:subtitle="更新内容往往包括数据库更新/软件功能更新"
+                    app:title="检查更新" />
 
             </LinearLayout>
 

@@ -10,8 +10,10 @@ import androidx.fragment.app.Fragment
 import cn.umafan.lib.android.beans.DaoSession
 import cn.umafan.lib.android.databinding.FragmentThanksBinding
 import cn.umafan.lib.android.model.DataBaseHandler
+import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
+import cn.umafan.lib.android.ui.main.MainActivity
 
 class ThanksFragment : Fragment() {
     private var _binding: FragmentThanksBinding? = null
@@ -28,6 +30,7 @@ class ThanksFragment : Fragment() {
         _binding = FragmentThanksBinding.inflate(inflater, container, false)
 
         with(binding) {
+            appVersion.text = MyApplication.getVersion().name
             settingItemFeedback.setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse("https://bbs.nga.cn/read.php?tid=32535194")
@@ -37,6 +40,9 @@ class ThanksFragment : Fragment() {
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse("https://github.com/umalib/UmaLibAndroid")
                 startActivity(intent)
+            }
+            settingItemCheckUpdate.setOnClickListener {
+                (activity as MainActivity).mViewModel.getUpdate(true)
             }
         }
 

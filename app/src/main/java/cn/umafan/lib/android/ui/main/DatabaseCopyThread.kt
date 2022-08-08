@@ -56,7 +56,7 @@ class DatabaseCopyThread : Thread() {
             val version = br.readLine()
             br.close()
             println("db version: $version")
-            if (version >= context.getString(R.string.app_version)) {
+            if (version >= MyApplication.getVersion().name) {
                 copy = false
             }
         }
@@ -89,7 +89,7 @@ class DatabaseCopyThread : Thread() {
             myInput.close()
 
             val bw = BufferedWriter(FileWriter(versionFile))
-            bw.write(context.getString(R.string.app_version))
+            bw.write(MyApplication.getVersion().name)
             bw.close()
         }
         println("copy database done!")

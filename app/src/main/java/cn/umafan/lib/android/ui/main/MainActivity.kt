@@ -1,7 +1,9 @@
 package cn.umafan.lib.android.ui.main
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -29,6 +31,7 @@ import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.main.model.TagSelectedItem
 import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter
+import cn.umafan.lib.android.util.network.UpdateUtil
 import com.angcyo.dsladapter.DslAdapter
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -36,6 +39,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.liangguo.androidkit.app.ToastUtil
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 
 @SuppressLint("InflateParams")
@@ -44,7 +48,7 @@ class MainActivity : MyBaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private var _mViewModel: MainViewModel? = null
-    private val mViewModel get() = _mViewModel!!
+    val mViewModel get() = _mViewModel!!
     private var daoSession: DaoSession? = null
 
     //是否退出的flag
@@ -229,12 +233,46 @@ class MainActivity : MyBaseActivity() {
                     }
                 }
             }
+            updateInfo.observe(this@MainActivity) {
+                var message = getString(R.string.no_update)
+                var buttonText = getString(R.string.confirm)
+                var buttonAction: DialogInterface.OnClickListener? = null
+                if (it.show) {
+                    message = it.info.message
+                    buttonText = it.button.text
+                    buttonAction = DialogInterface.OnClickListener { dialogInterface, i ->
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(it.button.url)
+                        startActivity(intent)
+                    }
+                    MaterialAlertDialogBuilder(
+                        this@MainActivity,
+                        com.google.android.material.R.style.MaterialAlertDialog_Material3
+                    )
+                        .setTitle("${it.currentVersionName} ${it.info.title}")
+                        .setMessage(message)
+                        .setPositiveButton(buttonText, buttonAction)
+                        .create().show()
+                } else {
+                    if (it.initiative) {
+                        MaterialAlertDialogBuilder(
+                            this@MainActivity,
+                            com.google.android.material.R.style.MaterialAlertDialog_Material3
+                        ).setTitle(it.info.title)
+                            .setMessage(message)
+                            .setPositiveButton(buttonText, null)
+                            .create().show()
+                    }
+                }
+            }
         }
 
         // 新建一个守护线程，每个数据库操作任务自动进入队列排队处理
         val dataBaseThread = DatabaseCopyThread()
         dataBaseThread.isDaemon = true
         dataBaseThread.start()
+
+        mViewModel.getUpdate(false)
 
         loadSearchOptions()
     }
@@ -254,10 +292,8 @@ class MainActivity : MyBaseActivity() {
             //利用handler延迟发送更改状态信息
             mHandler.sendEmptyMessageDelayed(0, 3000)
         } else {
-            //在后台运行程序，不退出程序，只返回桌面
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_HOME)
-            startActivity(intent)
+            finish()
+            exitProcess(0)
         }
     }
 
@@ -275,6 +311,9 @@ class MainActivity : MyBaseActivity() {
             // 搜索过滤项
             R.id.action_search_settings -> {
                 searchFilterDialog.show()
+            }
+            R.id.check_update -> {
+                mViewModel.getUpdate(true)
             }
         }
         return super.onOptionsItemSelected(item)
