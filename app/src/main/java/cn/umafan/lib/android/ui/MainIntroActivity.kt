@@ -1,6 +1,7 @@
-package cn.umafan.lib.android
+package cn.umafan.lib.android.ui
 
 import android.os.Bundle
+import cn.umafan.lib.android.R
 import com.heinrichreimersoftware.materialintro.app.IntroActivity
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide
 
