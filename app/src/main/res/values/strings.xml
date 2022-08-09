@@ -60,5 +60,14 @@
     <string name="record_check_content">我就是雷gay的化身 | nameabcd</string>
     <string name="no_update">您已经是最新版本啦！</string>
     <string name="check_update">检查更新</string>
+    <string name="app_description">赛马娘同人集中楼大书库(简称大书库)为一个能够读取翻译楼内容数据库的、配有良好用户界面的本地阅读器软件。</string>
+    <string name="app_database_intro">丰富的内置数据库</string>
+    <string name="app_database_description">内置数千篇曾在翻译楼内发布的翻译与原创内容，并会随软件持续更新。</string>
+    <string name="app_view_intro">简洁美观的阅读体验</string>
+    <string name="app_view_description">可自由调整文章字号，段落间距，打造自定义的阅读体验。</string>
+    <string name="app_tag_intro">自定义Tag搜索</string>
+    <string name="app_tag_description">它内置了一套较为完整的、以文章内容为主导的Tag系统，与一套支持按Tag关键词进行检索的搜索功能，便于用户对数据库中的作品进行自定义检索，以找到自己希望阅读的文章。</string>
+    <string name="app_func_intro">阅读功能完备</string>
+    <string name="app_func_description">大书库安卓端功能移植自PC版，在保持功能的同时致力于提供舒适的使用体验。</string>
 
 </resources>

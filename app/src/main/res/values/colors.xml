@@ -10,4 +10,5 @@
     <color name="grey">#AAAAAA</color>
     <color name="lightGrey">#DDDDDD</color>
     <color name="lightPrimary">#f3e3fc</color>
+    <color name="blue_500">#03A9F4</color>
 </resources>

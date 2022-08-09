@@ -20,6 +20,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
+import cn.umafan.lib.android.MainIntroActivity
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.beans.ArtInfoDao
 import cn.umafan.lib.android.beans.DaoSession
@@ -31,13 +32,13 @@ import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.main.model.TagSelectedItem
 import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter
-import cn.umafan.lib.android.util.network.UpdateUtil
 import com.angcyo.dsladapter.DslAdapter
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.liangguo.androidkit.app.ToastUtil
+import com.liangguo.androidkit.app.startNewActivity
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
@@ -236,11 +237,11 @@ class MainActivity : MyBaseActivity() {
             updateInfo.observe(this@MainActivity) {
                 var message = getString(R.string.no_update)
                 var buttonText = getString(R.string.confirm)
-                var buttonAction: DialogInterface.OnClickListener? = null
+                val buttonAction: DialogInterface.OnClickListener?
                 if (it.show) {
                     message = it.info.message
                     buttonText = it.button.text
-                    buttonAction = DialogInterface.OnClickListener { dialogInterface, i ->
+                    buttonAction = DialogInterface.OnClickListener { _, _ ->
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(it.button.url)
                         startActivity(intent)
@@ -275,6 +276,12 @@ class MainActivity : MyBaseActivity() {
         mViewModel.getUpdate(false)
 
         loadSearchOptions()
+
+        val sharedPreferences = getSharedPreferences("introduction", 0)
+        if (null == sharedPreferences.getString("done", null)) {
+            MainIntroActivity::class.startNewActivity()
+            sharedPreferences.edit().putString("done", "right").apply()
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -364,4 +371,5 @@ class MainActivity : MyBaseActivity() {
             }
         })
     }
+
 }

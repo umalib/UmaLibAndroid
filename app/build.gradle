@@ -58,6 +58,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.3'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
+    implementation 'com.heinrichreimersoftware:material-intro:2.0.0'
+
 
     implementation 'com.github.zzz40500:android-shapeLoadingView:1.0.3.2'
     implementation 'com.github.ldh-star:AndroidKit:0.1.5'
