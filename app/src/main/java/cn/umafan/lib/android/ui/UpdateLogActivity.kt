@@ -1,23 +1,17 @@
 package cn.umafan.lib.android.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
-import cn.umafan.lib.android.R
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import br.tiagohm.markdownview.css.styles.Github
 import cn.umafan.lib.android.databinding.ActivityUpdateLogBinding
-import cn.umafan.lib.android.ui.reader.ReaderViewModel
 
 class UpdateLogActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdateLogBinding
-    private var _mViewModel: ReaderViewModel? = null
-    private val mViewModel get() = _mViewModel!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        _mViewModel =
-            ViewModelProvider(this)[ReaderViewModel::class.java]
 
         binding = ActivityUpdateLogBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -25,6 +19,15 @@ class UpdateLogActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        binding.markdownView.loadMarkdownFromUrl("https://umalib.github.io/UmaLibAndroid/update-log.md")
+        binding.markdownView.addStyleSheet(Github())
+            .loadMarkdownFromUrl("https://umalib.github.io/UmaLibAndroid/update-log.md")
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
