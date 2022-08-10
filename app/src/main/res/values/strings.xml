@@ -70,5 +70,11 @@
     <string name="app_func_intro">阅读功能完备</string>
     <string name="app_func_description">大书库安卓端功能移植自PC版，在保持功能的同时致力于提供舒适的使用体验。</string>
     <string name="update_log">更新日志</string>
+    <string name="app_intro">软件介绍</string>
+    <string name="page_jumper_prefix">跳转至</string>
+    <string name="page_jumper_suffix">页</string>
+    <string name="page_jumper_label">输入页码数</string>
+    <string name="page_size_selector_label">选择每页文章数</string>
+
 
 </resources>

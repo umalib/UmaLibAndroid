@@ -2,11 +2,17 @@ package cn.umafan.lib.android.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.beans.ArtInfo
@@ -19,9 +25,12 @@ import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.home.model.PageItem
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
+import cn.umafan.lib.android.util.PageSizeUtil
 import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 import com.liangguo.androidkit.app.ToastUtil
+import kotlinx.coroutines.launch
 import org.greenrobot.greendao.query.QueryBuilder
 
 @SuppressLint("InflateParams")
@@ -35,22 +44,60 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel get() = _homeViewModel!!
 
-    private var pageLen: Int = 0
-
     private var daoSession: DaoSession? = null
+
+    private var isShowing = false
+
+    private var pageData = mutableListOf<Int>()
 
     private val mPageSelectorDialog by lazy {
         val view = LayoutInflater.from(activity).inflate(R.layout.dialog_page_selector, null)
-        val data = mutableListOf<PageItem>()
-        homeViewModel.checkedList.clear()
-        for (i in 0 until pageLen) {
-            if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
-            else homeViewModel.checkedList.add(true)
+        val pageSizeAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            arrayOf(10, 20, 30, 50)
+        )
+//        for (i in 1 until homeViewModel.pageLen.value!! + 1) {
+//            pageData.add(PageItem(i, homeViewModel))
+//        }
+        view.findViewById<RecyclerView>(R.id.page_recycler_view)?.adapter = homeViewModel.pageSelectorAdapter
+        val inputText = view.findViewById<TextInputEditText>(R.id.page_jumper_input_text)
+        inputText.doOnTextChanged { text, start, _, count ->
+            if (text.toString().isNotBlank()) {
+                val page = text.toString().toInt()
+                if (page > homeViewModel.pageLen.value!!) {
+                    inputText.setText(text.toString().replaceRange(start, start + count, ""))
+                }
+            }
         }
-        for (i in 1 until pageLen + 1) {
-            data.add(PageItem(i, homeViewModel))
+        inputText.setOnEditorActionListener { textView, i, keyEvent ->
+            if (i == EditorInfo.IME_ACTION_NEXT) {
+                val page = textView.text.toString().toInt()
+                homeViewModel.currentPage.postValue(page)
+                with(homeViewModel) {
+                    checkedButton.value?.isChecked = false
+                    checkedButton.value = null
+                    //清除数组再重新记录状态
+                    homeViewModel.checkedList.clear()
+                    for (i in 0 until homeViewModel.pageLen.value!!) {
+                        if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
+                        else homeViewModel.checkedList.add(true)
+                    }
+                    checkedList[page - 1] = true
+                    selectedPage.value = page
+                }
+                inputText.setText("")
+                isShowing = true
+            }
+            false
         }
-        view.findViewById<RecyclerView>(R.id.page_recycler_view)?.adapter = DslAdapter(data)
+        val pageSizeSelector = view.findViewById<AutoCompleteTextView>(R.id.page_size_selector_input)
+        pageSizeSelector.setAdapter(pageSizeAdapter)
+        pageSizeSelector.setOnItemClickListener { adapterView, view, i, l ->
+            PageSizeUtil.setSize(adapterView.adapter.getItem(i).toString().toInt())
+            homeViewModel.currentPage.postValue(1)
+            isShowing = true
+        }
         MaterialAlertDialogBuilder(
             requireActivity(),
             com.google.android.material.R.style.MaterialAlertDialog_Material3
@@ -83,14 +130,43 @@ class HomeFragment : Fragment() {
         initView()
 
         homeViewModel.currentPage.observe(viewLifecycleOwner) {
+            homeViewModel.checkedList.clear()
+            for (i in 0 until homeViewModel.pageLen.value!!) {
+                if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
+                else homeViewModel.checkedList.add(true)
+            }
+            if (isShowing) {
+                mPageSelectorDialog.hide()
+                isShowing = false
+            }
             loadArticles(
                 it,
-                arguments?.getSerializable("searchParams") as SearchBean?
+                arguments?.getSerializable("searchParams") as SearchBean?,
+                PageSizeUtil.getSize()
             )
             binding.lastPageBtn.isEnabled = it > 1
-            binding.nextPageBtn.isEnabled = it < pageLen
-            binding.pageNumBtn.text = "$it/$pageLen 页"
+            binding.nextPageBtn.isEnabled = it < homeViewModel.pageLen.value!!
+            binding.pageNumBtn.text = "$it/${homeViewModel.pageLen.value} 页"
         }
+
+        with(homeViewModel) {
+            pageLen.observe(viewLifecycleOwner) {
+                viewModelScope.launch {
+                    homeViewModel.checkedList.clear()
+                    for (i in 0 until it + 1) {
+                        if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
+                        else homeViewModel.checkedList.add(true)
+                    }
+                    this@HomeFragment.pageData = mutableListOf()
+                    for (i in 1 until it + 1) {
+                        this@HomeFragment.pageData.add(i)
+                    }
+                    pageData.emit(this@HomeFragment.pageData)
+                    println("fucka" + pageData.value)
+                }
+            }
+        }
+
 
         return root
     }
@@ -119,7 +195,7 @@ class HomeFragment : Fragment() {
      * @param params 查询主要参数
      */
     @SuppressLint("SetTextI18n")
-    private fun loadArticles(page: Int?, params: SearchBean?) {
+    private fun loadArticles(page: Int?, params: SearchBean?, pageSize: Int) {
         val handler = DataBaseHandler(activity as MainActivity) {
             daoSession = it.obj as DaoSession
             var count = 5L
@@ -127,7 +203,7 @@ class HomeFragment : Fragment() {
                 val artInfoDao: ArtInfoDao = daoSession!!.artInfoDao
                 val taggedDao = daoSession!!.taggedDao
                 val offset = if (page != null) {
-                    (page - 1) * 10
+                    (page - 1) * pageSize
                 } else {
                     0
                 }
@@ -171,15 +247,15 @@ class HomeFragment : Fragment() {
                     }
                 }
 
-                query.offset(offset).limit(10).orderDesc(ArtInfoDao.Properties.UploadTime)
+                query.offset(offset).limit(pageSize).orderDesc(ArtInfoDao.Properties.UploadTime)
                 count = query.count()
                 if (count == 0L) {
                     ToastUtil.info(getString(R.string.no_data))
                 }
-                if (0L == count || 0L != count % 10L) {
-                    count = count / 10L + 1
+                if (0L == count || 0L != count % pageSize) {
+                    count = count / pageSize + 1
                 } else {
-                    count /= 10
+                    count /= pageSize
                 }
                 val list = query.build().listLazy()
                 homeViewModel.loadArticles(list)
@@ -187,11 +263,11 @@ class HomeFragment : Fragment() {
             } else {
                 homeViewModel.loadArticles(null)
             }
-            pageLen = count.toInt()
+            homeViewModel.pageLen.value = count.toInt()
             with(homeViewModel.currentPage.value) {
                 binding.lastPageBtn.isEnabled = this!! > 1
-                binding.nextPageBtn.isEnabled = this < pageLen
-                binding.pageNumBtn.text = "$this/$pageLen 页"
+                binding.nextPageBtn.isEnabled = this < homeViewModel.pageLen.value!!
+                binding.pageNumBtn.text = "$this/${homeViewModel.pageLen.value} 页"
             }
         }
         (activity as MainActivity).shapeLoadingDialog?.show()

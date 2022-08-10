@@ -317,15 +317,11 @@ class MainActivity : MyBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             // 搜索过滤项
-            R.id.action_search_settings -> {
-                searchFilterDialog.show()
-            }
-            R.id.check_update -> {
-                mViewModel.getUpdate(true)
-            }
-            R.id.update_log -> {
-                UpdateLogActivity::class.startNewActivity()
-            }
+            R.id.action_search_settings -> searchFilterDialog.show()
+            R.id.check_update -> mViewModel.getUpdate(true)
+            R.id.update_log -> UpdateLogActivity::class.startNewActivity()
+            R.id.app_intro -> MainIntroActivity::class.startNewActivity()
+
         }
         return super.onOptionsItemSelected(item)
     }

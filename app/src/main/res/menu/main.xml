@@ -12,6 +12,11 @@
         android:title="@string/update_log"
         app:showAsAction="never" />
     <item
+        android:id="@+id/app_intro"
+        android:orderInCategory="100"
+        android:title="@string/app_intro"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_baseline_search_24"
         android:orderInCategory="100"

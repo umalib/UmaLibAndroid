@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import cn.umafan.lib.android.beans.ArtInfo
 import cn.umafan.lib.android.model.PageSelectorViewModel
 import cn.umafan.lib.android.ui.home.model.ArticleInfoItem
+import cn.umafan.lib.android.ui.home.model.PageItem
 import com.angcyo.dsladapter.DslAdapter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -16,11 +17,17 @@ class HomeViewModel : PageSelectorViewModel() {
     }
     val text: LiveData<String> = _text
 
+    val pageLen = MutableLiveData(1)
+
     private val articleData = MutableStateFlow(listOf<ArtInfo>())
 
     val currentPage = MutableLiveData(1)
 
     val articleDataAdapter = DslAdapter()
+
+    val pageSelectorAdapter = DslAdapter()
+
+    val pageData = MutableStateFlow(listOf<Int>())
 
     init {
         viewModelScope.launch {
@@ -31,6 +38,17 @@ class HomeViewModel : PageSelectorViewModel() {
                         adapterItems.add(ArticleInfoItem(it))
                     }
                 }
+            }
+        }
+        viewModelScope.launch {
+            pageData.collect {
+                pageSelectorAdapter.changeDataItems { adapterItems ->
+                    adapterItems.clear()
+                    it.forEach {
+                        adapterItems.add(PageItem(it, this@HomeViewModel))
+                    }
+                }
+                pageSelectorAdapter.notifyDataChanged()
             }
         }
     }
