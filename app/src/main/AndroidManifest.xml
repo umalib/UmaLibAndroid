@@ -15,11 +15,11 @@
         <activity
             android:name=".ui.UpdateLogActivity"
             android:exported="false"
-            android:theme="@style/Theme.UmaLibrary.NoActionBar"/>
+            android:theme="@style/Theme.UmaLibrary.NoActionBar" />
         <activity
             android:name=".ui.MainIntroActivity"
             android:exported="false"
-            android:theme="@style/Theme.UmaLibrary.NoActionBar"/>
+            android:theme="@style/Theme.UmaLibrary.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderActivity"
             android:exported="false"

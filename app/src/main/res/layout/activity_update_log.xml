@@ -18,9 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_collapseMode="pin"
-            app:title="@string/update_log"
+            app:popupTheme="@style/Theme.UmaLibrary.PopupOverlay"
             app:subtitle="@string/app_name"
-            app:popupTheme="@style/Theme.UmaLibrary.PopupOverlay" />
+            app:title="@string/update_log" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -31,9 +31,9 @@
 
         <br.tiagohm.markdownview.MarkdownView
             android:id="@+id/markdown_view"
-            app:escapeHtml="false"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:escapeHtml="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

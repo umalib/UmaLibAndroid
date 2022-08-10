@@ -8,7 +8,7 @@ import com.heinrichreimersoftware.materialintro.slide.SimpleSlide
 
 class MainIntroActivity : IntroActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        setFullscreen(true)
+        isFullscreen = true
         super.onCreate(savedInstanceState)
 
         addSlide(

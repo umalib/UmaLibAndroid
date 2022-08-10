@@ -71,7 +71,7 @@
         android:layout_marginTop="16dp"
         android:layout_margin="@dimen/fab_margin"
         android:stepSize="1"
-        android:value="1"
+        android:value="2"
         android:valueFrom="1.0"
         android:valueTo="2.0"
         app:layout_constraintEnd_toEndOf="parent"

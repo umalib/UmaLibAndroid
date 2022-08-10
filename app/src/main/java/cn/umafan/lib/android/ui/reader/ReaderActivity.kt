@@ -78,7 +78,16 @@ class ReaderActivity : MyBaseActivity() {
     private fun initView() {
         readerSettingView = LayoutInflater.from(this).inflate(R.layout.dialog_reader_setting, null)
         fontSizeSlider = readerSettingView?.findViewById(R.id.font_size_slider)
+        fontSizeSlider?.value = when (mViewModel.fontSize.value) {
+            "small" -> 1F
+            "large" -> 3F
+            else -> 2F
+        }
         segmentSpaceSlider = readerSettingView?.findViewById(R.id.segment_space_slider)
+        segmentSpaceSlider?.value = when (mViewModel.segmentSpace.value) {
+            "wider" -> 2F
+            else -> 1F
+        }
         textPreview1 = readerSettingView?.findViewById(R.id.text_preview_1)
         textPreview2 = readerSettingView?.findViewById(R.id.text_preview_2)
         fontSizeSlider?.addOnChangeListener { _, value, _ ->

@@ -20,7 +20,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
-import cn.umafan.lib.android.ui.MainIntroActivity
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.beans.ArtInfoDao
 import cn.umafan.lib.android.beans.DaoSession
@@ -30,6 +29,7 @@ import cn.umafan.lib.android.databinding.ActivityMainBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.model.SearchBean
+import cn.umafan.lib.android.ui.MainIntroActivity
 import cn.umafan.lib.android.ui.UpdateLogActivity
 import cn.umafan.lib.android.ui.main.model.TagSelectedItem
 import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter

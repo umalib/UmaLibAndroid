@@ -2,6 +2,7 @@ package cn.umafan.lib.android.ui.reader
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cn.umafan.lib.android.util.ReaderSettingUtil
 
 
 /**
@@ -10,10 +11,14 @@ import androidx.lifecycle.ViewModel
  * @Description
  * @createTime 2022年 08月07日 19:36
  **/
-class ReaderViewModel : ViewModel() {
+class ReaderViewModel() : ViewModel() {
     val collected = MutableLiveData(true)
+    val fontSize: MutableLiveData<String>
+    val segmentSpace: MutableLiveData<String>
 
-    val fontSize = MutableLiveData("normal")
-
-    val segmentSpace = MutableLiveData("normal")
+    init {
+        val setting = ReaderSettingUtil.getSetting("default")
+        fontSize = MutableLiveData(setting.getString("fontSize"))
+        segmentSpace = MutableLiveData(setting.getString("segmentSpace"))
+    }
 }
