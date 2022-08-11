@@ -39,7 +39,11 @@ class ArticleInfoItem(
                 articleName.text = articleInfo.name
                 articleNote.text = articleInfo.note
                 articleAuthor.text = articleInfo.author
-                articleTranslator.text = String.format("译者：%s", articleInfo.translator)
+                articleTranslator.text = if (articleInfo.translator.isNotEmpty()) {
+                    String.format("译者：%s", articleInfo.translator)
+                } else {
+                    ""
+                }
                 articleUploadTime.text = articleInfo.uploadTime.let { date ->
                     timeStampFormatter.format(date.toLong() * 1000)
                 }
