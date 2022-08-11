@@ -13,6 +13,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:windowBackground">@drawable/app_bg</item>
         <item name="cardBackgroundColor">@color/lightPrimary</item>
+        <item name="backgroundColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>
