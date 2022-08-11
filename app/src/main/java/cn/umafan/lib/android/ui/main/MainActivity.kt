@@ -21,10 +21,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.beans.ArtInfoDao
-import cn.umafan.lib.android.beans.DaoSession
-import cn.umafan.lib.android.beans.Tag
-import cn.umafan.lib.android.beans.TagDao
+import cn.umafan.lib.android.model.db.ArtInfoDao
+import cn.umafan.lib.android.model.db.DaoSession
+import cn.umafan.lib.android.model.db.Tag
+import cn.umafan.lib.android.model.db.TagDao
 import cn.umafan.lib.android.databinding.ActivityMainBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity

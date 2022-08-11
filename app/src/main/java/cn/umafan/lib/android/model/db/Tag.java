@@ -1,14 +1,14 @@
-package cn.umafan.lib.android.beans;
+package cn.umafan.lib.android.model.db;
 
-import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
 
 import java.io.Serializable;
 import java.util.List;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.DaoException;
 
 @Entity(createInDb = false)
 public class Tag implements Serializable {
@@ -28,22 +28,16 @@ public class Tag implements Serializable {
 
     @ToMany(referencedJoinProperty = "tagId")
     private List<Tagged> taggedList;
-
-    /**
-     * Used to resolve relations
-     */
+    /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
-
-    /**
-     * Used for active entity operations.
-     */
+    /** Used for active entity operations. */
     @Generated(hash = 2076396065)
     private transient TagDao myDao;
 
     @Generated(hash = 1132560429)
     public Tag(Long id, String name, Integer type, String cover,
-               String description) {
+            String description) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -117,9 +111,7 @@ public class Tag implements Serializable {
         return taggedList;
     }
 
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated(hash = 300101849)
     public synchronized void resetTaggedList() {
         taggedList = null;

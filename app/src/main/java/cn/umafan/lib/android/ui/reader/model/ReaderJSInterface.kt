@@ -1,7 +1,7 @@
 package cn.umafan.lib.android.ui.reader.model
 
 import android.text.TextUtils
-import cn.umafan.lib.android.beans.Article
+import cn.umafan.lib.android.model.db.Article
 import cn.umafan.lib.android.util.ReaderSettingUtil
 import com.itheima.view.BridgeWebView
 import org.json.JSONArray

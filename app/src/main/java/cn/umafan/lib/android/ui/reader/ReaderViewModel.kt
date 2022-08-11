@@ -7,7 +7,7 @@ import cn.umafan.lib.android.util.ReaderSettingUtil
 
 /**
  * @ClassName ReaderViewModel
- * @author ForeverDdB 835236331@qq.com
+ * @author Forever-DdB everddb@gmail.com
  * @Description
  * @createTime 2022年 08月07日 19:36
  **/

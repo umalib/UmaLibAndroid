@@ -22,7 +22,9 @@
                 <el-tag size="small">{{ tag }}</el-tag>
             </template>
         </el-descriptions-item>
-        <el-descriptions-item label="来源">{{ article.source }}</el-descriptions-item>
+        <el-descriptions-item v-if="article.source" label="来源">
+            {{ article.source }}
+        </el-descriptions-item>
         <el-descriptions-item label="备注">{{ article.note }}</el-descriptions-item>
     </el-descriptions>
     <div class='ql-snow' v-bind:class="`${fontSize}-font ${segmentSpace}-space`">
@@ -86,6 +88,7 @@
         vue.$data.fontSize = json.setting.fontSize
         vue.$data.segmentSpace = json.setting.segmentSpace
     }
+
 
 
 

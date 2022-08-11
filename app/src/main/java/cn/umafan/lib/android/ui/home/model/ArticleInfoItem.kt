@@ -2,7 +2,7 @@ package cn.umafan.lib.android.ui.home.model
 
 import androidx.databinding.DataBindingUtil
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.beans.ArtInfo
+import cn.umafan.lib.android.model.db.ArtInfo
 import cn.umafan.lib.android.databinding.ItemArticleCardBinding
 import cn.umafan.lib.android.ui.reader.ReaderActivity
 import com.angcyo.dsladapter.DslAdapterItem
@@ -38,12 +38,14 @@ class ArticleInfoItem(
             DataBindingUtil.bind<ItemArticleCardBinding>(it)?.apply {
                 articleName.text = articleInfo.name
                 articleNote.text = articleInfo.note
-                articleAuthor.text = articleInfo.author
-                articleTranslator.text = if (articleInfo.translator.isNotEmpty()) {
-                    String.format("译者：%s", articleInfo.translator)
+                if (articleInfo.translator.isNotEmpty()) {
+                    articleAuthor.text = articleInfo.author
+                    articleTranslator.text = String.format("译者：%s", articleInfo.translator)
                 } else {
-                    ""
+                    articleAuthor.text = ""
+                    articleTranslator.text = articleInfo.author
                 }
+
                 articleUploadTime.text = articleInfo.uploadTime.let { date ->
                     timeStampFormatter.format(date.toLong() * 1000)
                 }
@@ -55,7 +57,7 @@ class ArticleInfoItem(
                             else
                                 b.type.compareTo(a.type)
                         }.joinToString("，") { tag -> tag.name }
-                itemArticleCardBox.setOnClickListener { view ->
+                itemArticleCardBox.setOnClickListener { _ ->
                     ReaderActivity::class.startNewActivity {
                         putExtra("id", articleInfo.id.toInt())
                     }

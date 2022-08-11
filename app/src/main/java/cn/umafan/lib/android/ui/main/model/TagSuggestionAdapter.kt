@@ -7,7 +7,7 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.beans.Tag
+import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.util.PinyinUtil
 import com.google.android.material.textview.MaterialTextView
@@ -116,7 +116,7 @@ class TagSuggestionAdapter(
             constraint: CharSequence?,
             results: FilterResults
         ) {
-            adapter.filterTags = results.values as List<Tag>
+            adapter.filterTags = (results.values as List<*>).filterIsInstance<Tag>()
             if (results.count > 0) {
                 adapter.notifyDataSetChanged()
             } else {

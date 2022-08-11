@@ -14,9 +14,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.beans.ArtInfo
-import cn.umafan.lib.android.beans.ArtInfoDao
-import cn.umafan.lib.android.beans.DaoSession
+import cn.umafan.lib.android.model.db.ArtInfo
+import cn.umafan.lib.android.model.db.ArtInfoDao
+import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.databinding.FragmentFavoritesBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
@@ -52,7 +52,8 @@ class FavoritesFragment : Fragment() {
             android.R.layout.simple_spinner_dropdown_item,
             arrayOf(10, 20, 30, 50)
         )
-        view.findViewById<RecyclerView>(R.id.page_recycler_view)?.adapter = favoritesViewModel.pageSelectorAdapter
+        view.findViewById<RecyclerView>(R.id.page_recycler_view)?.adapter =
+            favoritesViewModel.pageSelectorAdapter
         val inputText = view.findViewById<TextInputEditText>(R.id.page_jumper_input_text)
         inputText.doOnTextChanged { text, start, _, count ->
             if (text.toString().isNotBlank()) {
@@ -72,7 +73,9 @@ class FavoritesFragment : Fragment() {
                     //清除数组再重新记录状态
                     favoritesViewModel.checkedList.clear()
                     for (n in 0 until favoritesViewModel.pageLen.value!!) {
-                        if (n + 1 != favoritesViewModel.currentPage.value) favoritesViewModel.checkedList.add(false)
+                        if (n + 1 != favoritesViewModel.currentPage.value) favoritesViewModel.checkedList.add(
+                            false
+                        )
                         else favoritesViewModel.checkedList.add(true)
                     }
                     checkedList[page - 1] = true
@@ -83,7 +86,8 @@ class FavoritesFragment : Fragment() {
             }
             false
         }
-        val pageSizeSelector = view.findViewById<AutoCompleteTextView>(R.id.page_size_selector_input)
+        val pageSizeSelector =
+            view.findViewById<AutoCompleteTextView>(R.id.page_size_selector_input)
         pageSizeSelector.setAdapter(pageSizeAdapter)
         pageSizeSelector.setOnItemClickListener { adapterView, _, i, _ ->
             PageSizeUtil.setSize(adapterView.adapter.getItem(i).toString().toInt())
@@ -120,7 +124,9 @@ class FavoritesFragment : Fragment() {
         favoritesViewModel.currentPage.observe(viewLifecycleOwner) {
             favoritesViewModel.checkedList.clear()
             for (i in 0 until favoritesViewModel.pageLen.value!!) {
-                if (i + 1 != favoritesViewModel.currentPage.value) favoritesViewModel.checkedList.add(false)
+                if (i + 1 != favoritesViewModel.currentPage.value) favoritesViewModel.checkedList.add(
+                    false
+                )
                 else favoritesViewModel.checkedList.add(true)
             }
             if (isShowing) {
@@ -142,7 +148,9 @@ class FavoritesFragment : Fragment() {
                     viewModelScope.launch {
                         favoritesViewModel.checkedList.clear()
                         for (i in 0 until it + 1) {
-                            if (i + 1 != favoritesViewModel.currentPage.value) favoritesViewModel.checkedList.add(false)
+                            if (i + 1 != favoritesViewModel.currentPage.value) favoritesViewModel.checkedList.add(
+                                false
+                            )
                             else favoritesViewModel.checkedList.add(true)
                         }
                         this@FavoritesFragment.pageData = mutableListOf()

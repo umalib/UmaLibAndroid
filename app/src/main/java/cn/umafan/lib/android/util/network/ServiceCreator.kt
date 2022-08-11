@@ -13,13 +13,13 @@ object ServiceCreator {
         .proxy(Proxy.NO_PROXY)
         .build()
 
-    val retrofit: Retrofit = Retrofit.Builder()
+    private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    fun <T> create(serviceClass: Class<T>):T = retrofit.create(serviceClass)
+    fun <T> create(serviceClass: Class<T>): T = retrofit.create(serviceClass)
 
-    inline fun<reified T> create(): T = create(T::class.java)
+    inline fun <reified T> create(): T = create(T::class.java)
 }

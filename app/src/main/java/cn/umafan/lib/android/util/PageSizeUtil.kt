@@ -2,7 +2,6 @@ package cn.umafan.lib.android.util
 
 import android.content.SharedPreferences
 import cn.umafan.lib.android.model.MyApplication
-import org.json.JSONObject
 
 
 object PageSizeUtil {

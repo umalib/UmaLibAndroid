@@ -3,7 +3,7 @@ package cn.umafan.lib.android.ui.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.umafan.lib.android.beans.Tag
+import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.util.network.UpdateUtil
@@ -23,7 +23,9 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             UpdateUtil.getUpdate().apply {
                 if (null != this) {
-                    this.show = this.currentVersion > MyApplication.getVersion().code || this.currentVersionName > MyApplication.getVersion().name
+                    this.show =
+                        this.currentVersion > MyApplication.getVersion().code ||
+                                this.currentVersionName > MyApplication.getVersion().name
                     this.initiative = initiative
                     updateInfo.value = this
                 } else {

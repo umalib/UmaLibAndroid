@@ -1,16 +1,16 @@
-package cn.umafan.lib.android.beans;
+package cn.umafan.lib.android.model.db;
 
-import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
 
 import java.util.List;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.DaoException;
 
-@Entity(createInDb = false)
-public class Article {
+@Entity(createInDb = false, nameInDb = "article")
+public class ArtInfo {
     @Id
     @Property(nameInDb = "id")
     private Long id;
@@ -19,8 +19,6 @@ public class Article {
     private String name;
     @Property(nameInDb = "note")
     private String note;
-    @Property(nameInDb = "content")
-    private String content;
     @Property(nameInDb = "author")
     private String author;
     @Property(nameInDb = "translator")
@@ -33,33 +31,28 @@ public class Article {
     @ToMany(referencedJoinProperty = "artId")
     private List<Tagged> taggedList;
 
-    /**
-     * Used to resolve relations
-     */
+    /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /**
-     * Used for active entity operations.
-     */
-    @Generated(hash = 434328755)
-    private transient ArticleDao myDao;
+    /** Used for active entity operations. */
+    @Generated(hash = 1125819822)
+    private transient ArtInfoDao myDao;
 
-    @Generated(hash = 1073743052)
-    public Article(Long id, String name, String note, String content, String author,
-                   String translator, int uploadTime, String source) {
+    @Generated(hash = 505436297)
+    public ArtInfo(Long id, String name, String note, String author,
+            String translator, int uploadTime, String source) {
         this.id = id;
         this.name = name;
         this.note = note;
-        this.content = content;
         this.author = author;
         this.translator = translator;
         this.uploadTime = uploadTime;
         this.source = source;
     }
 
-    @Generated(hash = 742516792)
-    public Article() {
+    @Generated(hash = 1265393630)
+    public ArtInfo() {
     }
 
     public Long getId() {
@@ -84,14 +77,6 @@ public class Article {
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public String getContent() {
-        return this.content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public String getAuthor() {
@@ -130,7 +115,7 @@ public class Article {
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
      */
-    @Generated(hash = 1533626314)
+    @Generated(hash = 1964025970)
     public List<Tagged> getTaggedList() {
         if (taggedList == null) {
             final DaoSession daoSession = this.daoSession;
@@ -138,7 +123,7 @@ public class Article {
                 throw new DaoException("Entity is detached from DAO context");
             }
             TaggedDao targetDao = daoSession.getTaggedDao();
-            List<Tagged> taggedListNew = targetDao._queryArticle_TaggedList(id);
+            List<Tagged> taggedListNew = targetDao._queryArtInfo_TaggedList(id);
             synchronized (this) {
                 if (taggedList == null) {
                     taggedList = taggedListNew;
@@ -148,9 +133,7 @@ public class Article {
         return taggedList;
     }
 
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated(hash = 300101849)
     public synchronized void resetTaggedList() {
         taggedList = null;
@@ -193,9 +176,9 @@ public class Article {
     }
 
     /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 2112142041)
+    @Generated(hash = 836848713)
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getArticleDao() : null;
+        myDao = daoSession != null ? daoSession.getArtInfoDao() : null;
     }
 }

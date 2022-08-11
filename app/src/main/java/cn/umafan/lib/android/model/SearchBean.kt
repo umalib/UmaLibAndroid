@@ -1,6 +1,6 @@
 package cn.umafan.lib.android.model
 
-import cn.umafan.lib.android.beans.Tag
+import cn.umafan.lib.android.model.db.Tag
 import java.io.Serializable
 
 data class SearchBean(

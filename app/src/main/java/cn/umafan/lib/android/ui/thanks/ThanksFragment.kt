@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import cn.umafan.lib.android.beans.DaoSession
+import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.databinding.FragmentThanksBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyApplication

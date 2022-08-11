@@ -3,7 +3,7 @@ package cn.umafan.lib.android.ui.main.model
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.viewModelScope
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.beans.Tag
+import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.databinding.ItemSelectedTagBinding
 import cn.umafan.lib.android.ui.main.MainViewModel
 import com.angcyo.dsladapter.DslAdapterItem
@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 
 class TagSelectedItem(
     val tag: Tag,
-    val mViewModel: MainViewModel,
-    val flag: Boolean
+    private val mViewModel: MainViewModel,
+    private val flag: Boolean
 ) : DslAdapterItem() {
     override var itemLayoutId = R.layout.item_selected_tag
 
@@ -44,15 +44,15 @@ class TagSelectedItem(
                             if (flag) {
                                 searchParams.value?.tags?.remove(tag)
                                 val tmp = mutableSetOf<Tag>()
-                                searchParams.value?.tags?.forEach {
-                                    tmp.add(it)
+                                searchParams.value?.tags?.forEach { tag ->
+                                    tmp.add(tag)
                                 }
                                 selectedTags.emit(tmp)
                             } else {
                                 searchParams.value?.exceptedTags?.remove(tag)
                                 val tmp = mutableSetOf<Tag>()
-                                searchParams.value?.exceptedTags?.forEach {
-                                    tmp.add(it)
+                                searchParams.value?.exceptedTags?.forEach { tag ->
+                                    tmp.add(tag)
                                 }
                                 selectedExceptTags.emit(tmp)
                             }
