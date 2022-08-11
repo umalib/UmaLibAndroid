@@ -89,6 +89,7 @@ class FavoritesFragment : Fragment() {
         val pageSizeSelector =
             view.findViewById<AutoCompleteTextView>(R.id.page_size_selector_input)
         pageSizeSelector.setAdapter(pageSizeAdapter)
+        pageSizeSelector.hint = "${getString(R.string.page_size_selector_label)}-当前：${PageSizeUtil.getSize()}"
         pageSizeSelector.setOnItemClickListener { adapterView, _, i, _ ->
             PageSizeUtil.setSize(adapterView.adapter.getItem(i).toString().toInt())
             favoritesViewModel.currentPage.postValue(1)
