@@ -2,7 +2,6 @@ package cn.umafan.lib.android.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,11 +21,9 @@ import cn.umafan.lib.android.beans.TaggedDao
 import cn.umafan.lib.android.databinding.FragmentHomeBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.SearchBean
-import cn.umafan.lib.android.ui.home.model.PageItem
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import cn.umafan.lib.android.util.PageSizeUtil
-import com.angcyo.dsladapter.DslAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.liangguo.androidkit.app.ToastUtil
@@ -57,9 +54,6 @@ class HomeFragment : Fragment() {
             android.R.layout.simple_spinner_dropdown_item,
             arrayOf(10, 20, 30, 50)
         )
-//        for (i in 1 until homeViewModel.pageLen.value!! + 1) {
-//            pageData.add(PageItem(i, homeViewModel))
-//        }
         view.findViewById<RecyclerView>(R.id.page_recycler_view)?.adapter = homeViewModel.pageSelectorAdapter
         val inputText = view.findViewById<TextInputEditText>(R.id.page_jumper_input_text)
         inputText.doOnTextChanged { text, start, _, count ->
@@ -70,7 +64,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        inputText.setOnEditorActionListener { textView, i, keyEvent ->
+        inputText.setOnEditorActionListener { textView, i, _ ->
             if (i == EditorInfo.IME_ACTION_NEXT) {
                 val page = textView.text.toString().toInt()
                 homeViewModel.currentPage.postValue(page)
@@ -79,8 +73,8 @@ class HomeFragment : Fragment() {
                     checkedButton.value = null
                     //清除数组再重新记录状态
                     homeViewModel.checkedList.clear()
-                    for (i in 0 until homeViewModel.pageLen.value!!) {
-                        if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
+                    for (n in 0 until homeViewModel.pageLen.value!!) {
+                        if (n + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
                         else homeViewModel.checkedList.add(true)
                     }
                     checkedList[page - 1] = true
@@ -93,7 +87,7 @@ class HomeFragment : Fragment() {
         }
         val pageSizeSelector = view.findViewById<AutoCompleteTextView>(R.id.page_size_selector_input)
         pageSizeSelector.setAdapter(pageSizeAdapter)
-        pageSizeSelector.setOnItemClickListener { adapterView, view, i, l ->
+        pageSizeSelector.setOnItemClickListener { adapterView, _, i, _ ->
             PageSizeUtil.setSize(adapterView.adapter.getItem(i).toString().toInt())
             homeViewModel.currentPage.postValue(1)
             isShowing = true
