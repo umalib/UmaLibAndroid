@@ -75,6 +75,6 @@
     <string name="page_jumper_suffix">页</string>
     <string name="page_jumper_label">输入页码数</string>
     <string name="page_size_selector_label">选择每页文章数</string>
-
+    <string name="random_article">随机文章</string>
 
 </resources>

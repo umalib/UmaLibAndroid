@@ -128,27 +128,26 @@ class HomeFragment : Fragment() {
 
         initView()
 
-        homeViewModel.currentPage.observe(viewLifecycleOwner) {
-            homeViewModel.checkedList.clear()
-            for (i in 0 until homeViewModel.pageLen.value!!) {
-                if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
-                else homeViewModel.checkedList.add(true)
-            }
-            if (isShowing) {
-                mPageSelectorDialog.hide()
-                isShowing = false
-            }
-            loadArticles(
-                it,
-                arguments?.getSerializable("searchParams") as SearchBean?,
-                PageSizeUtil.getSize()
-            )
-            binding.lastPageBtn.isEnabled = it > 1
-            binding.nextPageBtn.isEnabled = it < homeViewModel.pageLen.value!!
-            binding.pageNumBtn.text = "$it/${homeViewModel.pageLen.value} 页"
-        }
-
         with(homeViewModel) {
+            currentPage.observe(viewLifecycleOwner) {
+                homeViewModel.checkedList.clear()
+                for (i in 0 until homeViewModel.pageLen.value!!) {
+                    if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
+                    else homeViewModel.checkedList.add(true)
+                }
+                if (isShowing) {
+                    mPageSelectorDialog.hide()
+                    isShowing = false
+                }
+                loadArticles(
+                    it,
+                    arguments?.getSerializable("searchParams") as SearchBean?,
+                    PageSizeUtil.getSize()
+                )
+                binding.lastPageBtn.isEnabled = it > 1
+                binding.nextPageBtn.isEnabled = it < homeViewModel.pageLen.value!!
+                binding.pageNumBtn.text = "$it/${homeViewModel.pageLen.value} 页"
+            }
             pageLen.observe(viewLifecycleOwner) {
                 viewModelScope.launch {
                     homeViewModel.checkedList.clear()
@@ -163,11 +162,16 @@ class HomeFragment : Fragment() {
                         this@HomeFragment.pageData.add(i)
                     }
                     pageData.emit(this@HomeFragment.pageData)
-                    println("fucka" + pageData.value)
                 }
             }
         }
 
+        binding.randomBtn.setOnClickListener {
+            loadArticles(1,
+            SearchBean(isRandom = true),
+                PageSizeUtil.getSize()
+            )
+        }
 
         return root
     }
@@ -211,44 +215,57 @@ class HomeFragment : Fragment() {
                 println("search-params: $params")
                 val query: QueryBuilder<ArtInfo> = artInfoDao.queryBuilder()
                 if (null != params) {
-                    if (params.creator!!.isNotBlank()) {
-                        query.where(
-                            query.or(
-                                ArtInfoDao.Properties.Author.eq(params.creator),
-                                ArtInfoDao.Properties.Translator.eq(params.creator)
+                    if (!params.isRandom) {
+                        if (params.creator!!.isNotBlank()) {
+                            query.where(
+                                query.or(
+                                    ArtInfoDao.Properties.Author.eq(params.creator),
+                                    ArtInfoDao.Properties.Translator.eq(params.creator)
+                                )
                             )
-                        )
-                    }
-                    if (params.keyword!!.isNotBlank()) {
-                        query.where(
-                            query.or(
-                                ArtInfoDao.Properties.Name.like("%${params.keyword}%"),
-                                ArtInfoDao.Properties.Note.like("%${params.keyword}%")
+                        }
+                        if (params.keyword!!.isNotBlank()) {
+                            query.where(
+                                query.or(
+                                    ArtInfoDao.Properties.Name.like("%${params.keyword}%"),
+                                    ArtInfoDao.Properties.Note.like("%${params.keyword}%")
+                                )
                             )
-                        )
-                    }
-                    if (params.tags.isNotEmpty()) {
-                        val taggedList = taggedDao.queryRaw(
-                            "where tagId in ${
-                                params.tags.map { tag -> tag.id }.joinToString(",", "(", ")")
-                            } group by artId having count(id) = ${params.tags.size}"
-                        )
-                        query.where(
-                            ArtInfoDao.Properties.Id.`in`(
-                                taggedList.map { tagged -> tagged.artId })
-                        )
-                    }
-                    if (params.exceptedTags.isNotEmpty()) {
-                        val taggedList = taggedDao.queryBuilder()
-                            .where(TaggedDao.Properties.TagId.`in`(params.exceptedTags.map { tag -> tag.id }))
-                            .build().list()
-                        query.where(
-                            ArtInfoDao.Properties.Id.notIn(taggedList.map { tagged -> tagged.artId })
-                        )
+                        }
+                        if (params.tags.isNotEmpty()) {
+                            val taggedList = taggedDao.queryRaw(
+                                "where tagId in ${
+                                    params.tags.map { tag -> tag.id }.joinToString(",", "(", ")")
+                                } group by artId having count(id) = ${params.tags.size}"
+                            )
+                            query.where(
+                                ArtInfoDao.Properties.Id.`in`(
+                                    taggedList.map { tagged -> tagged.artId })
+                            )
+                        }
+                        if (params.exceptedTags.isNotEmpty()) {
+                            val taggedList = taggedDao.queryBuilder()
+                                .where(TaggedDao.Properties.TagId.`in`(params.exceptedTags.map { tag -> tag.id }))
+                                .build().list()
+                            query.where(
+                                ArtInfoDao.Properties.Id.notIn(taggedList.map { tagged -> tagged.artId })
+                            )
+                        }
+                    } else {
+                        val q = query.limit(pageSize).orderRaw("RANDOM()").orderDesc(ArtInfoDao.Properties.UploadTime).build().listLazy()
+                        homeViewModel.loadArticles(q)
+                        homeViewModel.pageLen.value = 1
+                        with(homeViewModel.currentPage.value) {
+                            binding.lastPageBtn.isEnabled = this!! > 1
+                            binding.nextPageBtn.isEnabled = this < homeViewModel.pageLen.value!!
+                            binding.pageNumBtn.text = "$this/${homeViewModel.pageLen.value} 页"
+                        }
+                        return@DataBaseHandler
                     }
                 }
 
                 query.offset(offset).limit(pageSize).orderDesc(ArtInfoDao.Properties.UploadTime)
+
                 count = query.count()
                 if (count == 0L) {
                     ToastUtil.info(getString(R.string.no_data))

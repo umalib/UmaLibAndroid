@@ -7,5 +7,6 @@ data class SearchBean(
     var keyword: String? = "",
     var tags: MutableSet<Tag> = mutableSetOf(),
     var creator: String? = "",
-    var exceptedTags: MutableSet<Tag> = mutableSetOf()
+    var exceptedTags: MutableSet<Tag> = mutableSetOf(),
+    var isRandom: Boolean = false
 ) : Serializable
