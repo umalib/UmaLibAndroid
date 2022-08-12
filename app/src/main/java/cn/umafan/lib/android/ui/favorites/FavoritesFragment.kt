@@ -14,12 +14,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.model.db.ArtInfo
-import cn.umafan.lib.android.model.db.ArtInfoDao
-import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.databinding.FragmentFavoritesBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
+import cn.umafan.lib.android.model.db.ArtInfo
+import cn.umafan.lib.android.model.db.ArtInfoDao
+import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import cn.umafan.lib.android.util.FavoriteArticleUtil
@@ -89,7 +89,8 @@ class FavoritesFragment : Fragment() {
         val pageSizeSelector =
             view.findViewById<AutoCompleteTextView>(R.id.page_size_selector_input)
         pageSizeSelector.setAdapter(pageSizeAdapter)
-        pageSizeSelector.hint = "${getString(R.string.page_size_selector_label)}-当前：${PageSizeUtil.getSize()}"
+        pageSizeSelector.hint =
+            "${getString(R.string.page_size_selector_label)}-当前：${PageSizeUtil.getSize()}"
         pageSizeSelector.setOnItemClickListener { adapterView, _, i, _ ->
             PageSizeUtil.setSize(adapterView.adapter.getItem(i).toString().toInt())
             favoritesViewModel.currentPage.postValue(1)
