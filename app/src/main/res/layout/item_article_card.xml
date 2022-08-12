@@ -21,7 +21,7 @@
             android:checkable="true"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="@color/lightPrimary"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
             app:cardCornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +71,7 @@
                     android:layout_weight="0.3"
                     android:paddingHorizontal="15dp"
                     android:text="译者： 鬼道"
-                    android:textColor="@color/purple_500"
+                    android:textColor="?attr/subtitle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/article_name" />
 
@@ -82,7 +82,7 @@
                     android:layout_weight="0.7"
                     android:paddingHorizontal="15dp"
                     android:text="2022-7-25 14:18"
-                    android:textColor="@color/purple_500"
+                    android:textColor="?attr/subtitle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/article_name" />
 

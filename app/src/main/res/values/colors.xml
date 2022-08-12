@@ -10,5 +10,7 @@
     <color name="grey">#AAAAAA</color>
     <color name="lightGrey">#DDDDDD</color>
     <color name="lightPrimary">#f3e3fc</color>
+    <color name="darkPurple">#342c3c</color>
     <color name="blue_500">#03A9F4</color>
+    <color name="darkSub">#cc7ede</color>
 </resources>

@@ -12,8 +12,10 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:windowBackground">@drawable/app_bg</item>
-        <item name="cardBackgroundColor">@color/lightPrimary</item>
+        <item name="cardBackgroundColor">@color/darkPurple</item>
         <item name="backgroundColor">@color/black</item>
+        <item name="subtitle">@color/darkSub</item>
+        <item name="textAllCaps">@color/white</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>
