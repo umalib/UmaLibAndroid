@@ -8,12 +8,12 @@ import android.view.View
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.model.db.Article
-import cn.umafan.lib.android.model.db.ArticleDao
-import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.databinding.ActivityReaderBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
+import cn.umafan.lib.android.model.db.Article
+import cn.umafan.lib.android.model.db.ArticleDao
+import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.reader.model.ReaderJSInterface
 import cn.umafan.lib.android.util.FavoriteArticleUtil

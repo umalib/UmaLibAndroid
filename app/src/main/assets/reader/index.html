@@ -10,13 +10,13 @@
 </head>
 <body style="background-color: #f5e8cb;">
 <div id="main">
-    <el-descriptions :column="1">
+    <el-descriptions :column="1" border>
         <el-descriptions-item label="标题">{{ article.name }}</el-descriptions-item>
         <el-descriptions-item label="作者">{{ article.author }}</el-descriptions-item>
         <el-descriptions-item v-if="article.translator" label="译者">
             {{ article.translator }}
         </el-descriptions-item>
-        <el-descriptions-item label="上传时间">{{ article.time }}</el-descriptions-item>
+        <el-descriptions-item label="上传">{{ article.time }}</el-descriptions-item>
         <el-descriptions-item label="标签">
             <template style="margin: 5px;" v-for="tag in article.tags">
                 <el-tag size="small">{{ tag }}</el-tag>
@@ -88,6 +88,7 @@
         vue.$data.fontSize = json.setting.fontSize
         vue.$data.segmentSpace = json.setting.segmentSpace
     }
+
 
 
 

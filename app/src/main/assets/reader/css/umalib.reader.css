@@ -2,6 +2,9 @@ div.ql-editor, div.el-descriptions .el-descriptions-item__cell {
   color: #10273f;
   background-color: #f5e8cb;
 }
+div.el-descriptions .el-descriptions-item__label {
+  min-width: 50px;
+}
 
 div.ql-editor img {
   max-width: 100%;

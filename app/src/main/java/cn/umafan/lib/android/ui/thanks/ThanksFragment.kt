@@ -33,7 +33,7 @@ class ThanksFragment : Fragment() {
             appVersion.text = MyApplication.getVersion().name
             settingItemFeedback.setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse("https://bbs.nga.cn/read.php?tid=32535194")
+                intent.data = Uri.parse("https://bbs.nga.cn/read.php?tid=33041357")
                 startActivity(intent)
             }
             settingItemGithub.setOnClickListener {
