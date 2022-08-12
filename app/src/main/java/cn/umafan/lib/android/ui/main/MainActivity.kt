@@ -31,6 +31,7 @@ import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.MainIntroActivity
 import cn.umafan.lib.android.ui.UpdateLogActivity
+import cn.umafan.lib.android.ui.main.model.CreatorSuggestionAdapter
 import cn.umafan.lib.android.ui.main.model.TagSelectedItem
 import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter
 import com.angcyo.dsladapter.DslAdapter
@@ -74,11 +75,7 @@ class MainActivity : MyBaseActivity() {
         val tags = tagList.toList()
         val tagAdapter = TagSuggestionAdapter(tags)
         val tagExceptAdapter = TagSuggestionAdapter(tags)
-        val creatorAdapter = ArrayAdapter(
-            this@MainActivity,
-            android.R.layout.simple_spinner_dropdown_item,
-            creatorList.toTypedArray()
-        )
+        val creatorAdapter = CreatorSuggestionAdapter(creatorList.toList())
 
         searchFilterView = LayoutInflater.from(this).inflate(R.layout.dialog_search_filter, null)
 
