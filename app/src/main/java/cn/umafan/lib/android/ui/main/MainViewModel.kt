@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.model.MyApplication
+import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.util.network.UpdateUtil
 import cn.umafan.lib.android.util.network.model.UpdateBean
@@ -19,9 +20,10 @@ class MainViewModel : ViewModel() {
 
     val updateInfo = MutableLiveData<UpdateBean>()
 
-    fun getUpdate(initiative: Boolean) {
+    fun getUpdate(activity: MyBaseActivity, initiative: Boolean) {
         viewModelScope.launch {
             UpdateUtil.getUpdate().apply {
+                if (initiative) activity.shapeLoadingDialog?.dialog?.hide()
                 if (null != this) {
                     this.show =
                         this.currentVersion > MyApplication.getVersion().code ||

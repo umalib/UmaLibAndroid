@@ -271,7 +271,7 @@ class MainActivity : MyBaseActivity() {
         dataBaseThread.isDaemon = true
         dataBaseThread.start()
 
-        mViewModel.getUpdate(false)
+        mViewModel.getUpdate(this,false)
 
         loadSearchOptions()
 
@@ -315,7 +315,10 @@ class MainActivity : MyBaseActivity() {
         when (item.itemId) {
             // 搜索过滤项
             R.id.action_search_settings -> searchFilterDialog.show()
-            R.id.check_update -> mViewModel.getUpdate(true)
+            R.id.check_update -> {
+                shapeLoadingDialog?.show()
+                mViewModel.getUpdate(this, true)
+            }
             R.id.update_log -> UpdateLogActivity::class.startNewActivity()
             R.id.app_intro -> MainIntroActivity::class.startNewActivity()
 

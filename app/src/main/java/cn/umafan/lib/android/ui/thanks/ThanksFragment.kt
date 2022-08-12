@@ -42,7 +42,8 @@ class ThanksFragment : Fragment() {
                 startActivity(intent)
             }
             settingItemCheckUpdate.setOnClickListener {
-                (activity as MainActivity).mViewModel.getUpdate(true)
+                (activity as MainActivity).shapeLoadingDialog?.dialog?.show()
+                (activity as MainActivity).mViewModel.getUpdate(activity as MainActivity, true)
             }
         }
 
