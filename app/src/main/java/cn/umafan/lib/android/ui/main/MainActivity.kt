@@ -166,6 +166,7 @@ class MainActivity : MyBaseActivity() {
 
         with(binding) {
             // 搜索框输入监听
+            appBarMain.searchView.setKeepQuery(true)
             appBarMain.searchView.setOnQueryTextListener(object :
                 SimpleSearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String): Boolean {
