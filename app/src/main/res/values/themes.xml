@@ -16,7 +16,7 @@
         <item name="cardBackgroundColor">@color/lightPrimary</item>
         <item name="backgroundColor">@color/white</item>
         <item name="subtitleTextColor">@color/purple_500</item>
-        <item name="textAllCaps">@color/black</item>
+        <item name="normalTextColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
 

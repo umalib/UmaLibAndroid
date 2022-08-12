@@ -71,7 +71,7 @@
                     android:layout_weight="0.3"
                     android:paddingHorizontal="15dp"
                     android:text="译者： 鬼道"
-                    android:textColor="?attr/subtitle"
+                    android:textColor="?attr/subtitleTextColor"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/article_name" />
 
@@ -82,7 +82,7 @@
                     android:layout_weight="0.7"
                     android:paddingHorizontal="15dp"
                     android:text="2022-7-25 14:18"
-                    android:textColor="?attr/subtitle"
+                    android:textColor="?attr/subtitleTextColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/article_name" />
 
