@@ -6,25 +6,30 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
+import android.os.Handler
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.core.net.toUri
 import cn.umafan.lib.android.model.MyApplication
+import java.io.*
 
 
 object SettingUtil {
     private const val fileName = "setting"
     const val INDEX_BG = "index_bg"
     const val APP_BAR_BG = "app_bar_bg"
+    const val SAVE_IMAGE_SUCCESS = 0
+    const val SAVE_IMAGE_FAIL = 1
 
     private var sharedPreferences: SharedPreferences =
         MyApplication.context.getSharedPreferences(fileName, 0)
 
-    fun saveImageBackground(type: String, uri: Uri): Boolean {
+    fun saveImageBackground(handler: Handler, type: String, uri: Uri): Boolean {
         return try {
-            sharedPreferences.edit().putString(type, uri.toString()).apply()
+            SaveImageThread(handler, type, uri).start()
             true
         } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }
@@ -63,15 +68,13 @@ object SettingUtil {
         var cursor: Cursor? = null
         try {
             cursor =
-                context.getContentResolver().query(uri, projection, selection, selectionArgs, null)
+                context.contentResolver.query(uri, projection, selection, selectionArgs, null)
             if (cursor != null && cursor.moveToFirst()) {
                 val columnIndex: Int = cursor.getColumnIndexOrThrow(projection[0])
                 path = cursor.getString(columnIndex)
             }
         } catch (e: java.lang.Exception) {
-            if (cursor != null) {
-                cursor.close()
-            }
+            cursor?.close()
         }
         return path
     }
@@ -133,4 +136,38 @@ object SettingUtil {
         return "com.android.providers.downloads.documents" == uri.authority
     }
 
+    private class SaveImageThread(
+        val handler: Handler,
+        val type: String,
+        val uri: Uri
+    ): Thread(){
+        override fun run() {
+            try {
+                val context = MyApplication.context
+                val file = File(getRealPathFromUriAboveApi19(context, uri)!!)
+                val myInput: InputStream = FileInputStream(file)
+                val outFile: File = context.getDatabasePath("$type.jpg")
+
+                outFile.parentFile?.mkdirs()
+                val myOutput: OutputStream = FileOutputStream(outFile)
+                val buffer = ByteArray(5)
+                var length: Int = myInput.read(buffer)
+                var count = 0
+
+                while (length > 0) {
+                    myOutput.write(buffer, 0, length)
+                    length = myInput.read(buffer)
+                    count++
+                }
+                myOutput.flush()
+                myOutput.close()
+                myInput.close()
+                sharedPreferences.edit().putString(type, outFile.path).apply()
+                handler.sendEmptyMessage(SAVE_IMAGE_SUCCESS)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                handler.sendEmptyMessage(SAVE_IMAGE_FAIL)
+            }
+        }
+    }
 }

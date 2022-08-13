@@ -84,4 +84,6 @@
     <string name="restart_now">现在重启</string>
     <string name="later">现在不要</string>
     <string name="set_fail">设置失败！</string>
+    <string name="reset">恢复默认</string>
+    <string name="confirm_reset">确定恢复默认设置吗？此操作不可恢复</string>
 </resources>

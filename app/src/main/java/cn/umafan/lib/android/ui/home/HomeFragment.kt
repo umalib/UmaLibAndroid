@@ -195,7 +195,7 @@ class HomeFragment : Fragment() {
             pageNumBtn.setOnClickListener { mPageSelectorDialog.show() }
             layout.apply {
                 val uri = SettingUtil.getImageBackground(SettingUtil.INDEX_BG)
-                if (null != uri) background = Drawable.createFromPath(SettingUtil.getRealPathFromUriAboveApi19(requireContext(), uri))
+                if (null != uri) background = Drawable.createFromPath(uri.path)
             }
         }
     }

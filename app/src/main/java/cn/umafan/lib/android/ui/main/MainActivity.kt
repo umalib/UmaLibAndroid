@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -208,8 +209,12 @@ class MainActivity : MyBaseActivity() {
                 }
             }
             appBarMain.indexBg.apply {
-                val uri = SettingUtil.getImageBackground(SettingUtil.APP_BAR_BG)
-                if (null != uri) setImageBitmap(getBitmapFromUri(uri, this@MainActivity))
+                try {
+                    val uri = SettingUtil.getImageBackground(SettingUtil.APP_BAR_BG)
+                    if (null != uri) setImageDrawable(Drawable.createFromPath(uri.path))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
 
