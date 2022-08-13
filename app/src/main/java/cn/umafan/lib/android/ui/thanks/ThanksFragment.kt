@@ -1,6 +1,7 @@
 package cn.umafan.lib.android.ui.thanks
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
+import cn.umafan.lib.android.util.SettingUtil
 
 class ThanksFragment : Fragment() {
     private var _binding: FragmentThanksBinding? = null
@@ -44,6 +46,10 @@ class ThanksFragment : Fragment() {
             settingItemCheckUpdate.setOnClickListener {
                 (activity as MainActivity).shapeLoadingDialog?.dialog?.show()
                 (activity as MainActivity).mViewModel.getUpdate(activity as MainActivity, true)
+            }
+            layout.apply {
+                val uri = SettingUtil.getImageBackground(SettingUtil.INDEX_BG)
+                if (null != uri) background = Drawable.createFromPath(SettingUtil.getRealPathFromUriAboveApi19(requireContext(), uri))
             }
         }
 

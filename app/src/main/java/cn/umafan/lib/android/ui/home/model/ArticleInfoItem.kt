@@ -7,6 +7,8 @@ import cn.umafan.lib.android.databinding.ItemArticleCardBinding
 import cn.umafan.lib.android.ui.reader.ReaderActivity
 import com.angcyo.dsladapter.DslAdapterItem
 import com.angcyo.dsladapter.DslViewHolder
+import com.google.android.material.snackbar.Snackbar
+import com.liangguo.androidkit.app.ToastUtil
 import com.liangguo.androidkit.app.startNewActivity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -57,10 +59,14 @@ class ArticleInfoItem(
                             else
                                 b.type.compareTo(a.type)
                         }.joinToString("，") { tag -> tag.name }
-                itemArticleCardBox.setOnClickListener { _ ->
+                itemArticleCardBox.setOnClickListener {
                     ReaderActivity::class.startNewActivity {
                         putExtra("id", articleInfo.id.toInt())
                     }
+                }
+                itemArticleCardBox.setOnLongClickListener {
+                    Snackbar.make(it, "[ID${articleInfo.id}]${articleInfo.name}", Snackbar.LENGTH_SHORT).show()
+                    false
                 }
                 invalidateAll()
             }

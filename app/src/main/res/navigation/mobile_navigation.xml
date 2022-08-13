@@ -23,5 +23,11 @@
         android:label="@string/thanks"
         tools:layout="@layout/fragment_favorites" />
 
+    <activity
+        android:id="@+id/nav_setting"
+        android:name="cn.umafan.lib.android.ui.setting.SettingActivity"
+        android:label="@string/action_settings"
+        tools:layout="@layout/activity_setting"
+        />
 
 </navigation>

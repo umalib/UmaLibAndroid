@@ -3,12 +3,13 @@ package cn.umafan.lib.android.ui.main
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.*
-import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -21,19 +22,20 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.model.db.ArtInfoDao
-import cn.umafan.lib.android.model.db.DaoSession
-import cn.umafan.lib.android.model.db.Tag
-import cn.umafan.lib.android.model.db.TagDao
 import cn.umafan.lib.android.databinding.ActivityMainBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.model.SearchBean
+import cn.umafan.lib.android.model.db.ArtInfoDao
+import cn.umafan.lib.android.model.db.DaoSession
+import cn.umafan.lib.android.model.db.Tag
+import cn.umafan.lib.android.model.db.TagDao
 import cn.umafan.lib.android.ui.MainIntroActivity
 import cn.umafan.lib.android.ui.UpdateLogActivity
 import cn.umafan.lib.android.ui.main.model.CreatorSuggestionAdapter
 import cn.umafan.lib.android.ui.main.model.TagSelectedItem
 import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter
+import cn.umafan.lib.android.util.SettingUtil
 import com.angcyo.dsladapter.DslAdapter
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,6 +44,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.liangguo.androidkit.app.ToastUtil
 import com.liangguo.androidkit.app.startNewActivity
 import kotlinx.coroutines.launch
+import java.io.FileNotFoundException
 import kotlin.system.exitProcess
 
 
@@ -151,7 +154,7 @@ class MainActivity : MyBaseActivity() {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_favorites, R.id.nav_thanks
+                R.id.nav_home, R.id.nav_favorites, R.id.nav_thanks, R.id.nav_setting
             ), drawerLayout
         )
 
@@ -203,6 +206,10 @@ class MainActivity : MyBaseActivity() {
                         navController.navigate(R.id.nav_favorites)
                     }
                 }
+            }
+            appBarMain.indexBg.apply {
+                val uri = SettingUtil.getImageBackground(SettingUtil.APP_BAR_BG)
+                if (null != uri) setImageBitmap(getBitmapFromUri(uri, this@MainActivity))
             }
         }
 
@@ -372,5 +379,11 @@ class MainActivity : MyBaseActivity() {
             }
         })
     }
-
+    companion object {
+        @Throws(FileNotFoundException::class)
+        fun getBitmapFromUri(uri: Uri, activity: MainActivity): Bitmap {
+            val parcelFileDescriptor = activity.contentResolver.openFileDescriptor(uri, "r")
+            return BitmapFactory.decodeFileDescriptor(parcelFileDescriptor?.fileDescriptor)
+        }
+    }
 }

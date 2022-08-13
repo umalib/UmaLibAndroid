@@ -10,4 +10,5 @@
     <dimen name="phone_statue_bar_height">35dp</dimen>
     <dimen name="collapsing_toolbar_layout_large_size">150dp</dimen>
     <dimen name="padding_bottom_recycler">150dp</dimen>
+    <dimen name="grid_expected_size">120dp</dimen>
 </resources>

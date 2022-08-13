@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.setting.SettingActivity"
+    android:background="?attr/backgroundColor">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/Theme.UmaLibrary.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="@string/action_settings"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/Theme.UmaLibrary.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <com.liangguo.preference.views.CommonSettingView
+            android:id="@+id/setting_change_index_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:icon="@drawable/ic_baseline_insert_photo_24"
+            app:showEndIcon="false"
+            app:subtitle="@string/select_from_gallery"
+            app:title="@string/change_index_bg"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.liangguo.preference.views.CommonSettingView
+            android:id="@+id/setting_change_bar_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:icon="@drawable/ic_baseline_insert_photo_24"
+            app:showEndIcon="false"
+            app:subtitle="@string/select_from_gallery"
+            app:title="@string/change_app_bar_bg"
+            app:layout_constraintTop_toBottomOf="@id/setting_change_index_bg"/>
+
+<!--        <com.liangguo.preference.views.CommonSettingView-->
+<!--            android:id="@+id/setting_item_check_update"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            app:icon="@drawable/ic_baseline_system_update_24"-->
+<!--            app:showEndIcon="false"-->
+<!--            app:subtitle="更新内容往往包括数据库更新/软件功能更新"-->
+<!--            app:title="检查更新" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,6 +1,7 @@
 package cn.umafan.lib.android.ui.favorites
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import cn.umafan.lib.android.util.FavoriteArticleUtil
 import cn.umafan.lib.android.util.PageSizeUtil
+import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.liangguo.androidkit.app.ToastUtil
@@ -181,6 +183,11 @@ class FavoritesFragment : Fragment() {
             }
             recyclerView.adapter = favoritesViewModel.articleDataAdapter
             pageNumBtn.setOnClickListener { mPageSelectorDialog.show() }
+
+            layout.apply {
+                val uri = SettingUtil.getImageBackground(SettingUtil.INDEX_BG)
+                if (null != uri) background = Drawable.createFromPath(SettingUtil.getRealPathFromUriAboveApi19(requireContext(), uri))
+            }
         }
     }
 
