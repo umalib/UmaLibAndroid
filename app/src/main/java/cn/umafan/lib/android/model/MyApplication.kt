@@ -14,7 +14,7 @@ class MyApplication : Application() {
         fun getVersion(): VersionBean {
             val v = context.packageManager.getPackageInfo(context.packageName, 0)
             return VersionBean(
-                v.longVersionCode.toInt(),
+                v.versionCode,
                 v.versionName
             )
 
