@@ -5,8 +5,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import br.tiagohm.markdownview.css.styles.Github
 import cn.umafan.lib.android.databinding.ActivityUpdateLogBinding
+import cn.umafan.lib.android.model.MyBaseActivity
 
-class UpdateLogActivity : AppCompatActivity() {
+class UpdateLogActivity : MyBaseActivity() {
 
     private lateinit var binding: ActivityUpdateLogBinding
 

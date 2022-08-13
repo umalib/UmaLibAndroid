@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ActivitySettingBinding
 import cn.umafan.lib.android.model.MyBaseActivity
@@ -32,9 +31,9 @@ class SettingActivity : MyBaseActivity() {
     }
 
     private val handler by lazy {
-        Handler(Looper.getMainLooper()){ it ->
+        Handler(Looper.getMainLooper()) {
             shapeLoadingDialog?.dialog?.hide()
-            when(it.what) {
+            when (it.what) {
                 SettingUtil.SAVE_IMAGE_SUCCESS -> restartDialog.show()
                 SettingUtil.SAVE_IMAGE_FAIL -> ToastUtil.error(getString(R.string.set_fail))
             }
@@ -71,6 +70,18 @@ class SettingActivity : MyBaseActivity() {
             settingChangeBarBg.setOnLongClickListener {
                 clearImageBackground(SettingUtil.APP_BAR_BG)
                 false
+            }
+
+            settingChangeTheme.setOnClickListener {
+                val themes = arrayOf(getString(R.string.theme_mcqueen), getString(R.string.theme_nga))
+                val themesId = arrayOf(R.style.Theme_UmaLibrary, R.style.Theme_UmaLibrary_NGA)
+                val selectedId = themesId.indexOf(SettingUtil.getTheme())
+                MaterialAlertDialogBuilder(this@SettingActivity)
+                    .setTitle(R.string.change_theme)
+                    .setSingleChoiceItems(themes, selectedId) { _, i ->
+                        SettingUtil.saveTheme(themesId[i])
+                        restartDialog.show()
+                    }.create().show()
             }
         }
 

@@ -2,6 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.UmaLibrary" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorButtonNormal">@color/purple_200</item>
@@ -13,10 +15,11 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:windowBackground">@drawable/app_bg</item>
-        <item name="cardBackgroundColor">@color/lightPrimary</item>
+        <item name="cardBackgroundColor">@color/lightPurple</item>
         <item name="backgroundColor">@color/white</item>
         <item name="subtitleTextColor">@color/purple_500</item>
         <item name="normalTextColor">@color/black</item>
+        <item name="drawerBg">@color/purple_200</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -29,4 +32,28 @@
     <style name="Theme.UmaLibrary.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.UmaLibrary.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.UmaLibrary.NGA" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/brown_500</item>
+        <item name="colorPrimaryVariant">@color/brown_700</item>
+        <item name="colorButtonNormal">@color/brown_200</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/yellow_200</item>
+        <item name="colorSecondaryVariant">@color/yellow_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/brown_700</item>
+        <item name="android:windowBackground">@drawable/app_bg</item>
+        <item name="cardBackgroundColor">@color/lightYellow</item>
+        <item name="backgroundColor">@color/white</item>
+        <item name="subtitleTextColor">@color/brown_700</item>
+        <item name="normalTextColor">@color/black</item>
+        <item name="drawerBg">@color/brown_500</item>
+        <!-- Customize your theme here. -->
+    </style>
+
 </resources>

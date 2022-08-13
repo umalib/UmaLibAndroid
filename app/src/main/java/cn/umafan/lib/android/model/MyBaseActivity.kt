@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import cn.umafan.lib.android.R
+import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.mingle.widget.ShapeLoadingDialog
@@ -41,6 +42,7 @@ open class MyBaseActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(SettingUtil.getTheme())
         super.onCreate(savedInstanceState)
         shapeLoadingDialog = ShapeLoadingDialog(this)
         shapeLoadingDialog?.dialog?.setCanceledOnTouchOutside(false)

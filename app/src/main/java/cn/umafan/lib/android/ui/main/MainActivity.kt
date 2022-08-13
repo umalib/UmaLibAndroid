@@ -123,8 +123,7 @@ class MainActivity : MyBaseActivity() {
         creatorTextView?.setAdapter(creatorAdapter)
 
         MaterialAlertDialogBuilder(
-            this@MainActivity,
-            com.google.android.material.R.style.MaterialAlertDialog_Material3
+            this
         )
             .setTitle(R.string.search_settings)
             .setView(searchFilterView)

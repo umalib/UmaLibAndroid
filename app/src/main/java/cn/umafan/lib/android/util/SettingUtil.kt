@@ -10,6 +10,7 @@ import android.os.Handler
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.core.net.toUri
+import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.MyApplication
 import java.io.*
 
@@ -54,6 +55,23 @@ object SettingUtil {
             true
         } catch (e: Exception) {
             false
+        }
+    }
+
+    fun saveTheme(id: Int): Boolean {
+        return try {
+            sharedPreferences.edit().putInt("theme", id).apply()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun getTheme(): Int {
+        return try {
+            return sharedPreferences.getInt("theme", R.style.Theme_UmaLibrary)
+        } catch (e: Exception) {
+            R.style.Theme_UmaLibrary
         }
     }
 

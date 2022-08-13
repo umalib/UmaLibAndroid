@@ -10,8 +10,17 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#AAAAAA</color>
     <color name="lightGrey">#DDDDDD</color>
-    <color name="lightPrimary">#f3e3fc</color>
+    <color name="lightPurple">#f3e3fc</color>
     <color name="darkPurple">#342c3c</color>
     <color name="blue_500">#03A9F4</color>
     <color name="darkSub">#cc7ede</color>
+
+    <color name="brown_200">#d6cab5</color>
+    <color name="brown_500">#1c1c24</color>
+    <color name="brown_700">#3b2620</color>
+    <color name="yellow_700">#bfb3ac</color>
+    <color name="yellow_500">#b1b4b0</color>
+    <color name="yellow_200">#be914d</color>
+    <color name="lightYellow">#faf9e1</color>
+    <color name="darkYellow">#332807</color>
 </resources>
