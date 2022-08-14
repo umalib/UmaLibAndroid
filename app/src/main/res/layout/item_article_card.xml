@@ -43,6 +43,7 @@
                     android:maxEms="14"
                     android:paddingHorizontal="15dp"
                     android:singleLine="true"
+                    android:textColor="?attr/titleTextColor"
                     android:text="西野花与東商變革 斯芬克斯"
                     android:textFontWeight="900"
                     app:layout_constraintStart_toStartOf="parent"

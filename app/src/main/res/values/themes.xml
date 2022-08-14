@@ -20,6 +20,7 @@
         <item name="subtitleTextColor">@color/purple_500</item>
         <item name="normalTextColor">@color/black</item>
         <item name="drawerBg">@color/purple_200</item>
+        <item name="titleTextColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -53,6 +54,55 @@
         <item name="subtitleTextColor">@color/brown_700</item>
         <item name="normalTextColor">@color/black</item>
         <item name="drawerBg">@color/brown_500</item>
+        <item name="titleTextColor">@color/black</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.UmaLibrary.WHITE" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/grey_700</item>
+        <item name="colorPrimaryVariant">@color/suzuka_700</item>
+        <item name="colorButtonNormal">@color/suzuka_200</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/grey_200</item>
+        <item name="colorSecondaryVariant">@color/grey_500</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/white_700</item>
+        <item name="android:windowBackground">@drawable/app_bg</item>
+        <item name="cardBackgroundColor">@color/white_200</item>
+        <item name="backgroundColor">@color/white</item>
+        <item name="subtitleTextColor">@color/grey_200</item>
+        <item name="normalTextColor">@color/black</item>
+        <item name="drawerBg">@color/white</item>
+        <item name="titleTextColor">@color/black</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.UmaLibrary.TEAL" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/suzuka_500</item>
+        <item name="colorPrimaryVariant">@color/suzuka_700</item>
+        <item name="colorButtonNormal">@color/suzuka_200</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/orange_500</item>
+        <item name="colorSecondaryVariant">@color/orange_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/suzuka_700</item>
+        <item name="android:windowBackground">@drawable/app_bg</item>
+        <item name="cardBackgroundColor">@color/suzuka_200</item>
+        <item name="backgroundColor">@color/lightSuzuka</item>
+        <item name="subtitleTextColor">@color/suzuka_700</item>
+        <item name="normalTextColor">@color/black</item>
+        <item name="drawerBg">@color/orange_200</item>
+        <item name="titleTextColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
 

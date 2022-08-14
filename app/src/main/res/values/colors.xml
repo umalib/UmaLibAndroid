@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -23,4 +23,23 @@
     <color name="yellow_200">#be914d</color>
     <color name="lightYellow">#faf9e1</color>
     <color name="darkYellow">#332807</color>
+
+    <color name="white_200">#fbfbfb</color>
+    <color name="white_500">#DDDDDD</color>
+    <color name="white_700">#BBBBBB</color>
+    <color name="grey_700">#cae2ec</color>
+    <color name="grey_500">#98b2d5</color>
+    <color name="grey_200">#5d98e8</color>
+    <color name="lightBlack">#999999</color>
+    <color name="darkGrey">#AAAAAA</color>
+
+    <color name="suzuka_200">#cbeaac</color>
+    <color name="suzuka_500">#57a86c</color>
+    <color name="suzuka_700">#608d8a</color>
+    <color name="orange_700">#cf8045</color>
+    <color name="orange_500">#e69048</color>
+    <color name="orange_200">#dcb26e</color>
+    <color name="lightSuzuka" >#C4F6DA</color>
+    <color name="darkOrange">#c17949</color>
+    <color name="darkSuzuka">#206C32</color>
 </resources>
