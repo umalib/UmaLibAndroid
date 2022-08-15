@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_baseline_collections_bookmark_24"
             android:title="@string/my_favorites" />
         <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_baseline_history_24"
+            android:title="@string/history" />
+        <item
             android:id="@+id/nav_thanks"
             android:icon="@drawable/baseline_volunteer_activism_24"
             android:title="@string/thanks" />

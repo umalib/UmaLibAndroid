@@ -154,7 +154,7 @@ class MainActivity : MyBaseActivity() {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_favorites, R.id.nav_thanks, R.id.nav_setting
+                R.id.nav_home, R.id.nav_favorites, R.id.nav_history, R.id.nav_thanks, R.id.nav_setting
             ), drawerLayout
         )
 
@@ -204,6 +204,9 @@ class MainActivity : MyBaseActivity() {
                     }
                     getString(R.string.my_favorites) -> {
                         navController.navigate(R.id.nav_favorites)
+                    }
+                    getString(R.string.history) -> {
+                        navController.navigate(R.id.nav_history)
                     }
                 }
             }

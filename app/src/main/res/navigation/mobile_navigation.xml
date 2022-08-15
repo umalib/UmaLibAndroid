@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_favorites" />
 
     <fragment
+        android:id="@+id/nav_history"
+        android:name="cn.umafan.lib.android.ui.history.HistoryFragment"
+        android:label="@string/history"
+        tools:layout="@layout/fragment_histroy" />
+
+    <fragment
         android:id="@+id/nav_thanks"
         android:name="cn.umafan.lib.android.ui.thanks.ThanksFragment"
         android:label="@string/thanks"
