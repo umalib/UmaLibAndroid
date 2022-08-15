@@ -1,8 +1,10 @@
 package cn.umafan.lib.android.ui.reader.model
 
 import android.text.TextUtils
+import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.db.Article
 import cn.umafan.lib.android.util.ReaderSettingUtil
+import cn.umafan.lib.android.util.SettingUtil
 import com.itheima.view.BridgeWebView
 import org.json.JSONArray
 import org.json.JSONObject
@@ -42,6 +44,16 @@ class ReaderJSInterface(
             ).format(article.uploadTime.toLong() * 1000)
         )
         json.put("setting", ReaderSettingUtil.getSetting("default"))
+        println(SettingUtil.getTheme())
+        json.getJSONObject("setting").put(
+            "theme", when (SettingUtil.getTheme()) {
+                R.style.Theme_UmaLibrary_NGA -> "nga"
+                R.style.Theme_UmaLibrary_WHITE -> "white"
+                R.style.Theme_UmaLibrary_TEAL -> "cyan"
+                else -> "purple"
+            }
+        )
+        println(json)
 
         invokeJavaScript(callback, json.toString())
     }

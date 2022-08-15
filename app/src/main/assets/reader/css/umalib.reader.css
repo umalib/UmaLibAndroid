@@ -1,7 +1,48 @@
-div.ql-editor, div.el-descriptions .el-descriptions-item__cell {
+div.theme-nga, div.theme-nga div.ql-editor, div.theme-nga div.el-descriptions .el-descriptions-item__cell {
   color: #10273f;
   background-color: #f5e8cb;
 }
+
+div.theme-white, div.theme-white div.ql-editor, div.theme-white div.el-descriptions .el-descriptions-item__cell {
+  color: black;
+  background-color: white;
+}
+
+div.theme-cyan, div.theme-cyan div.ql-editor, div.theme-cyan div.el-descriptions .el-descriptions-item__cell {
+  color: #10273f;
+  background-color: #d3dedb;
+}
+
+div.theme-teio, div.theme-teio div.ql-editor, div.theme-teio div.el-descriptions .el-descriptions-item__cell {
+  color: navy;
+  background-color: #d0daff;
+}
+
+div.theme-purple, div.theme-purple div.ql-editor, div.theme-purple div.el-descriptions .el-descriptions-item__cell {
+  color: #10273f;
+  background-color: #ded1d4;
+}
+
+div.theme-black, div.theme-black div.ql-editor, div.theme-black div.el-descriptions .el-descriptions-item__cell {
+  color: #ddedf5;
+  background-color: #34312e;
+}
+
+div.theme-green, div.theme-green div.ql-editor, div.theme-green div.el-descriptions .el-descriptions-item__cell {
+  color: black;
+  background-color: #dde9dd;
+}
+
+div.theme-exhentai, div.theme-exhentai div.ql-editor, div.theme-exhentai div.el-descriptions .el-descriptions-item__cell {
+  color: #f1f1f1;
+  background-color: #3e424a;
+}
+
+div.theme-porn, div.theme-porn div.ql-editor, div.theme-porn div.el-descriptions .el-descriptions-item__cell {
+  color: #e4e4e4;
+  background-color: black;
+}
+
 div.el-descriptions .el-descriptions-item__label {
   min-width: 50px;
 }

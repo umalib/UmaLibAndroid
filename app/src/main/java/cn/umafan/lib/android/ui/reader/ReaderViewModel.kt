@@ -11,7 +11,7 @@ import cn.umafan.lib.android.util.ReaderSettingUtil
  * @Description
  * @createTime 2022年 08月07日 19:36
  **/
-class ReaderViewModel() : ViewModel() {
+class ReaderViewModel : ViewModel() {
     val collected = MutableLiveData(true)
     val fontSize: MutableLiveData<String>
     val segmentSpace: MutableLiveData<String>

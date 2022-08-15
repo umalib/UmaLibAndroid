@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="file:///android_asset/reader/css/quill.snow.css">
     <link rel="stylesheet" href="file:///android_asset/reader/css/umalib.reader.css">
 </head>
-<body style="background-color: #f5e8cb;">
-<div id="main">
+<body style="margin: 0;">
+<div id="main" v-bind:class="`theme-${theme}`">
     <el-descriptions :column="1" border>
         <el-descriptions-item label="标题">{{ article.name }}</el-descriptions-item>
         <el-descriptions-item label="作者">{{ article.author }}</el-descriptions-item>
@@ -44,6 +44,7 @@
         data() {
             return {
                 article: {},
+                theme: 'nga',
                 fontSize: 'normal',
                 segmentSpace: 'wider'
             };
@@ -82,12 +83,14 @@
         vue.$data.article = json
         vue.$data.fontSize = json.setting.fontSize
         vue.$data.segmentSpace = json.setting.segmentSpace
+        vue.$data.theme = json.setting.theme
     }
 
     function renderAct(json) {
         vue.$data.fontSize = json.setting.fontSize
         vue.$data.segmentSpace = json.setting.segmentSpace
     }
+
 
 
 

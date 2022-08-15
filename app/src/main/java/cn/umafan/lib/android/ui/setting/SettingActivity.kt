@@ -73,8 +73,18 @@ class SettingActivity : MyBaseActivity() {
             }
 
             settingChangeTheme.setOnClickListener {
-                val themes = arrayOf(getString(R.string.theme_mcqueen), getString(R.string.theme_nga), getString(R.string.theme_white), getString(R.string.theme_teal))
-                val themesId = arrayOf(R.style.Theme_UmaLibrary, R.style.Theme_UmaLibrary_NGA, R.style.Theme_UmaLibrary_WHITE, R.style.Theme_UmaLibrary_TEAL)
+                val themes = arrayOf(
+                    getString(R.string.theme_nga),
+                    getString(R.string.theme_white),
+                    getString(R.string.theme_teal),
+                    getString(R.string.theme_mcqueen)
+                )
+                val themesId = arrayOf(
+                    R.style.Theme_UmaLibrary_NGA,
+                    R.style.Theme_UmaLibrary_WHITE,
+                    R.style.Theme_UmaLibrary_TEAL,
+                    R.style.Theme_UmaLibrary
+                )
                 val selectedId = themesId.indexOf(SettingUtil.getTheme())
                 MaterialAlertDialogBuilder(this@SettingActivity)
                     .setTitle(R.string.change_theme)
