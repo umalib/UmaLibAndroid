@@ -11,6 +11,9 @@ import cn.umafan.lib.android.databinding.ActivitySettingBinding
 import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.liangguo.androidkit.app.ToastUtil
 import java.io.FileNotFoundException
 
@@ -51,26 +54,68 @@ class SettingActivity : MyBaseActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         with(binding) {
-            settingChangeIndexBg.setOnClickListener {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                intent.type = "image/*"
-                startActivityForResult(intent, 1)
+            settingChangeIndexBg.apply {
+                setOnClickListener {
+                    XXPermissions.with(this@SettingActivity)
+                        .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+                        .request(object : OnPermissionCallback {
+                            override fun onGranted(permissions: List<String>, all: Boolean) {
+                                if (all) {
+                                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                                    intent.addCategory(Intent.CATEGORY_OPENABLE)
+                                    intent.type = "image/*"
+                                    startActivityForResult(intent, 1)
+                                }
+                            }
+
+                            override fun onDenied(permissions: List<String>, never: Boolean) {
+                                if (never) {
+                                    ToastUtil.error("被永久拒绝授权，请手动授予读写手机储存权限")
+                                    // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                                    XXPermissions.startPermissionActivity(context, permissions)
+                                } else {
+                                    ToastUtil.error("获取读写手机储存权限失败")
+                                }
+                            }
+                        })
+                }
+                setOnLongClickListener {
+                    clearImageBackground(SettingUtil.INDEX_BG)
+                    false
+                }
             }
-            settingChangeIndexBg.setOnLongClickListener {
-                clearImageBackground(SettingUtil.INDEX_BG)
-                false
+
+            settingChangeBarBg.apply {
+                setOnClickListener {
+                    XXPermissions.with(this@SettingActivity)
+                        .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+                        .request(object : OnPermissionCallback {
+                            override fun onGranted(permissions: List<String>, all: Boolean) {
+                                if (all) {
+                                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                                    intent.addCategory(Intent.CATEGORY_OPENABLE)
+                                    intent.type = "image/*"
+                                    startActivityForResult(intent, 2)
+                                }
+                            }
+
+                            override fun onDenied(permissions: List<String>, never: Boolean) {
+                                if (never) {
+                                    ToastUtil.error("被永久拒绝授权，请手动授予读写手机储存权限")
+                                    // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                                    XXPermissions.startPermissionActivity(context, permissions)
+                                } else {
+                                    ToastUtil.error("获取读写手机储存权限失败")
+                                }
+                            }
+                        })
+                }
+                setOnLongClickListener {
+                    clearImageBackground(SettingUtil.APP_BAR_BG)
+                    false
+                }
             }
-            settingChangeBarBg.setOnClickListener {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                intent.type = "image/*"
-                startActivityForResult(intent, 2)
-            }
-            settingChangeBarBg.setOnLongClickListener {
-                clearImageBackground(SettingUtil.APP_BAR_BG)
-                false
-            }
+
 
             settingChangeTheme.setOnClickListener {
                 val themes = arrayOf(
