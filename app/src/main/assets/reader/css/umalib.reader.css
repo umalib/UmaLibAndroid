@@ -3,11 +3,6 @@ div.theme-nga, div.theme-nga div.ql-editor, div.theme-nga div.el-descriptions .e
   background-color: #f5e8cb;
 }
 
-div.theme-white, div.theme-white div.ql-editor, div.theme-white div.el-descriptions .el-descriptions-item__cell {
-  color: black;
-  background-color: white;
-}
-
 div.theme-cyan, div.theme-cyan div.ql-editor, div.theme-cyan div.el-descriptions .el-descriptions-item__cell {
   color: #10273f;
   background-color: #d3dedb;

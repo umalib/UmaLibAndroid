@@ -15,13 +15,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.umafan.lib.android.R
+import cn.umafan.lib.android.databinding.FragmentHomeBinding
+import cn.umafan.lib.android.model.DataBaseHandler
+import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.model.db.ArtInfo
 import cn.umafan.lib.android.model.db.ArtInfoDao
 import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.model.db.TaggedDao
-import cn.umafan.lib.android.databinding.FragmentHomeBinding
-import cn.umafan.lib.android.model.DataBaseHandler
-import cn.umafan.lib.android.model.SearchBean
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import cn.umafan.lib.android.util.PageSizeUtil
@@ -93,7 +93,8 @@ class HomeFragment : Fragment() {
         val pageSizeSelector =
             view.findViewById<AutoCompleteTextView>(R.id.page_size_selector_input)
         pageSizeSelector.setAdapter(pageSizeAdapter)
-        pageSizeSelector.hint = "${getString(R.string.page_size_selector_label)}-当前：${PageSizeUtil.getSize()}"
+        pageSizeSelector.hint =
+            "${getString(R.string.page_size_selector_label)}-当前：${PageSizeUtil.getSize()}"
         pageSizeSelector.setOnItemClickListener { adapterView, _, i, _ ->
             PageSizeUtil.setSize(adapterView.adapter.getItem(i).toString().toInt())
             homeViewModel.currentPage.postValue(1)
@@ -134,7 +135,9 @@ class HomeFragment : Fragment() {
             currentPage.observe(viewLifecycleOwner) {
                 homeViewModel.checkedList.clear()
                 for (i in 0 until homeViewModel.pageLen.value!!) {
-                    if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(false)
+                    if (i + 1 != homeViewModel.currentPage.value) homeViewModel.checkedList.add(
+                        false
+                    )
                     else homeViewModel.checkedList.add(true)
                 }
                 if (isShowing) {
@@ -169,8 +172,9 @@ class HomeFragment : Fragment() {
         }
 
         binding.randomBtn.setOnClickListener {
-            loadArticles(1,
-            SearchBean(isRandom = true),
+            loadArticles(
+                1,
+                SearchBean(isRandom = true),
                 PageSizeUtil.getSize()
             )
         }
@@ -258,7 +262,9 @@ class HomeFragment : Fragment() {
                             )
                         }
                     } else {
-                        val q = query.limit(pageSize).orderRaw("RANDOM()").orderDesc(ArtInfoDao.Properties.UploadTime).build().listLazy()
+                        val q = query.limit(pageSize).orderRaw("RANDOM()")
+                            .orderDesc(ArtInfoDao.Properties.UploadTime, ArtInfoDao.Properties.Id)
+                            .build().listLazy()
                         homeViewModel.loadArticles(q)
                         homeViewModel.pageLen.value = 1
                         with(homeViewModel.currentPage.value) {

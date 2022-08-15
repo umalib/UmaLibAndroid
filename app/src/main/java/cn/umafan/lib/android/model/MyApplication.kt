@@ -3,7 +3,6 @@ package cn.umafan.lib.android.model
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import cn.umafan.lib.android.util.SettingUtil
 
 class MyApplication : Application() {
     companion object {
