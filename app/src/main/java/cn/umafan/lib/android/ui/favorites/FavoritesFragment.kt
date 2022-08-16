@@ -31,6 +31,9 @@ import cn.umafan.lib.android.util.PageSizeUtil
 import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.liangguo.androidkit.app.ToastUtil
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -38,7 +41,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 import java.io.FileInputStream
-import java.security.Provider
 
 @SuppressLint("InflateParams")
 class FavoritesFragment : Fragment() {
@@ -70,6 +72,7 @@ class FavoritesFragment : Fragment() {
                         JSONArray(text)
                         FavoriteArticleUtil.getSharedPreferences().edit().putString(FavoriteArticleUtil.fileName, text).apply()
                         ToastUtil.success(getString(R.string.import_success))
+                        favoritesViewModel.currentPage.value = 1
                     } catch (e: Exception) {
                         e.printStackTrace()
                         if (e is JSONException) {
@@ -226,10 +229,42 @@ class FavoritesFragment : Fragment() {
                 if (null != uri) background = Drawable.createFromPath(uri.path)
             }
             exportBtn.setOnClickListener {
-                FavoriteArticleUtil.exportFavorites(activity as MyBaseActivity)
+                XXPermissions.with(requireContext())
+                    .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+                    .request(object : OnPermissionCallback {
+                        override fun onGranted(permissions: List<String>, all: Boolean) {
+                            if (all) {
+                                FavoriteArticleUtil.exportFavorites(activity as MyBaseActivity)
+                            }
+                        }
+                        override fun onDenied(permissions: List<String>, never: Boolean) {
+                            if (never) {
+                                ToastUtil.error("被永久拒绝授权，请手动授予读写手机储存权限")
+                                XXPermissions.startPermissionActivity(context, permissions)
+                            } else {
+                                ToastUtil.error("获取读写手机储存权限失败")
+                            }
+                        }
+                    })
             }
             importBtn.setOnClickListener {
-                activityResultLauncher.launch("application/json")
+                XXPermissions.with(requireContext())
+                    .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+                    .request(object : OnPermissionCallback {
+                        override fun onGranted(permissions: List<String>, all: Boolean) {
+                            if (all) {
+                                activityResultLauncher.launch("application/json")
+                            }
+                        }
+                        override fun onDenied(permissions: List<String>, never: Boolean) {
+                            if (never) {
+                                ToastUtil.error("被永久拒绝授权，请手动授予读写手机储存权限")
+                                XXPermissions.startPermissionActivity(context, permissions)
+                            } else {
+                                ToastUtil.error("获取读写手机储存权限失败")
+                            }
+                        }
+                    })
             }
         }
     }
@@ -250,7 +285,7 @@ class FavoritesFragment : Fragment() {
                     0
                 }
                 val list = mutableListOf<JSONObject>()
-                var lastIndex = if (offset + pageSize > artList.length()) artList.length() else offset + pageSize
+                val lastIndex = if (offset + pageSize > artList.length()) artList.length() else offset + pageSize
                 for (i in offset until lastIndex) {
                     list.add(artList.getJSONObject(i))
                 }
