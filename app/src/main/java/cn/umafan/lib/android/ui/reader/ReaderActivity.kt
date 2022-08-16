@@ -152,13 +152,8 @@ class ReaderActivity : MyBaseActivity() {
                 // 设置js与android的桥接类
                 readerJSInterface = ReaderJSInterface(webView, article!!)
                 webView.addBridgeInterface(readerJSInterface)
-//                val artInfoDao = daoSession!!.artInfoDao
-//                val infoQuery = articleDao.queryBuilder()
-//                    .where(ArtInfoDao.Properties.Id.eq(intent.getIntExtra("id", 1)))
-//                    .build()
-//                val artInfo =
+
                 HistoryUtil.saveHistory(article!!)
-                println("fucka ${HistoryUtil.getHistory()}")
             }
         }
         DatabaseCopyThread.addHandler(handler)

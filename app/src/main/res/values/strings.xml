@@ -93,4 +93,14 @@
     <string name="theme_white">特别白</string>
     <string name="theme_teal">铃鹿青</string>
     <string name="history">历史记录</string>
+    <string name="export_favorites">导出收藏夹</string>
+    <string name="import_favorites">导入到收藏夹</string>
+    <string name="export_success">成功导出至：</string>
+    <string name="export_fail">导出失败！</string>
+    <string name="import_success">导入成功！</string>
+    <string name="import_fail">导入失败！</string>
+    <string name="import_hint">是否确定将文件导入到收藏夹，这会覆盖当前收藏夹，此操作无法恢复。是否确定导入？</string>
+    <string name="import_format_fail">文件格式错误！</string>
+    <string name="restart">重启应用</string>
+
 </resources>

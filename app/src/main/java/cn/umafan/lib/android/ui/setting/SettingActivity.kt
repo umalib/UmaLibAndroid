@@ -23,6 +23,7 @@ class SettingActivity : MyBaseActivity() {
 
     private val restartDialog by lazy {
         MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.restart)
             .setMessage(R.string.restart_info)
             .setPositiveButton(R.string.restart_now) { _, _ ->
                 val intent = packageManager.getLaunchIntentForPackage(packageName)

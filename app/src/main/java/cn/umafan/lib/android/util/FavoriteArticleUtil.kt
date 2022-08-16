@@ -1,21 +1,33 @@
 package cn.umafan.lib.android.util
 
+import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
+import android.os.Environment
+import android.text.format.DateUtils
+import androidx.activity.result.contract.ActivityResultContracts
+import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.MyBaseActivity
-import cn.umafan.lib.android.model.db.ArtInfo
 import cn.umafan.lib.android.model.db.ArtInfoDao
 import cn.umafan.lib.android.model.db.Article
 import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
+import com.liangguo.androidkit.app.ToastUtil
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 object FavoriteArticleUtil {
 
-    private const val fileName = "favorites"
+    const val fileName = "favorites"
 
     private var sharedPreferences: SharedPreferences =
         MyApplication.context.getSharedPreferences(fileName, 0)
@@ -124,5 +136,42 @@ object FavoriteArticleUtil {
             e.printStackTrace()
             false
         }
+    }
+
+    /**
+     * 导出收藏夹
+     */
+    fun exportFavorites(activity: MyBaseActivity) {
+        return try {
+            val originData = sharedPreferences.getString(fileName, "[]")
+            val filePath = File(Environment.getExternalStorageDirectory(), "${activity.getString(R.string.app_name)}/收藏夹")
+            if (!filePath.exists()) filePath.mkdirs()
+
+            var name = ""
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val current = LocalDateTime.now()
+                val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+                name = current.format(formatter)
+            } else {
+                val sdf = SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA)
+                name = sdf.format(Date()).toString()
+            }
+
+            val newFile = File(filePath, "导出(${name}).json")
+            if (!newFile.exists()) newFile.createNewFile()
+
+            val fileOutputStream = FileOutputStream(newFile).bufferedWriter()
+            fileOutputStream.write(originData)
+            fileOutputStream.flush()
+            fileOutputStream.close()
+            ToastUtil.success("${activity.getString(R.string.export_success)}${newFile.path}")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ToastUtil.error(activity.getString(R.string.export_fail))
+        }
+    }
+
+    fun getSharedPreferences(): SharedPreferences {
+        return sharedPreferences
     }
 }

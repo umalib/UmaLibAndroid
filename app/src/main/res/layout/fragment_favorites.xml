@@ -16,6 +16,32 @@
         tools:listitem="@layout/item_article_card" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/import_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/import_favorites"
+        android:tooltipText="@string/import_favorites"
+        app:layout_constraintBottom_toTopOf="@id/export_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_cloud_download_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/export_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/export_favorites"
+        android:tooltipText="@string/export_favorites"
+        app:layout_constraintBottom_toTopOf="@id/last_page_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_cloud_upload_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/last_page_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

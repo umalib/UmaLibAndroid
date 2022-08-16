@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +25,7 @@ import cn.umafan.lib.android.model.db.ArtInfoDao
 import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
+import cn.umafan.lib.android.util.ContentUriUtil
 import cn.umafan.lib.android.util.FavoriteArticleUtil
 import cn.umafan.lib.android.util.PageSizeUtil
 import cn.umafan.lib.android.util.SettingUtil
@@ -30,7 +33,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.liangguo.androidkit.app.ToastUtil
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
+import java.io.File
+import java.io.FileInputStream
+import java.security.Provider
 
 @SuppressLint("InflateParams")
 class FavoritesFragment : Fragment() {
@@ -47,6 +55,35 @@ class FavoritesFragment : Fragment() {
     private var pageData = mutableListOf<Int>()
 
     private var isShowing = false
+
+    private val activityResultLauncher: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetContent()) {
+        try {
+            MaterialAlertDialogBuilder(
+                requireContext()
+            ).setTitle(getString(R.string.import_favorites))
+                .setMessage(getString(R.string.import_hint))
+                .setPositiveButton(R.string.confirm) { _, _ ->
+                    try {
+                        val file = File(ContentUriUtil.getAbsolutePath(requireContext(), it))
+                        val fileReader = FileInputStream(file).bufferedReader()
+                        val text = fileReader.readText()
+                        JSONArray(text)
+                        FavoriteArticleUtil.getSharedPreferences().edit().putString(FavoriteArticleUtil.fileName, text).apply()
+                        ToastUtil.success(getString(R.string.import_success))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        if (e is JSONException) {
+                            ToastUtil.error(getString(R.string.import_fail) + getString(R.string.import_format_fail))
+                        }
+                    }
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ToastUtil.error(getString(R.string.import_fail))
+        }
+    }
 
     private val mPageSelectorDialog by lazy {
         val view = LayoutInflater.from(activity).inflate(R.layout.dialog_page_selector, null)
@@ -163,7 +200,6 @@ class FavoritesFragment : Fragment() {
                             this@FavoritesFragment.pageData.add(i)
                         }
                         pageData.emit(this@FavoritesFragment.pageData)
-                        println("fucka" + pageData.value)
                     }
                 }
             }
@@ -188,6 +224,12 @@ class FavoritesFragment : Fragment() {
             layout.apply {
                 val uri = SettingUtil.getImageBackground(SettingUtil.INDEX_BG)
                 if (null != uri) background = Drawable.createFromPath(uri.path)
+            }
+            exportBtn.setOnClickListener {
+                FavoriteArticleUtil.exportFavorites(activity as MyBaseActivity)
+            }
+            importBtn.setOnClickListener {
+                activityResultLauncher.launch("application/json")
             }
         }
     }

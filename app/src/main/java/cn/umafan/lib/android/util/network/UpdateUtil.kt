@@ -27,6 +27,7 @@ object UpdateUtil {
             val result = withContext(Dispatchers.IO) { block() }
             result
         } catch (e: Exception) {
+            e.printStackTrace()
             if (e is retrofit2.HttpException) {
                 null
             } else {
