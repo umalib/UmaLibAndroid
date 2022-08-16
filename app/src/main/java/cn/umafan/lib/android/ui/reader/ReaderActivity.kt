@@ -166,11 +166,11 @@ class ReaderActivity : MyBaseActivity() {
 
     private fun initCollectBtn() {
         mViewModel.collected.observe(this) {
-            if (FavoriteArticleUtil.existsFavorite(article!!.id.toInt(), article!!.name)) {
+            if (FavoriteArticleUtil.existsFavorite(article!!)) {
                 binding.collect.setImageResource(R.drawable.ic_baseline_star_24)
                 binding.collect.setOnClickListener {
                     if (FavoriteArticleUtil.cancelFavorite(
-                            article!!.id.toInt()
+                            article!!
                         )
                     ) {
                         ToastUtil.success(getString(R.string.cancel_collect_success))
@@ -181,8 +181,7 @@ class ReaderActivity : MyBaseActivity() {
             } else {
                 binding.collect.setOnClickListener {
                     if (FavoriteArticleUtil.saveFavorite(
-                            article!!.id.toInt(),
-                            article!!.name
+                            article!!
                         )
                     ) {
                         ToastUtil.success(getString(R.string.collect_success))

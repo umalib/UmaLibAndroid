@@ -36,6 +36,7 @@ import cn.umafan.lib.android.ui.UpdateLogActivity
 import cn.umafan.lib.android.ui.main.model.CreatorSuggestionAdapter
 import cn.umafan.lib.android.ui.main.model.TagSelectedItem
 import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter
+import cn.umafan.lib.android.util.FavoriteArticleUtil
 import cn.umafan.lib.android.util.SettingUtil
 import com.angcyo.dsladapter.DslAdapter
 import com.ferfalk.simplesearchview.SimpleSearchView
@@ -295,6 +296,8 @@ class MainActivity : MyBaseActivity() {
             MainIntroActivity::class.startNewActivity()
             sharedPreferences.edit().putString("done", "right").apply()
         }
+
+        FavoriteArticleUtil.refactorFavorites(this)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {

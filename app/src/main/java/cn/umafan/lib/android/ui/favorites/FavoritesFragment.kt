@@ -30,6 +30,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.liangguo.androidkit.app.ToastUtil
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 @SuppressLint("InflateParams")
 class FavoritesFragment : Fragment() {
@@ -192,11 +193,11 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun loadArticles(page: Int?, pageSize: Int) {
-        val idList = FavoriteArticleUtil.getFavorites()
-        if (idList.isEmpty()) {
+        val artList = FavoriteArticleUtil.getFavorites()
+        if (artList.length() < 1) {
             ToastUtil.info(getString(R.string.no_data))
         }
-        favoritesViewModel.pageLen.value = idList.size / pageSize + 1
+        favoritesViewModel.pageLen.value = artList.length() / pageSize + 1
         val handler = DataBaseHandler(activity as MyBaseActivity) {
             daoSession = it.obj as DaoSession
             if (null != daoSession) {
@@ -206,18 +207,33 @@ class FavoritesFragment : Fragment() {
                 } else {
                     0
                 }
-                val list = if (offset + pageSize > idList.size) idList.subList(offset, idList.size)
-                else idList.subList(offset, offset + pageSize)
+                val list = mutableListOf<JSONObject>()
+                var lastIndex = if (offset + pageSize > artList.length()) artList.length() else offset + pageSize
+                for (i in offset until lastIndex) {
+                    list.add(artList.getJSONObject(i))
+                }
                 val data = mutableListOf<ArtInfo>()
-                data.addAll(
-                    artInfoDao.queryBuilder().where(ArtInfoDao.Properties.Id.`in`(list)).build()
-                        .list().sortedBy { artInfo -> list.indexOf(artInfo.id.toInt()) }
-                )
+                list.forEach {  json ->
+                    data.add(artInfoDao.queryBuilder().where(
+                        ArtInfoDao.Properties.Name.eq(json.getString("name")),
+                        ArtInfoDao.Properties.Author.eq(json.getString("author")),
+                        ArtInfoDao.Properties.Translator.eq(json.getString("translator")),
+                    ).unique())
+                }
+                data.reverse()
                 favoritesViewModel.loadArticles(data)
             }
         }
         (activity as MainActivity).shapeLoadingDialog?.show()
         DatabaseCopyThread.addHandler(handler)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadArticles(
+            favoritesViewModel.currentPage.value,
+            PageSizeUtil.getSize()
+        )
     }
 
     override fun onDestroyView() {
