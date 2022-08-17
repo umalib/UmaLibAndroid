@@ -73,7 +73,8 @@ class HistoryFragment : Fragment() {
                 val artInfoDao: ArtInfoDao = daoSession!!.artInfoDao
                 val data = mutableListOf<ArtInfo>()
                 idList.forEach { id ->
-                    data.add(artInfoDao.queryBuilder().where(ArtInfoDao.Properties.Id.eq(id)).unique())
+                    val art = artInfoDao.queryBuilder().where(ArtInfoDao.Properties.Id.eq(id)).unique()
+                    if (null != art) data.add(art)
                 }
                 historyViewModel.loadArticles(data)
             }

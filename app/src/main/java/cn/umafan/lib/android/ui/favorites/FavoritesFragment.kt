@@ -291,11 +291,12 @@ class FavoritesFragment : Fragment() {
                 }
                 val data = mutableListOf<ArtInfo>()
                 list.forEach {  json ->
-                    data.add(artInfoDao.queryBuilder().where(
+                    val art = artInfoDao.queryBuilder().where(
                         ArtInfoDao.Properties.Name.eq(json.getString("name")),
                         ArtInfoDao.Properties.Author.eq(json.getString("author")),
                         ArtInfoDao.Properties.Translator.eq(json.getString("translator")),
-                    ).unique())
+                    ).unique()
+                    if (null != art) data.add(art)
                 }
                 data.reverse()
                 favoritesViewModel.loadArticles(data)
