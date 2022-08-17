@@ -20,7 +20,11 @@ class DataBaseHandler(
             }
             MyApplication.DATABASE_LOADED -> {
                 activity.dataBaseLoadingDialog(100.0)
-                unit(msg)
+                try {
+                    unit(msg)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 activity.shapeLoadingDialog?.dialog?.hide()
             }
         }

@@ -17,23 +17,4 @@ class MainViewModel : ViewModel() {
     var searchParams = MutableLiveData(SearchBean())
     var selectedTags = MutableStateFlow(mutableSetOf<Tag>())
     var selectedExceptTags = MutableStateFlow(mutableSetOf<Tag>())
-
-    val updateInfo = MutableLiveData<UpdateBean>()
-
-    fun getUpdate(activity: MyBaseActivity, initiative: Boolean) {
-        viewModelScope.launch {
-            UpdateUtil.getUpdate().apply {
-                if (initiative) activity.shapeLoadingDialog?.dialog?.hide()
-                if (null != this) {
-                    this.show =
-                        this.currentVersion > MyApplication.getVersion().code ||
-                                this.currentVersionName > MyApplication.getVersion().name
-                    this.initiative = initiative
-                    updateInfo.value = this
-                } else {
-                    ToastUtil.error("获取更新失败，请检查网络！")
-                }
-            }
-        }
-    }
 }

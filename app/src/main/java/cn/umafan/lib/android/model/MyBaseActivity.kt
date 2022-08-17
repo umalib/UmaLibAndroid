@@ -1,12 +1,17 @@
 package cn.umafan.lib.android.model
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.lifecycle.ViewModelProvider
 import cn.umafan.lib.android.R
+import cn.umafan.lib.android.ui.setting.SettingViewModel
 import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -16,6 +21,9 @@ import com.mingle.widget.ShapeLoadingDialog
 open class MyBaseActivity : AppCompatActivity() {
 
     var shapeLoadingDialog: ShapeLoadingDialog? = null
+
+    private var _baseViewModel: MyBaseViewModel? = null
+    val baseViewModel get() = _baseViewModel!!
 
     /**
      * 数据库操作进度dialog
@@ -44,8 +52,45 @@ open class MyBaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(SettingUtil.getTheme())
         super.onCreate(savedInstanceState)
+
+        _baseViewModel =
+            ViewModelProvider(this)[MyBaseViewModel::class.java]
+
         shapeLoadingDialog = ShapeLoadingDialog(this)
         shapeLoadingDialog?.dialog?.setCanceledOnTouchOutside(false)
+
+        baseViewModel.updateInfo.observe(this@MyBaseActivity) {
+            var message = getString(R.string.no_update)
+            var buttonText = getString(R.string.confirm)
+            val buttonAction: DialogInterface.OnClickListener?
+            if (it.show) {
+                message = it.info.message
+                buttonText = it.button.text
+                buttonAction = DialogInterface.OnClickListener { _, _ ->
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(it.button.url)
+                    startActivity(intent)
+                }
+                MaterialAlertDialogBuilder(
+                    this@MyBaseActivity,
+                    com.google.android.material.R.style.MaterialAlertDialog_Material3
+                )
+                    .setTitle("${it.currentVersionName} ${it.info.title}")
+                    .setMessage(message)
+                    .setPositiveButton(buttonText, buttonAction)
+                    .create().show()
+            } else {
+                if (it.initiative) {
+                    MaterialAlertDialogBuilder(
+                        this@MyBaseActivity,
+                        com.google.android.material.R.style.MaterialAlertDialog_Material3
+                    ).setTitle(it.info.title)
+                        .setMessage(message)
+                        .setPositiveButton(buttonText, null)
+                        .create().show()
+                }
+            }
+        }
     }
 
     override fun onPause() {

@@ -48,50 +48,54 @@ class DatabaseCopyThread : Thread() {
     }
 
     private fun copyDatabase() {
-        val versionFile = context.getDatabasePath("version")
-        var copy = true
-        if (versionFile.exists()) {
-            val br = BufferedReader(FileReader(versionFile))
-            val version = br.readLine()
-            br.close()
-            println("db version: $version")
-            if (version >= MyApplication.getVersion().name) {
-                copy = false
-            }
-        }
-
-        if (copy) {
-            val myInput: InputStream = context.assets.open("db/main.db")
-            val outFile: File = context.getDatabasePath("main.db")
-
-            outFile.parentFile?.mkdirs()
-            val myOutput: OutputStream = FileOutputStream(outFile)
-            val buffer = ByteArray(5)
-            var length: Int = myInput.read(buffer)
-            val total = myInput.available()
-            var count = 0
-
-            while (length > 0) {
-                if (count % 12000 == 0) {
-                    val progress = count * length / total.toDouble() * 100
-                    val message = handler.obtainMessage()
-                    message.what = MyApplication.DATABASE_LOADING
-                    message.obj = progress
-                    handler.sendMessage(message)
+        try {
+            val versionFile = context.getDatabasePath("version")
+            var copy = true
+            if (versionFile.exists()) {
+                val br = BufferedReader(FileReader(versionFile))
+                val version = br.readLine()
+                br.close()
+                println("db version: $version")
+                if (version >= MyApplication.getVersion().name) {
+                    copy = false
                 }
-                myOutput.write(buffer, 0, length)
-                length = myInput.read(buffer)
-                count++
             }
-            myOutput.flush()
-            myOutput.close()
-            myInput.close()
 
-            val bw = BufferedWriter(FileWriter(versionFile))
-            bw.write(MyApplication.getVersion().name)
-            bw.close()
+            if (copy) {
+                val myInput: InputStream = context.assets.open("db/main.db")
+                val outFile: File = context.getDatabasePath("main.db")
+
+                outFile.parentFile?.mkdirs()
+                val myOutput: OutputStream = FileOutputStream(outFile)
+                val buffer = ByteArray(5)
+                var length: Int = myInput.read(buffer)
+                val total = myInput.available()
+                var count = 0
+
+                while (length > 0) {
+                    if (count % 12000 == 0) {
+                        val progress = count * length / total.toDouble() * 100
+                        val message = handler.obtainMessage()
+                        message.what = MyApplication.DATABASE_LOADING
+                        message.obj = progress
+                        handler.sendMessage(message)
+                    }
+                    myOutput.write(buffer, 0, length)
+                    length = myInput.read(buffer)
+                    count++
+                }
+                myOutput.flush()
+                myOutput.close()
+                myInput.close()
+
+                val bw = BufferedWriter(FileWriter(versionFile))
+                bw.write(MyApplication.getVersion().name)
+                bw.close()
+            }
+            println("copy database done!")
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        println("copy database done!")
     }
 
     class LibOpenHelper(val context: Context, val name: String) :

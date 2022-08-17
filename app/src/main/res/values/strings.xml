@@ -102,5 +102,10 @@
     <string name="import_hint">是否确定将文件导入到收藏夹，这会覆盖当前收藏夹，此操作无法恢复。是否确定导入？</string>
     <string name="import_format_fail">文件格式错误！</string>
     <string name="restart">重启应用</string>
-
+    <string name="appearance_title">外观</string>
+    <string name="about">关于</string>
+    <string name="other">其他</string>
+    <string name="reload_database_title">重新加载数据库</string>
+    <string name="reload_database">重新加载并覆盖当前数据库，以修复数据库版本不一致等问题</string>
+    <string name="reload_database_prompt">即将重新加载并覆盖当前数据库，此操作无法恢复。是否确定继续？</string>
 </resources>

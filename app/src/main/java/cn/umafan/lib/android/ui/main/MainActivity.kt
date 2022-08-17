@@ -36,6 +36,7 @@ import cn.umafan.lib.android.ui.UpdateLogActivity
 import cn.umafan.lib.android.ui.main.model.CreatorSuggestionAdapter
 import cn.umafan.lib.android.ui.main.model.TagSelectedItem
 import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter
+import cn.umafan.lib.android.ui.setting.SettingActivity
 import cn.umafan.lib.android.util.FavoriteArticleUtil
 import cn.umafan.lib.android.util.SettingUtil
 import com.angcyo.dsladapter.DslAdapter
@@ -248,38 +249,6 @@ class MainActivity : MyBaseActivity() {
                     }
                 }
             }
-            updateInfo.observe(this@MainActivity) {
-                var message = getString(R.string.no_update)
-                var buttonText = getString(R.string.confirm)
-                val buttonAction: DialogInterface.OnClickListener?
-                if (it.show) {
-                    message = it.info.message
-                    buttonText = it.button.text
-                    buttonAction = DialogInterface.OnClickListener { _, _ ->
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(it.button.url)
-                        startActivity(intent)
-                    }
-                    MaterialAlertDialogBuilder(
-                        this@MainActivity,
-                        com.google.android.material.R.style.MaterialAlertDialog_Material3
-                    )
-                        .setTitle("${it.currentVersionName} ${it.info.title}")
-                        .setMessage(message)
-                        .setPositiveButton(buttonText, buttonAction)
-                        .create().show()
-                } else {
-                    if (it.initiative) {
-                        MaterialAlertDialogBuilder(
-                            this@MainActivity,
-                            com.google.android.material.R.style.MaterialAlertDialog_Material3
-                        ).setTitle(it.info.title)
-                            .setMessage(message)
-                            .setPositiveButton(buttonText, null)
-                            .create().show()
-                    }
-                }
-            }
         }
 
         // 新建一个守护线程，每个数据库操作任务自动进入队列排队处理
@@ -287,7 +256,7 @@ class MainActivity : MyBaseActivity() {
         dataBaseThread.isDaemon = true
         dataBaseThread.start()
 
-        mViewModel.getUpdate(this,false)
+        baseViewModel.getUpdate(this,false)
 
         loadSearchOptions()
 
@@ -313,7 +282,7 @@ class MainActivity : MyBaseActivity() {
             isExit = true
             ToastUtil.info("再按一次返回键退出程序")
             //利用handler延迟发送更改状态信息
-            mHandler.sendEmptyMessageDelayed(0, 3000)
+            mHandler.sendEmptyMessageDelayed(0, 2000)
         } else {
             finish()
             exitProcess(0)
@@ -333,13 +302,8 @@ class MainActivity : MyBaseActivity() {
         when (item.itemId) {
             // 搜索过滤项
             R.id.action_search_settings -> searchFilterDialog.show()
-            R.id.check_update -> {
-                shapeLoadingDialog?.show()
-                mViewModel.getUpdate(this, true)
-            }
-            R.id.update_log -> UpdateLogActivity::class.startNewActivity()
             R.id.app_intro -> MainIntroActivity::class.startNewActivity()
-
+            R.id.setting -> SettingActivity::class.startNewActivity()
         }
         return super.onOptionsItemSelected(item)
     }

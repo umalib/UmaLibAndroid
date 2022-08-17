@@ -33,20 +33,6 @@ class ThanksFragment : Fragment() {
 
         with(binding) {
             appVersion.text = MyApplication.getVersion().name
-            settingItemFeedback.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse("https://bbs.nga.cn/read.php?tid=33041357")
-                startActivity(intent)
-            }
-            settingItemGithub.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse("https://github.com/umalib/UmaLibAndroid")
-                startActivity(intent)
-            }
-            settingItemCheckUpdate.setOnClickListener {
-                (activity as MainActivity).shapeLoadingDialog?.dialog?.show()
-                (activity as MainActivity).mViewModel.getUpdate(activity as MainActivity, true)
-            }
             layout.apply {
                 val uri = SettingUtil.getImageBackground(SettingUtil.INDEX_BG)
                 if (null != uri) background = Drawable.createFromPath(uri.path)

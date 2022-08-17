@@ -2,20 +2,28 @@ package cn.umafan.lib.android.ui.setting
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.MenuItem
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ActivitySettingBinding
+import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
+import cn.umafan.lib.android.ui.UpdateLogActivity
+import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.liangguo.androidkit.app.ToastUtil
+import com.liangguo.androidkit.app.startNewActivity
+import java.io.BufferedWriter
 import java.io.FileNotFoundException
+import java.io.FileWriter
+import kotlin.system.exitProcess
 
 
 class SettingActivity : MyBaseActivity() {
@@ -29,6 +37,18 @@ class SettingActivity : MyBaseActivity() {
                 val intent = packageManager.getLaunchIntentForPackage(packageName)
                 intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
+            }
+            .setNegativeButton(R.string.later, null)
+            .create()
+    }
+
+    private val reopenDialog by lazy {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.restart)
+            .setMessage(R.string.restart_info)
+            .setPositiveButton(R.string.restart_now) { _, _ ->
+                finish()
+                exitProcess(0)
             }
             .setNegativeButton(R.string.later, null)
             .create()
@@ -139,8 +159,46 @@ class SettingActivity : MyBaseActivity() {
                         restartDialog.show()
                     }.create().show()
             }
-        }
 
+            settingItemFeedback.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse("https://bbs.nga.cn/read.php?tid=33041357")
+                startActivity(intent)
+            }
+            settingItemGithub.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse("https://github.com/umalib/UmaLibAndroid")
+                startActivity(intent)
+            }
+            settingItemCheckUpdate.setOnClickListener {
+                this@SettingActivity.shapeLoadingDialog?.dialog?.show()
+                this@SettingActivity.baseViewModel.getUpdate(this@SettingActivity, true)
+            }
+            settingUpdateLog.setOnClickListener {
+                UpdateLogActivity::class.startNewActivity()
+            }
+            settingReloadDatabase.setOnClickListener {
+                try {
+                    MaterialAlertDialogBuilder(
+                        this@SettingActivity
+                    ).setTitle(R.string.reload_database_title)
+                        .setMessage(R.string.reload_database_prompt)
+                        .setPositiveButton(R.string.confirm) { _, _ ->
+                            val versionFile = this@SettingActivity.getDatabasePath("version")
+                            val bw = BufferedWriter(FileWriter(versionFile))
+                            bw.write("0.0.0")
+                            bw.flush()
+                            bw.close()
+                            reopenDialog.show()
+                        }
+                        .setNegativeButton(R.string.cancel, null)
+                        .show()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    ToastUtil.error("加载失败！")
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
