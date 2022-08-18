@@ -1,11 +1,8 @@
 package cn.umafan.lib.android.util
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Environment
-import android.text.format.DateUtils
-import androidx.activity.result.contract.ActivityResultContracts
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyApplication
@@ -115,19 +112,20 @@ object FavoriteArticleUtil {
                 activity.shapeLoadingDialog?.show()
                 val handler = DataBaseHandler(activity) {
                     val daoSession = it.obj as DaoSession
-                    if (null != daoSession) {
-                        val artInfoDao: ArtInfoDao = daoSession!!.artInfoDao
-                        val data = JSONArray()
-                        sharedPreferences.all.forEach { (id, _) ->
-                            val art = artInfoDao.queryBuilder().where(ArtInfoDao.Properties.Id.eq(id.toInt())).unique()
-                            val json = JSONObject()
-                            json.put("name", art.name)
-                            json.put("author", art.author)
-                            json.put("translator", art.translator)
-                            data.put(json)
-                        }
-                        sharedPreferences.edit().putString(fileName, data.toString()).putString("refactor", "done").apply()
+                    val artInfoDao: ArtInfoDao = daoSession.artInfoDao
+                    val data = JSONArray()
+                    sharedPreferences.all.forEach { (id, _) ->
+                        val art =
+                            artInfoDao.queryBuilder().where(ArtInfoDao.Properties.Id.eq(id.toInt()))
+                                .unique()
+                        val json = JSONObject()
+                        json.put("name", art.name)
+                        json.put("author", art.author)
+                        json.put("translator", art.translator)
+                        data.put(json)
                     }
+                    sharedPreferences.edit().putString(fileName, data.toString())
+                        .putString("refactor", "done").apply()
                 }
                 DatabaseCopyThread.addHandler(handler)
             }
@@ -144,17 +142,19 @@ object FavoriteArticleUtil {
     fun exportFavorites(activity: MyBaseActivity) {
         return try {
             val originData = sharedPreferences.getString(fileName, "[]")
-            val filePath = File(Environment.getExternalStorageDirectory(), "${activity.getString(R.string.app_name)}/收藏夹")
+            val filePath = File(
+                Environment.getExternalStorageDirectory(),
+                "${activity.getString(R.string.app_name)}/收藏夹"
+            )
             if (!filePath.exists()) filePath.mkdirs()
 
-            var name = ""
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val current = LocalDateTime.now()
                 val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-                name = current.format(formatter)
+                current.format(formatter)
             } else {
                 val sdf = SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA)
-                name = sdf.format(Date()).toString()
+                sdf.format(Date()).toString()
             }
 
             val newFile = File(filePath, "导出(${name}).json")
