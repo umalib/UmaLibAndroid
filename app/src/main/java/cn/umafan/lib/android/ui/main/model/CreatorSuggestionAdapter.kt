@@ -16,7 +16,7 @@ import java.util.*
 /**
  * 用于搜索展示tag的适配器
  */
-class CreatorSuggestionAdapter (
+class CreatorSuggestionAdapter(
     private val tags: List<String>
 ) : BaseAdapter(), Filterable {
 

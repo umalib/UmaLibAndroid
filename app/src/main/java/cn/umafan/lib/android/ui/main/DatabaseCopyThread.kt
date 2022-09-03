@@ -2,9 +2,9 @@ package cn.umafan.lib.android.ui.main
 
 import android.content.Context
 import android.os.Handler
+import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.db.DaoMaster
 import cn.umafan.lib.android.model.db.DaoSession
-import cn.umafan.lib.android.model.MyApplication
 import org.greenrobot.greendao.database.Database
 import java.io.*
 

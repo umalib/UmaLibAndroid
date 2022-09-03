@@ -2,13 +2,12 @@ package cn.umafan.lib.android.ui.home.model
 
 import androidx.databinding.DataBindingUtil
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.model.db.ArtInfo
 import cn.umafan.lib.android.databinding.ItemArticleCardBinding
+import cn.umafan.lib.android.model.db.ArtInfo
 import cn.umafan.lib.android.ui.reader.ReaderActivity
 import com.angcyo.dsladapter.DslAdapterItem
 import com.angcyo.dsladapter.DslViewHolder
 import com.google.android.material.snackbar.Snackbar
-import com.liangguo.androidkit.app.ToastUtil
 import com.liangguo.androidkit.app.startNewActivity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,14 +57,18 @@ class ArticleInfoItem(
                                 a.name.compareTo(b.name)
                             else
                                 b.type.compareTo(a.type)
-                        }.joinToString("，") { tag -> tag.name }
+                        }.joinToString(" | ") { tag -> tag.name }
                 itemArticleCardBox.setOnClickListener {
                     ReaderActivity::class.startNewActivity {
                         putExtra("id", articleInfo.id.toInt())
                     }
                 }
-                itemArticleCardBox.setOnLongClickListener {
-                    Snackbar.make(it, "[ID${articleInfo.id}]${articleInfo.name}", Snackbar.LENGTH_SHORT).show()
+                itemArticleCardBox.setOnLongClickListener { view ->
+                    Snackbar.make(
+                        view,
+                        "[ID${articleInfo.id}]${articleInfo.name}",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                     false
                 }
                 invalidateAll()

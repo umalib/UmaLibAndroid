@@ -7,8 +7,8 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.model.MyApplication
+import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.util.PinyinUtil
 import com.google.android.material.textview.MaterialTextView
 import java.util.*

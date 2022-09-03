@@ -9,7 +9,7 @@ import com.liangguo.androidkit.app.ToastUtil
 import kotlinx.coroutines.launch
 
 
-class MyBaseViewModel: ViewModel() {
+class MyBaseViewModel : ViewModel() {
     val updateInfo = MutableLiveData<UpdateBean>()
 
     fun getUpdate(activity: MyBaseActivity, initiative: Boolean) {

@@ -9,10 +9,8 @@ import android.os.Looper
 import android.view.MenuItem
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ActivitySettingBinding
-import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.ui.UpdateLogActivity
-import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hjq.permissions.OnPermissionCallback

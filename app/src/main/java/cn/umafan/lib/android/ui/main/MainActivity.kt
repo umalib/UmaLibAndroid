@@ -1,8 +1,6 @@
 package cn.umafan.lib.android.ui.main
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
@@ -32,7 +30,6 @@ import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.model.db.TagDao
 import cn.umafan.lib.android.ui.MainIntroActivity
-import cn.umafan.lib.android.ui.UpdateLogActivity
 import cn.umafan.lib.android.ui.main.model.CreatorSuggestionAdapter
 import cn.umafan.lib.android.ui.main.model.TagSelectedItem
 import cn.umafan.lib.android.ui.main.model.TagSuggestionAdapter
@@ -156,7 +153,11 @@ class MainActivity : MyBaseActivity() {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_favorites, R.id.nav_history, R.id.nav_thanks, R.id.nav_setting
+                R.id.nav_home,
+                R.id.nav_favorites,
+                R.id.nav_history,
+                R.id.nav_thanks,
+                R.id.nav_setting
             ), drawerLayout
         )
 
@@ -256,7 +257,7 @@ class MainActivity : MyBaseActivity() {
         dataBaseThread.isDaemon = true
         dataBaseThread.start()
 
-        baseViewModel.getUpdate(this,false)
+        baseViewModel.getUpdate(this, false)
 
         loadSearchOptions()
 
@@ -353,6 +354,7 @@ class MainActivity : MyBaseActivity() {
             }
         })
     }
+
     companion object {
         @Throws(FileNotFoundException::class)
         fun getBitmapFromUri(uri: Uri, activity: MainActivity): Bitmap {

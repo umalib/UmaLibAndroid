@@ -38,7 +38,7 @@ object SettingUtil {
     fun getImageBackground(type: String): Uri? {
         return try {
             val uriStr = sharedPreferences.getString(type, "")
-            if (null !=uriStr && uriStr.isNotBlank()) {
+            if (null != uriStr && uriStr.isNotBlank()) {
                 return uriStr.toUri()
             }
             return null
@@ -158,7 +158,7 @@ object SettingUtil {
         val handler: Handler,
         val type: String,
         val uri: Uri
-    ): Thread(){
+    ) : Thread() {
         override fun run() {
             try {
                 val context = MyApplication.context

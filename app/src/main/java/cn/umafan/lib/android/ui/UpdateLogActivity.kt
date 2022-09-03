@@ -2,7 +2,6 @@ package cn.umafan.lib.android.ui
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import br.tiagohm.markdownview.css.styles.Github
 import cn.umafan.lib.android.databinding.ActivityUpdateLogBinding
 import cn.umafan.lib.android.model.MyBaseActivity

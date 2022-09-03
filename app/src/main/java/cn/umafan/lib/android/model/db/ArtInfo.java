@@ -1,13 +1,13 @@
 package cn.umafan.lib.android.model.db;
 
+import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
 
 import java.util.List;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.DaoException;
 
 @Entity(createInDb = false, nameInDb = "article")
 public class ArtInfo {
@@ -31,17 +31,21 @@ public class ArtInfo {
     @ToMany(referencedJoinProperty = "artId")
     private List<Tagged> taggedList;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 1125819822)
     private transient ArtInfoDao myDao;
 
     @Generated(hash = 505436297)
     public ArtInfo(Long id, String name, String note, String author,
-            String translator, int uploadTime, String source) {
+                   String translator, int uploadTime, String source) {
         this.id = id;
         this.name = name;
         this.note = note;
@@ -133,7 +137,9 @@ public class ArtInfo {
         return taggedList;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 300101849)
     public synchronized void resetTaggedList() {
         taggedList = null;

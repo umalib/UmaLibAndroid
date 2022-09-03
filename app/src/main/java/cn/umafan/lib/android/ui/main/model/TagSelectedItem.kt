@@ -3,8 +3,8 @@ package cn.umafan.lib.android.ui.main.model
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.viewModelScope
 import cn.umafan.lib.android.R
-import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.databinding.ItemSelectedTagBinding
+import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.ui.main.MainViewModel
 import com.angcyo.dsladapter.DslAdapterItem
 import com.angcyo.dsladapter.DslViewHolder

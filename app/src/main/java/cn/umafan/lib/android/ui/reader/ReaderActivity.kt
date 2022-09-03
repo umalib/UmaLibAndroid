@@ -11,7 +11,6 @@ import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ActivityReaderBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
-import cn.umafan.lib.android.model.db.ArtInfoDao
 import cn.umafan.lib.android.model.db.Article
 import cn.umafan.lib.android.model.db.ArticleDao
 import cn.umafan.lib.android.model.db.DaoSession

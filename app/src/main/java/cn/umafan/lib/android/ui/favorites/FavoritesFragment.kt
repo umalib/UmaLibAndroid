@@ -58,35 +58,37 @@ class FavoritesFragment : Fragment() {
 
     private var isShowing = false
 
-    private val activityResultLauncher: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        try {
-            MaterialAlertDialogBuilder(
-                requireContext()
-            ).setTitle(getString(R.string.import_favorites))
-                .setMessage(getString(R.string.import_hint))
-                .setPositiveButton(R.string.confirm) { _, _ ->
-                    try {
-                        val file = File(ContentUriUtil.getAbsolutePath(requireContext(), it))
-                        val fileReader = FileInputStream(file).bufferedReader()
-                        val text = fileReader.readText()
-                        JSONArray(text)
-                        FavoriteArticleUtil.getSharedPreferences().edit().putString(FavoriteArticleUtil.fileName, text).apply()
-                        ToastUtil.success(getString(R.string.import_success))
-                        favoritesViewModel.currentPage.value = 1
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        if (e is JSONException) {
-                            ToastUtil.error(getString(R.string.import_fail) + getString(R.string.import_format_fail))
+    private val activityResultLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.GetContent()) {
+            try {
+                MaterialAlertDialogBuilder(
+                    requireContext()
+                ).setTitle(getString(R.string.import_favorites))
+                    .setMessage(getString(R.string.import_hint))
+                    .setPositiveButton(R.string.confirm) { _, _ ->
+                        try {
+                            val file = File(ContentUriUtil.getAbsolutePath(requireContext(), it))
+                            val fileReader = FileInputStream(file).bufferedReader()
+                            val text = fileReader.readText()
+                            JSONArray(text)
+                            FavoriteArticleUtil.getSharedPreferences().edit()
+                                .putString(FavoriteArticleUtil.fileName, text).apply()
+                            ToastUtil.success(getString(R.string.import_success))
+                            favoritesViewModel.currentPage.value = 1
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            if (e is JSONException) {
+                                ToastUtil.error(getString(R.string.import_fail) + getString(R.string.import_format_fail))
+                            }
                         }
                     }
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ToastUtil.error(getString(R.string.import_fail))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ToastUtil.error(getString(R.string.import_fail))
+            }
         }
-    }
 
     private val mPageSelectorDialog by lazy {
         val view = LayoutInflater.from(activity).inflate(R.layout.dialog_page_selector, null)
@@ -237,6 +239,7 @@ class FavoritesFragment : Fragment() {
                                 FavoriteArticleUtil.exportFavorites(activity as MyBaseActivity)
                             }
                         }
+
                         override fun onDenied(permissions: List<String>, never: Boolean) {
                             if (never) {
                                 ToastUtil.error("被永久拒绝授权，请手动授予读写手机储存权限")
@@ -256,6 +259,7 @@ class FavoritesFragment : Fragment() {
                                 activityResultLauncher.launch("application/json")
                             }
                         }
+
                         override fun onDenied(permissions: List<String>, never: Boolean) {
                             if (never) {
                                 ToastUtil.error("被永久拒绝授权，请手动授予读写手机储存权限")
@@ -285,12 +289,13 @@ class FavoritesFragment : Fragment() {
                     0
                 }
                 val list = mutableListOf<JSONObject>()
-                val lastIndex = if (offset + pageSize > artList.length()) artList.length() else offset + pageSize
+                val lastIndex =
+                    if (offset + pageSize > artList.length()) artList.length() else offset + pageSize
                 for (i in offset until lastIndex) {
                     list.add(artList.getJSONObject(i))
                 }
                 val data = mutableListOf<ArtInfo>()
-                list.forEach {  json ->
+                list.forEach { json ->
                     val art = artInfoDao.queryBuilder().where(
                         ArtInfoDao.Properties.Name.eq(json.getString("name")),
                         ArtInfoDao.Properties.Author.eq(json.getString("author")),

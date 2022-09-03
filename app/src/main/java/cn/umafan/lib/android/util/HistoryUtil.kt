@@ -2,7 +2,6 @@ package cn.umafan.lib.android.util
 
 import android.content.SharedPreferences
 import cn.umafan.lib.android.model.MyApplication
-import cn.umafan.lib.android.model.db.ArtInfo
 import cn.umafan.lib.android.model.db.Article
 import org.json.JSONArray
 import org.json.JSONObject
