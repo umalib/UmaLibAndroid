@@ -15,6 +15,25 @@ class ReaderJSInterface(
     private val webView: BridgeWebView,
     private val article: Article
 ) {
+
+    companion object {
+        val FORMATTER = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm",
+            Locale.CHINA
+        )
+
+        fun initiativeStyle(webView: BridgeWebView) {
+            val callback = "renderAct"
+
+            val json = JSONObject()
+            json.put("setting", ReaderSettingUtil.getSetting("default"))
+
+            if (TextUtils.isEmpty(callback)) return
+            //调用js方法必须在主线程
+            webView.post { webView.loadUrl("javascript:$callback($json)") }
+        }
+    }
+
     // 以此格式写方法
     fun getArticle(str: Array<String>) {
         println(str[0])
@@ -34,14 +53,16 @@ class ReaderJSInterface(
                 a.tag.name.compareTo(b.tag.name)
             else
                 b.tag.type.compareTo(a.tag.type)
-        }.map { tagged -> tagged.tag.name })
+        }.map { tagged ->
+            val tagJson = JSONObject()
+            tagJson.put("name", tagged.tag.name)
+            tagJson.put("type", tagged.tag.type)
+            tagJson
+        })
         json.put("tags", tagList)
         json.put(
             "time",
-            SimpleDateFormat(
-                "yyyy-MM-dd HH:mm",
-                Locale.CHINA
-            ).format(article.uploadTime.toLong() * 1000)
+            FORMATTER.format(article.uploadTime.toLong() * 1000)
         )
         json.put("setting", ReaderSettingUtil.getSetting("default"))
         println(SettingUtil.getTheme())
@@ -56,19 +77,6 @@ class ReaderJSInterface(
         println(json)
 
         invokeJavaScript(callback, json.toString())
-    }
-
-    companion object {
-        fun initiativeStyle(webView: BridgeWebView) {
-            val callback = "renderAct"
-
-            val json = JSONObject()
-            json.put("setting", ReaderSettingUtil.getSetting("default"))
-
-            if (TextUtils.isEmpty(callback)) return
-            //调用js方法必须在主线程
-            webView.post { webView.loadUrl("javascript:$callback($json)") }
-        }
     }
 
     /**

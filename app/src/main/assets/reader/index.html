@@ -18,9 +18,9 @@
         </el-descriptions-item>
         <el-descriptions-item label="上传">{{ article.time }}</el-descriptions-item>
         <el-descriptions-item label="标签">
-            <template style="margin: 5px;" v-for="tag in article.tags">
-                <el-tag size="small">{{ tag }}</el-tag>
-            </template>
+            <el-tag :type="elTagTypes[tag.type]" size="small" v-for="tag in article.tags">
+                {{ tag.name }}
+            </el-tag>
         </el-descriptions-item>
         <el-descriptions-item v-if="article.source" label="来源">
             {{ article.source }}
@@ -44,9 +44,10 @@
         data() {
             return {
                 article: {},
-                theme: 'nga',
+                elTagTypes: ['info', '', 'warning', 'success', 'error'],
                 fontSize: 'normal',
-                segmentSpace: 'wider'
+                segmentSpace: 'wider',
+                theme: 'nga'
             };
         },
         methods: {
