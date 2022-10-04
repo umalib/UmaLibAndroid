@@ -1,9 +1,9 @@
 {
   "currentVersion": 1,
-  "currentVersionName": "1.0.3",
+  "currentVersionName": "1.0.4",
   "info": {
     "title": "！！如果遇到问题请卸载重装！！",
-    "message": "现在所有[图片]均被转换为合法的图片了\n增加了历史记录功能\n允许收藏夹导入导出（仅限导入客户端版主数据库收藏夹）\n增加数据库强制加载功能（以用于客户端版本不更新数据库更新的情况）\n"
+    "message": "更新数据库"
   },
   "button": {
     "text": "去下载新版",

@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
     <string name="app_name">赛马娘同人集中楼大书库</string>
 
-    <string name="action_settings">设置</string>
+    <string name="action_settings">管理处</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -10,8 +10,8 @@
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="home">大书库</string>
-    <string name="my_favorites">收藏夹</string>
-    <string name="thanks">鸣谢</string>
+    <string name="my_favorites">个人文库</string>
+    <string name="thanks">纪念碑</string>
     <string name="collections">总目表</string>
     <string name="search">搜索</string>
     <string name="open_menu">打开菜单</string>
@@ -92,7 +92,7 @@
     <string name="theme_nga">那我呢</string>
     <string name="theme_white">特别白</string>
     <string name="theme_teal">铃鹿青</string>
-    <string name="history">历史记录</string>
+    <string name="history">借阅记录</string>
     <string name="export_favorites">导出收藏夹</string>
     <string name="import_favorites">导入到收藏夹</string>
     <string name="export_success">成功导出至：</string>
