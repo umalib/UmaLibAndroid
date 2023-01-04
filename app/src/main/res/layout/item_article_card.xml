@@ -43,8 +43,8 @@
                     android:maxEms="14"
                     android:paddingHorizontal="15dp"
                     android:singleLine="true"
+                    android:text="@string/template_title"
                     android:textColor="?attr/titleTextColor"
-                    android:text="西野花与東商變革 斯芬克斯"
                     android:textFontWeight="900"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +60,7 @@
                     android:maxEms="6"
                     android:paddingHorizontal="15dp"
                     android:singleLine="true"
-                    android:text="匿名"
+                    android:text="@string/template_author"
                     android:textColor="@color/grey"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:paddingHorizontal="15dp"
-                    android:text="译者： 鬼道"
+                    android:text="@string/template_translator"
                     android:textColor="?attr/subtitleTextColor"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/article_name" />
@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
                     android:paddingHorizontal="15dp"
-                    android:text="2022-7-25 14:18"
+                    android:text="@string/template_upload_time"
                     android:textColor="?attr/subtitleTextColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/article_name" />
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="5dp"
-                    android:text="很久很久以前，在特雷森學園的交通要道上出現了一隻怪物 據說那被稱為斯芬克斯的怪物會向路過的人提出謎語，回答不出來的話就會被吃掉 有一天，出現了一名挑戰這個怪物的勇者，她的名字叫東商變革 如果是魔法師"
+                    android:text="@string/template_note"
                     app:layout_constraintTop_toBottomOf="@id/driver_up" />
 
                 <View
@@ -122,7 +122,7 @@
                     android:layout_weight="0.7"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp"
-                    android:text="西野花，东商变革"
+                    android:text="@string/template_tag"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/driver_down" />
 

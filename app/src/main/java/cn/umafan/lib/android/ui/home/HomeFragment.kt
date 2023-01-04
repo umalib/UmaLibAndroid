@@ -224,7 +224,6 @@ class HomeFragment : Fragment() {
                     0
                 }
                 Log.d(this.javaClass.simpleName, "search-params: $params")
-                QueryBuilder.LOG_SQL = true
                 val query: QueryBuilder<ArtInfo> = artInfoDao.queryBuilder()
                 if (null != params) {
                     if (!params.isRandom) {

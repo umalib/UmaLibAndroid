@@ -108,4 +108,11 @@
     <string name="reload_database_title">重新加载数据库</string>
     <string name="reload_database">重新加载并覆盖当前数据库，以修复数据库版本不一致等问题</string>
     <string name="reload_database_prompt">即将重新加载并覆盖当前数据库，此操作无法恢复。是否确定继续？</string>
+
+    <string name="template_title">我是标题</string>
+    <string name="template_author">我是作者</string>
+    <string name="template_translator">我是译者</string>
+    <string name="template_upload_time">我是时间</string>
+    <string name="template_note">我是简介</string>
+    <string name="template_tag">我是标签</string>
 </resources>
