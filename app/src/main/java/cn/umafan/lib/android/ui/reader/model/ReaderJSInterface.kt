@@ -38,7 +38,7 @@ class ReaderJSInterface(
 
     // 以此格式写方法
     fun getArticle(str: Array<String>) {
-        Log.d(this.className(), str[0])
+        Log.d(this.javaClass.simpleName, str[0])
         //解析js callback方法
         val mJson = JSONObject(str[0])
         val callback = mJson.optString("callback") //解析js回调方法
@@ -67,7 +67,7 @@ class ReaderJSInterface(
             FORMATTER.format(article.uploadTime.toLong() * 1000)
         )
         json.put("setting", ReaderSettingUtil.getSetting("default"))
-        Log.d(this.className(), SettingUtil.getTheme().toString())
+        Log.d(this.javaClass.simpleName, SettingUtil.getTheme().toString())
         json.getJSONObject("setting").put(
             "theme", when (SettingUtil.getTheme()) {
                 R.style.Theme_UmaLibrary_NGA -> "nga"
@@ -76,7 +76,7 @@ class ReaderJSInterface(
                 else -> "purple"
             }
         )
-        Log.d(this.className(), json.toString())
+        Log.d(this.javaClass.simpleName, json.toString())
 
         invokeJavaScript(callback, json.toString())
     }
@@ -88,7 +88,7 @@ class ReaderJSInterface(
      * @param json     传递json数据
      */
     private fun invokeJavaScript(callback: String, json: String) {
-        Log.d(this.className(), "callbackName: $callback  data: $json")
+        Log.d(this.javaClass.simpleName, "callbackName: $callback  data: $json")
         if (TextUtils.isEmpty(callback)) return
         //调用js方法必须在主线程
         webView.post { webView.loadUrl("javascript:$callback($json)") }

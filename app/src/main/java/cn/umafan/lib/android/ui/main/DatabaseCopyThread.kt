@@ -57,7 +57,7 @@ class DatabaseCopyThread : Thread() {
                 val br = BufferedReader(FileReader(versionFile))
                 val version = br.readLine()
                 br.close()
-                Log.i(this.className(), "db version: $version")
+                Log.i(this.javaClass.simpleName, "db version: $version")
                 if (version >= MyApplication.getVersion().name) {
                     copy = false
                 }
@@ -94,7 +94,7 @@ class DatabaseCopyThread : Thread() {
                 bw.write(MyApplication.getVersion().name)
                 bw.close()
             }
-            Log.i(this.className(), "copy database done!")
+            Log.i(this.javaClass.simpleName, "copy database done!")
         } catch (e: Exception) {
             e.printStackTrace()
         }

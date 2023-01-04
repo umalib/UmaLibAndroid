@@ -27,7 +27,6 @@ import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import cn.umafan.lib.android.util.PageSizeUtil
 import cn.umafan.lib.android.util.SettingUtil
-import com.angcyo.dsladapter.className
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.liangguo.androidkit.app.ToastUtil
@@ -224,7 +223,8 @@ class HomeFragment : Fragment() {
                 } else {
                     0
                 }
-                Log.d(this.className(), "search-params: $params")
+                Log.d(this.javaClass.simpleName, "search-params: $params")
+                QueryBuilder.LOG_SQL = true
                 val query: QueryBuilder<ArtInfo> = artInfoDao.queryBuilder()
                 if (null != params) {
                     if (!params.isRandom) {
@@ -264,7 +264,7 @@ class HomeFragment : Fragment() {
                             )
                         }
                     } else {
-                        val q = query.limit(pageSize).orderRaw("RANDOM()")
+                        val q = query.limit(pageSize)
                             .orderDesc(ArtInfoDao.Properties.UploadTime, ArtInfoDao.Properties.Id)
                             .build().listLazy()
                         homeViewModel.loadArticles(q)
@@ -278,7 +278,8 @@ class HomeFragment : Fragment() {
                     }
                 }
 
-                query.offset(offset).limit(pageSize).orderDesc(ArtInfoDao.Properties.UploadTime)
+                query.offset(offset).limit(pageSize)
+                    .orderDesc(ArtInfoDao.Properties.UploadTime, ArtInfoDao.Properties.Id)
 
                 count = query.count()
                 if (count == 0L) {

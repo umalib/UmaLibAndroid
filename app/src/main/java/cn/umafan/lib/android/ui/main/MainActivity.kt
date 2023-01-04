@@ -328,7 +328,7 @@ class MainActivity : MyBaseActivity() {
             navController.popBackStack()
         }
         navController.navigate(R.id.nav_home, bundle)
-        Log.d(this.className(), navController.backStack.last.destination.label.toString())
+        Log.d(this.javaClass.simpleName, navController.backStack.last.destination.label.toString())
     }
 
     /**
