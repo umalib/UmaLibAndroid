@@ -3,6 +3,7 @@ package cn.umafan.lib.android.ui.home
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import cn.umafan.lib.android.util.PageSizeUtil
 import cn.umafan.lib.android.util.SettingUtil
+import com.angcyo.dsladapter.className
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.liangguo.androidkit.app.ToastUtil
@@ -222,7 +224,7 @@ class HomeFragment : Fragment() {
                 } else {
                     0
                 }
-                println("search-params: $params")
+                Log.d(this.className(), "search-params: $params")
                 val query: QueryBuilder<ArtInfo> = artInfoDao.queryBuilder()
                 if (null != params) {
                     if (!params.isRandom) {

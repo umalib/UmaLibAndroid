@@ -2,9 +2,11 @@ package cn.umafan.lib.android.ui.main
 
 import android.content.Context
 import android.os.Handler
+import android.util.Log
 import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.db.DaoMaster
 import cn.umafan.lib.android.model.db.DaoSession
+import com.angcyo.dsladapter.className
 import org.greenrobot.greendao.database.Database
 import java.io.*
 
@@ -55,7 +57,7 @@ class DatabaseCopyThread : Thread() {
                 val br = BufferedReader(FileReader(versionFile))
                 val version = br.readLine()
                 br.close()
-                println("db version: $version")
+                Log.i(this.className(), "db version: $version")
                 if (version >= MyApplication.getVersion().name) {
                     copy = false
                 }
@@ -92,7 +94,7 @@ class DatabaseCopyThread : Thread() {
                 bw.write(MyApplication.getVersion().name)
                 bw.close()
             }
-            println("copy database done!")
+            Log.i(this.className(), "copy database done!")
         } catch (e: Exception) {
             e.printStackTrace()
         }

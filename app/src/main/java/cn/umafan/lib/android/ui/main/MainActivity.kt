@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
@@ -37,6 +38,7 @@ import cn.umafan.lib.android.ui.setting.SettingActivity
 import cn.umafan.lib.android.util.FavoriteArticleUtil
 import cn.umafan.lib.android.util.SettingUtil
 import com.angcyo.dsladapter.DslAdapter
+import com.angcyo.dsladapter.className
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
@@ -326,7 +328,7 @@ class MainActivity : MyBaseActivity() {
             navController.popBackStack()
         }
         navController.navigate(R.id.nav_home, bundle)
-        println(navController.backStack.last.destination.label)
+        Log.d(this.className(), navController.backStack.last.destination.label.toString())
     }
 
     /**

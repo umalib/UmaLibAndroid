@@ -1,10 +1,12 @@
 package cn.umafan.lib.android.ui.reader.model
 
 import android.text.TextUtils
+import android.util.Log
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.db.Article
 import cn.umafan.lib.android.util.ReaderSettingUtil
 import cn.umafan.lib.android.util.SettingUtil
+import com.angcyo.dsladapter.className
 import com.itheima.view.BridgeWebView
 import org.json.JSONArray
 import org.json.JSONObject
@@ -36,7 +38,7 @@ class ReaderJSInterface(
 
     // 以此格式写方法
     fun getArticle(str: Array<String>) {
-        println(str[0])
+        Log.d(this.className(), str[0])
         //解析js callback方法
         val mJson = JSONObject(str[0])
         val callback = mJson.optString("callback") //解析js回调方法
@@ -65,7 +67,7 @@ class ReaderJSInterface(
             FORMATTER.format(article.uploadTime.toLong() * 1000)
         )
         json.put("setting", ReaderSettingUtil.getSetting("default"))
-        println(SettingUtil.getTheme())
+        Log.d(this.className(), SettingUtil.getTheme().toString())
         json.getJSONObject("setting").put(
             "theme", when (SettingUtil.getTheme()) {
                 R.style.Theme_UmaLibrary_NGA -> "nga"
@@ -74,7 +76,7 @@ class ReaderJSInterface(
                 else -> "purple"
             }
         )
-        println(json)
+        Log.d(this.className(), json.toString())
 
         invokeJavaScript(callback, json.toString())
     }
@@ -86,7 +88,7 @@ class ReaderJSInterface(
      * @param json     传递json数据
      */
     private fun invokeJavaScript(callback: String, json: String) {
-        println("callbackName: $callback  data: $json")
+        Log.d(this.className(), "callbackName: $callback  data: $json")
         if (TextUtils.isEmpty(callback)) return
         //调用js方法必须在主线程
         webView.post { webView.loadUrl("javascript:$callback($json)") }
