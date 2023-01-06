@@ -71,5 +71,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
 
+    // 文件下载
+    implementation "com.tonyodev.fetch2:fetch2:3.0.12"
+    // 消息通知
+    implementation "io.karn:notify:1.4.0"
+
     testImplementation 'junit:junit:4.13.2'
 }

@@ -6,5 +6,6 @@ data class UpdateBean(
     val currentVersion: Int = 0,
     val info: UpdateInfoBean,
     var show: Boolean = false,
-    var initiative: Boolean = false
+    var initiative: Boolean = false,
+    var currentDb: Long = 0L
 )

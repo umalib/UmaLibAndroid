@@ -11,6 +11,7 @@ import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ActivitySettingBinding
 import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.ui.UpdateLogActivity
+import cn.umafan.lib.android.util.DownloadUtil
 import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hjq.permissions.OnPermissionCallback
@@ -174,6 +175,10 @@ class SettingActivity : MyBaseActivity() {
             }
             settingUpdateLog.setOnClickListener {
                 UpdateLogActivity::class.startNewActivity()
+            }
+            settingGetOnlineDb.setOnClickListener {
+                val activity = this@SettingActivity
+                DownloadUtil.getLatestDataBase(activity)
             }
             settingReloadDatabase.setOnClickListener {
                 try {

@@ -44,6 +44,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.liangguo.androidkit.app.ToastUtil
+import com.liangguo.androidkit.app.getAppCacheSize
 import com.liangguo.androidkit.app.startNewActivity
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException

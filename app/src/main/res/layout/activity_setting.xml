@@ -96,14 +96,27 @@
                 app:layout_constraintTop_toBottomOf="@id/setting_change_theme" />
 
             <com.liangguo.preference.views.CommonSettingView
+                android:id="@+id/setting_get_online_db"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:icon="@drawable/ic_baseline_cloud_download_24"
+                app:layout_constraintTop_toBottomOf="@id/other_title"
+                app:showEndIcon="false"
+                app:subtitle="@string/get_online_db"
+                app:title="@string/get_online_db_title" />
+
+            <com.liangguo.preference.views.CommonSettingView
                 android:id="@+id/setting_reload_database"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:icon="@drawable/ic_baseline_chat_24"
-                app:layout_constraintTop_toBottomOf="@id/other_title"
+                app:icon="@drawable/ic_baseline_refresh_24"
+                app:layout_constraintTop_toBottomOf="@id/setting_get_online_db"
                 app:showEndIcon="false"
                 app:subtitle="@string/reload_database"
                 app:title="@string/reload_database_title" />

@@ -105,9 +105,12 @@
     <string name="appearance_title">外观</string>
     <string name="about">关于</string>
     <string name="other">其他</string>
+    <string name="get_online_db_title">在线下载数据库</string>
+    <string name="get_online_db">从github托管仓库获取最新数据库文件，此操作需要联网</string>
     <string name="reload_database_title">重新加载数据库</string>
     <string name="reload_database">重新加载并覆盖当前数据库，以修复数据库版本不一致等问题</string>
     <string name="reload_database_prompt">即将重新加载并覆盖当前数据库，此操作无法恢复。是否确定继续？</string>
+    <string name="download_complete">下载已完成</string>
 
     <string name="template_title">我是标题</string>
     <string name="template_author">我是作者</string>
