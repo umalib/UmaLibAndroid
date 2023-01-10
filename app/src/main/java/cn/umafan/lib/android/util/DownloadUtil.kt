@@ -114,7 +114,7 @@ object DownloadUtil {
                 val icon = IconCompat.createWithResource(context, cn.umafan.lib.android.R.drawable.ic_launcher)
 
                 notificationManager.notify(Random().nextInt(), NotificationCompat.Builder(context, "high_priority_notifications")
-                    .setContentTitle("您有一条新消息")
+                    .setContentTitle("数据库已下载完成")
                     .setSmallIcon(icon)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .build())
