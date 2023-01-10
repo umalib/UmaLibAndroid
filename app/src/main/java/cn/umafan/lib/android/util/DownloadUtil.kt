@@ -29,14 +29,17 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.annotations.NotNull
 import java.util.Random
+import kotlin.math.log
 
 
 object DownloadUtil {
-    private const val BASE_URL = "https://umalib.github.io/UmaLibDesktop/" //20230106.zip
+    private const val TAG = "downloadF"
+    private const val BASE_URL = "https://umalib.github.io/UmaLibDesktop/"
 
     private lateinit var fetch: Fetch
 
     private val context = MyApplication.context
+    private var isDownloading = false
 
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -56,8 +59,8 @@ object DownloadUtil {
             UpdateUtil.getUpdate().apply {
                 if (null != this) {
                     updateInfo = this
-                    download("${updateInfo!!.currentDb}.zip", activity)
-//                    download("20230106.zip", activity)
+//                    download("${updateInfo!!.currentDb}.zip", activity)
+                    download("20230108.zip", activity)
                 } else {
                     ToastUtil.error("获取更新失败，请检查网络！")
                 }
@@ -66,7 +69,7 @@ object DownloadUtil {
     }
 
     private fun download(name: String, activity: MyBaseActivity) {
-
+        if (isDownloading) return
         val fetchConfiguration: FetchConfiguration = FetchConfiguration.Builder(context)
             .setDownloadConcurrentLimit(1)
             .build()
@@ -83,6 +86,7 @@ object DownloadUtil {
                 downloadBlocks: List<DownloadBlock>,
                 totalBlocks: Int
             ) {
+                isDownloading = true
                 ToastUtil.info("已开始在后台下载数据库")
                 activity.runOnUiThread {
                     activity.shapeLoadingDialog?.dialog?.hide()
@@ -90,11 +94,10 @@ object DownloadUtil {
                 showProgress(total = download.total / 1024 / 1024)
             }
             override fun onQueued(@NotNull download: Download, waitingOnNetwork: Boolean) {
-                if (request.id == download.id) {
-                    showProgress(total = download.total / 1024 / 1024)
-                }
+                Log.d(TAG, "onQueued: $download")
             }
             override fun onCompleted(@NotNull download: Download) {
+                isDownloading = false
                 activity.runOnUiThread {
                     activity.shapeLoadingDialog?.dialog?.hide()
                 }
@@ -132,6 +135,7 @@ object DownloadUtil {
                 etaInMilliSeconds: Long,
                 downloadedBytesPerSecond: Long
             ) {
+                Log.d(TAG, "onProgress: $download")
                 if (request.id == download.id) {
                     showProgress(
                         progress = download.progress,
@@ -141,20 +145,45 @@ object DownloadUtil {
                 }
             }
 
-            override fun onWaitingNetwork(download: Download) {}
-            override fun onDownloadBlockUpdated(download: Download, downloadBlock: DownloadBlock, totalBlocks: Int) {}
-            override fun onError(download: Download, error: Error, throwable: Throwable?) {}
-            override fun onAdded(download: Download) {}
-            override fun onPaused(@NotNull download: Download) {}
-            override fun onResumed(@NotNull download: Download) {}
-            override fun onCancelled(@NotNull download: Download) {}
-            override fun onRemoved(@NotNull download: Download) {}
-            override fun onDeleted(@NotNull download: Download) {}
+            override fun onWaitingNetwork(download: Download) {
+                Log.d(TAG, "onWaitingNetwork: ")
+            }
+            override fun onDownloadBlockUpdated(download: Download, downloadBlock: DownloadBlock, totalBlocks: Int) {
+                Log.d(TAG, "onDownloadBlockUpdated: ")
+            }
+            override fun onError(download: Download, error: Error, throwable: Throwable?) {
+                ToastUtil.error("下载失败：$error")
+                activity.runOnUiThread {
+                    activity.shapeLoadingDialog?.dialog?.hide()
+                }
+            }
+            override fun onAdded(download: Download) {
+                Log.d(TAG, "onAdded: ")
+            }
+            override fun onPaused(@NotNull download: Download) {
+                Log.d(TAG, "onPaused: ")
+            }
+            override fun onResumed(@NotNull download: Download) {
+                Log.d(TAG, "onResumed: ")
+            }
+            override fun onCancelled(@NotNull download: Download) {
+                Log.d(TAG, "onCancelled: ")
+            }
+            override fun onRemoved(@NotNull download: Download) {
+                Log.d(TAG, "onRemoved: ")
+            }
+            override fun onDeleted(@NotNull download: Download) {
+                Log.d(TAG, "onDeleted: ")
+            }
         }
         fetch.addListener(fetchListener)
         fetch.enqueue(request,
-            { _: Request? -> }
-        ) { _: Error? -> }
+            { req: Request? ->
+                Log.d("downloadF", "download: $req")
+            }
+        ) { error: Error? ->
+            Log.d("downloadF", "error: $error")
+        }
     }
 
     private fun showProgress(progress: Int = 0, speed: Long = 0, total: Long = 0) {
