@@ -39,11 +39,7 @@ import kotlin.math.log
 object DownloadUtil {
     private const val TAG = "downloadF"
 
-    /**
-     * 不知道为啥用安卓仓库的url就下载不了文件
-     * 其他任何仓库的url都能下载文件
-     */
-    private const val BASE_URL = "https://umalib.github.io/UmaLibDesktop/"
+    private const val BASE_URL = "https://umalib.github.io/UmaLibAndroid/"
 
     private lateinit var fetch: Fetch
     private lateinit var fetchListener: FetchListener
@@ -71,8 +67,7 @@ object DownloadUtil {
                 if (null != this) {
                     updateInfo = this
                     // 根据版本号下载db
-//                    download("${updateInfo!!.currentDb}.zip", activity)
-                    download("20230108.zip", activity)
+                    download("${updateInfo!!.currentDb}.zip", activity)
                 } else {
                     ToastUtil.error("获取更新失败，请检查网络！")
                 }
