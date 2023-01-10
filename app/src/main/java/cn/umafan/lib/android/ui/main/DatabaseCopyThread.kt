@@ -6,9 +6,11 @@ import android.util.Log
 import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.db.DaoMaster
 import cn.umafan.lib.android.model.db.DaoSession
-import com.angcyo.dsladapter.className
+import cn.umafan.lib.android.util.ZipUtil
+import com.liangguo.androidkit.app.ToastUtil
 import org.greenrobot.greendao.database.Database
 import java.io.*
+
 
 class DatabaseCopyThread : Thread() {
     val context = MyApplication.context
@@ -16,27 +18,34 @@ class DatabaseCopyThread : Thread() {
 
     companion object {
         private var daoSession: DaoSession? = null
-        private val queue = mutableListOf<Handler>()
+        private val queue = mutableListOf<Pair<Handler, String?>>()
         private val lock = Object()
 
-        fun addHandler(_handler: Handler) {
-            queue.add(_handler)
+        fun addHandler(_handler: Handler, fileName: String? = null) {
+            queue.add(Pair(_handler, fileName))
             synchronized(lock) {
                 lock.notify()
             }
+        }
+
+        fun clearDb() {
+            daoSession = null
         }
     }
 
     override fun run() {
         while (true) {
             while (queue.size > 0) {
-                handler = queue.first()
+                handler = queue.first().first
+                val dbName = queue.first().second
                 queue.removeFirst()
                 if (null == daoSession) {
-                    copyDatabase()
-                    val helper = LibOpenHelper(context, "main.db")
-                    val db: Database = helper.readableDb
-                    daoSession = DaoMaster(db).newSession()
+                    copyDatabase(dbName)
+                    if (context.getDatabasePath("main.db").exists()) {
+                        val helper = LibOpenHelper(context, "main.db")
+                        val db: Database = helper.readableDb
+                        daoSession = DaoMaster(db).newSession()
+                    }
                 }
                 val message = handler.obtainMessage()
                 message.what = MyApplication.DATABASE_LOADED
@@ -49,7 +58,7 @@ class DatabaseCopyThread : Thread() {
         }
     }
 
-    private fun copyDatabase() {
+    private fun copyDatabase(name: String? = null) {
         try {
             val versionFile = context.getDatabasePath("version")
             var copy = true
@@ -64,32 +73,49 @@ class DatabaseCopyThread : Thread() {
             }
 
             if (copy) {
-                val myInput: InputStream = context.assets.open("db/main.db")
-                val outFile: File = context.getDatabasePath("main.db")
-
-                outFile.parentFile?.mkdirs()
-                val myOutput: OutputStream = FileOutputStream(outFile)
-                val buffer = ByteArray(5)
-                var length: Int = myInput.read(buffer)
-                val total = myInput.available()
-                var count = 0
-
-                while (length > 0) {
-                    if (count % 12000 == 0) {
-                        val progress = count * length / total.toDouble() * 100
-                        val message = handler.obtainMessage()
-                        message.what = MyApplication.DATABASE_LOADING
-                        message.obj = progress
-                        handler.sendMessage(message)
+                if (name !== null) {
+                    val outputFile: File = context.getDatabasePath("main.db")
+                    if (!outputFile.exists()) {
+                        outputFile.createNewFile()
                     }
-                    myOutput.write(buffer, 0, length)
-                    length = myInput.read(buffer)
-                    count++
-                }
-                myOutput.flush()
-                myOutput.close()
-                myInput.close()
+                    val output: String = outputFile.parent!! + "/"
+                    val input: String = context.getDatabasePath(name).path
+                    val unzippedFileName = ZipUtil.unzip(input, output)
+                    val unzippedFile = context.getDatabasePath(unzippedFileName)
+                    if (unzippedFile.exists()) {
+                        unzippedFile.renameTo(context.getDatabasePath("main.db"))
+                        // 删除压缩包
+                        context.getDatabasePath(name).delete()
+                    } else {
+                        return
+                    }
+                } else{
+                    val myInput: InputStream = context.assets.open("db/main.db")
+                    val outFile: File = context.getDatabasePath("main.db")
 
+                    outFile.parentFile?.mkdirs()
+                    val myOutput: OutputStream = FileOutputStream(outFile)
+                    val buffer = ByteArray(5)
+                    var length: Int = myInput.read(buffer)
+                    val total = myInput.available()
+                    var count = 0
+
+                    while (length > 0) {
+                        if (count % 12000 == 0) {
+                            val progress = count * length / total.toDouble() * 100
+                            val message = handler.obtainMessage()
+                            message.what = MyApplication.DATABASE_LOADING
+                            message.obj = progress
+                            handler.sendMessage(message)
+                        }
+                        myOutput.write(buffer, 0, length)
+                        length = myInput.read(buffer)
+                        count++
+                    }
+                    myOutput.flush()
+                    myOutput.close()
+                    myInput.close()
+                }
                 val bw = BufferedWriter(FileWriter(versionFile))
                 bw.write(MyApplication.getVersion().name)
                 bw.close()
@@ -97,6 +123,9 @@ class DatabaseCopyThread : Thread() {
             Log.i(this.javaClass.simpleName, "copy database done!")
         } catch (e: Exception) {
             e.printStackTrace()
+            if (context.getDatabasePath("main.db").exists()) {
+                context.getDatabasePath("main.db").delete()
+            }
         }
     }
 

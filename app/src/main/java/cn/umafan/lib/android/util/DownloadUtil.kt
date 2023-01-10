@@ -7,12 +7,16 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.IconCompat
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.MyBaseActivity
+import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
 import cn.umafan.lib.android.ui.setting.SettingActivity
 import cn.umafan.lib.android.util.network.UpdateUtil
@@ -34,9 +38,15 @@ import kotlin.math.log
 
 object DownloadUtil {
     private const val TAG = "downloadF"
+
+    /**
+     * 不知道为啥用安卓仓库的url就下载不了文件
+     * 其他任何仓库的url都能下载文件
+     */
     private const val BASE_URL = "https://umalib.github.io/UmaLibDesktop/"
 
     private lateinit var fetch: Fetch
+    private lateinit var fetchListener: FetchListener
 
     private val context = MyApplication.context
     private var isDownloading = false
@@ -51,6 +61,7 @@ object DownloadUtil {
         return context.getDatabasePath(fileName).path
     }
 
+    // 获取最新db版本
     fun getLatestDataBase(activity: MyBaseActivity) {
         activity.shapeLoadingDialog?.dialog?.show()
         var updateInfo: UpdateBean? = null
@@ -59,6 +70,7 @@ object DownloadUtil {
             UpdateUtil.getUpdate().apply {
                 if (null != this) {
                     updateInfo = this
+                    // 根据版本号下载db
 //                    download("${updateInfo!!.currentDb}.zip", activity)
                     download("20230108.zip", activity)
                 } else {
@@ -79,7 +91,7 @@ object DownloadUtil {
         request.priority = Priority.HIGH
         request.networkType = NetworkType.ALL
 
-        val fetchListener: FetchListener = object : FetchListener {
+        fetchListener = object : FetchListener {
 
             override fun onStarted(
                 download: Download,
@@ -97,24 +109,17 @@ object DownloadUtil {
                 Log.d(TAG, "onQueued: $download")
             }
             override fun onCompleted(@NotNull download: Download) {
+                Log.d(TAG, "onCompleted: ")
                 isDownloading = false
                 activity.runOnUiThread {
                     activity.shapeLoadingDialog?.dialog?.hide()
                 }
                 // 发送通知
                 notificationManager.createNotificationChannel(NotificationChannel("high_priority_notifications", "下载通知", NotificationManager.IMPORTANCE_HIGH))
-                val target = Intent(context, MainActivity::class.java)
-                val bubbleIntent = PendingIntent.getActivity(context, 0, target, PendingIntent.FLAG_MUTABLE)
                 val icon = IconCompat.createWithResource(context, cn.umafan.lib.android.R.drawable.ic_launcher)
-                val bubbleData = NotificationCompat.BubbleMetadata.Builder(bubbleIntent,
-                    icon)
-                    .setDesiredHeight(600)
-                    .build()
+
                 notificationManager.notify(Random().nextInt(), NotificationCompat.Builder(context, "high_priority_notifications")
                     .setContentTitle("您有一条新消息")
-                    .setContentText("点此应用数据库")
-                    .setContentIntent(bubbleIntent)
-                    .setBubbleMetadata(bubbleData)
                     .setSmallIcon(icon)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .build())
@@ -125,10 +130,21 @@ object DownloadUtil {
                     .setTitle(R.string.download_complete)
                     .setMessage(R.string.reload_database_prompt)
                     .setPositiveButton(R.string.confirm) { _, _ ->
-                        /** TODO 重载数据库操作 */
+                        // 删除原有数据库
+                        context.getDatabasePath("main.db").delete()
+                        context.getDatabasePath("version").delete()
+                        DatabaseCopyThread.clearDb()
+                        // 覆盖应用新数据库
+                        DatabaseCopyThread.addHandler(object: Handler(Looper.getMainLooper()) {
+                            override fun handleMessage(msg: Message) {
+                                ToastUtil.success("数据库加载成功，返回首页刷新以应用")
+                            }
+                        }, name)
                     }
                     .setNegativeButton(R.string.cancel, null)
-                    .create().show()
+                    .create()
+                    .show()
+                fetch.removeListener(fetchListener)
             }
             override fun onProgress(
                 @NotNull download: Download,
