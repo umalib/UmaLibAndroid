@@ -2,6 +2,6 @@
 
 A library of doujin articles of _Umamusume: Pretty Derby_
 
-## How to Contribute
+## Branch "version"
 
-Send email to umalib629@outlook.com
+This branch is for update service
