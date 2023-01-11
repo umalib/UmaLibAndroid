@@ -38,13 +38,11 @@ import cn.umafan.lib.android.ui.setting.SettingActivity
 import cn.umafan.lib.android.util.FavoriteArticleUtil
 import cn.umafan.lib.android.util.SettingUtil
 import com.angcyo.dsladapter.DslAdapter
-import com.angcyo.dsladapter.className
 import com.ferfalk.simplesearchview.SimpleSearchView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.liangguo.androidkit.app.ToastUtil
-import com.liangguo.androidkit.app.getAppCacheSize
 import com.liangguo.androidkit.app.startNewActivity
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException

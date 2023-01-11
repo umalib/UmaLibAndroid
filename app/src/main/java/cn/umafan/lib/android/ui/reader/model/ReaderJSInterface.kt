@@ -6,7 +6,6 @@ import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.db.Article
 import cn.umafan.lib.android.util.ReaderSettingUtil
 import cn.umafan.lib.android.util.SettingUtil
-import com.angcyo.dsladapter.className
 import com.itheima.view.BridgeWebView
 import org.json.JSONArray
 import org.json.JSONObject

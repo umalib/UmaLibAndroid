@@ -7,7 +7,6 @@ import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.db.DaoMaster
 import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.util.ZipUtil
-import com.liangguo.androidkit.app.ToastUtil
 import org.greenrobot.greendao.database.Database
 import java.io.*
 
@@ -89,7 +88,7 @@ class DatabaseCopyThread : Thread() {
                     } else {
                         return
                     }
-                } else{
+                } else {
                     val myInput: InputStream = context.assets.open("db/main.db")
                     val outFile: File = context.getDatabasePath("main.db")
 
