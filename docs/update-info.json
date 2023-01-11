@@ -1,13 +1,14 @@
 {
   "currentVersion": 1,
-  "currentVersionName": "1.0.7",
-  "currentDb": 20230108,
+  "currentVersionName": "3.0.0",
+  "currentDb": 20240402,
   "info": {
     "title": "！！如果遇到问题请卸载重装！！",
-    "message": "更新数据库"
+    "message": "增加作品推荐功能；马娘别名迁移到数据库"
   },
   "button": {
     "text": "去下载新版",
     "url": "https://pan.baidu.com/s/1LSlwkoRjjl4AHU9uhyKf4g?pwd=nga2"
-  }
+  },
+  "downloadUrl": "https://umalib.gitgud.site/UmaLibAndroid/"
 }
