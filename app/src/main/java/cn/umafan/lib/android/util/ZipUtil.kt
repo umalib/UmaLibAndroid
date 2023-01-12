@@ -18,11 +18,11 @@ object ZipUtil {
     fun unzip(filePath: String?, zipDir: String): String {
         var name = ""
         try {
-            var dest: BufferedOutputStream? = null
-            var `is`: BufferedInputStream? = null
+            var bufferedOutputStream: BufferedOutputStream?
+            var bufferedInputStream: BufferedInputStream?
             var entry: ZipEntry
-            val zipfile = ZipFile(filePath)
-            val dir: Enumeration<*> = zipfile.entries()
+            val zipFile = ZipFile(filePath)
+            val dir: Enumeration<*> = zipFile.entries()
             while (dir.hasMoreElements()) {
                 entry = dir.nextElement() as ZipEntry
                 if (entry.isDirectory) {
@@ -33,23 +33,23 @@ object ZipUtil {
                 }
                 name = entry.name
             }
-            val e: Enumeration<*> = zipfile.entries()
+            val e: Enumeration<*> = zipFile.entries()
             while (e.hasMoreElements()) {
                 entry = e.nextElement() as ZipEntry
                 if (entry.isDirectory) {
                     continue
                 } else {
-                    `is` = BufferedInputStream(zipfile.getInputStream(entry))
+                    bufferedInputStream = BufferedInputStream(zipFile.getInputStream(entry))
                     var count: Int
                     val dataByte = ByteArray(BUFFER)
                     val fos = FileOutputStream(zipDir + entry.name)
-                    dest = BufferedOutputStream(fos, BUFFER)
-                    while (`is`.read(dataByte, 0, BUFFER).also { count = it } != -1) {
-                        dest.write(dataByte, 0, count)
+                    bufferedOutputStream = BufferedOutputStream(fos, BUFFER)
+                    while (bufferedInputStream.read(dataByte, 0, BUFFER).also { count = it } != -1) {
+                        bufferedOutputStream.write(dataByte, 0, count)
                     }
-                    dest.flush()
-                    dest.close()
-                    `is`.close()
+                    bufferedOutputStream.flush()
+                    bufferedOutputStream.close()
+                    bufferedInputStream.close()
                 }
             }
         } catch (e: Exception) {

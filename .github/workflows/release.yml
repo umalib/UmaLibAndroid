@@ -37,7 +37,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: Uma Library Android ${{ github.ref_name }}
-          body: created by Github Actions
+          body: built by Github Actions
           draft: false
           prerelease: false
           files: ./umalib-android-${{ github.ref_name }}.apk
