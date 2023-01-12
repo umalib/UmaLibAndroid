@@ -1,0 +1,43 @@
+name: umalib-build-and-release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Assemble release
+        run: ./gradlew :app:assembleRelease
+      - name: ZipAlign & Sign android release
+        id: sign_app
+        uses: kevin-david/zipalign-sign-android-release@v1.1
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.JKS_FILE }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+          zipAlign: true
+      - name: Move
+        run: mv ${{ steps.sign_app.outputs.signedReleaseFile }} './umalib-android-${{ github.ref_name }}.apk'
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Uma Library Android ${{ github.ref_name }}
+          body: created by Github Actions
+          draft: false
+          prerelease: false
+          files: ./umalib-android-${{ github.ref_name }}.apk
