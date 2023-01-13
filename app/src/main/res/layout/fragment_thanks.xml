@@ -23,9 +23,12 @@
             android:clickable="true"
             android:focusable="true"
             app:cardCornerRadius="15dp"
+            app:checkedIconTint="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:rippleColor="@null"
+            app:strokeColor="@null">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -99,9 +102,12 @@
             android:clickable="true"
             android:focusable="true"
             app:cardCornerRadius="15dp"
+            app:checkedIconTint="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/app_info_card">
+            app:layout_constraintTop_toBottomOf="@id/app_info_card"
+            app:rippleColor="@null"
+            app:strokeColor="@null">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -284,15 +290,18 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/container_btn_card"
+            style="@style/Widget.Material3.CardView.Elevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.CardView.Elevated"
             android:layout_margin="@dimen/text_margin"
             android:padding="15dp"
             app:cardCornerRadius="15dp"
+            app:checkedIconTint="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/staffs_card">
+            app:layout_constraintTop_toBottomOf="@+id/staffs_card"
+            app:rippleColor="@null"
+            app:strokeColor="@null">
 
 <!--            <LinearLayout-->
 <!--                android:layout_width="match_parent"-->
