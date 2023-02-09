@@ -40,16 +40,16 @@ public class BaselineGridTextView extends MaterialTextView {
     super(context, attrs, defStyleAttr);
 
     final TypedArray a =
-        context.obtainStyledAttributes(attrs, R.styleable.BaselineGridTextView, defStyleAttr, 0);
+            context.obtainStyledAttributes(attrs, R.styleable.BaselineGridTextView, defStyleAttr, 0);
 
     //首先检查 TextAppearance 的行高和字体属性
     if (a.hasValue(R.styleable.BaselineGridTextView_android_textAppearance)) {
       int textAppearanceId =
-          a.getResourceId(
-              R.styleable.BaselineGridTextView_android_textAppearance,
-              android.R.style.TextAppearance);
+              a.getResourceId(
+                      R.styleable.BaselineGridTextView_android_textAppearance,
+                      android.R.style.TextAppearance);
       TypedArray ta =
-          context.obtainStyledAttributes(textAppearanceId, R.styleable.BaselineGridTextView);
+              context.obtainStyledAttributes(textAppearanceId, R.styleable.BaselineGridTextView);
       parseTextAttrs(ta);
       ta.recycle();
     }
@@ -59,8 +59,8 @@ public class BaselineGridTextView extends MaterialTextView {
     a.recycle();
 
     FOUR_DIP =
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+            TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
     computeLineHeight();
   }
 
@@ -136,10 +136,10 @@ public class BaselineGridTextView extends MaterialTextView {
     final Paint.FontMetrics fm = getPaint().getFontMetrics();
     final float fontHeight = Math.abs(fm.ascent - fm.descent) + fm.leading;
     final float desiredLineHeight =
-        (lineHeightHint > 0) ? lineHeightHint : lineHeightMultiplierHint * fontHeight;
+            (lineHeightHint > 0) ? lineHeightHint : lineHeightMultiplierHint * fontHeight;
 
     final int baselineAlignedLineHeight =
-        (int) ((FOUR_DIP * (float) Math.ceil(desiredLineHeight / FOUR_DIP)) + 0.5f);
+            (int) ((FOUR_DIP * (float) Math.ceil(desiredLineHeight / FOUR_DIP)) + 0.5f);
     setLineSpacing(baselineAlignedLineHeight - fontHeight, 1f);
   }
 
@@ -163,7 +163,7 @@ public class BaselineGridTextView extends MaterialTextView {
   private void parseTextAttrs(TypedArray a) {
     if (a.hasValue(R.styleable.BaselineGridTextView_lineHeightMultiplierHint)) {
       lineHeightMultiplierHint =
-          a.getFloat(R.styleable.BaselineGridTextView_lineHeightMultiplierHint, 1f);
+              a.getFloat(R.styleable.BaselineGridTextView_lineHeightMultiplierHint, 1f);
     }
     if (a.hasValue(R.styleable.BaselineGridTextView_lineHeightHint)) {
       lineHeightHint = a.getDimensionPixelSize(R.styleable.BaselineGridTextView_lineHeightHint, 0);

@@ -45,13 +45,14 @@ class CommonSettingView @JvmOverloads constructor(
 
     init {
         LayoutInflater.from(context).inflate(R.layout.item_common_preference, this, true)
-        context.obtainStyledAttributes(attrs, R.styleable.CommonSettingsView, defStyleAttr, 0).apply {
-            titleTextView.text = getText(R.styleable.CommonSettingsView_title)
-            subtitleTextView.text = getText(R.styleable.CommonSettingsView_subtitle)
-            endTextView.text = getText(R.styleable.CommonSettingsView_end_text)
-            endIconView.isVisible = getBoolean(R.styleable.CommonSettingsView_showEndIcon, true)
-            iconView.setImageDrawable(getDrawable(R.styleable.CommonSettingsView_icon))
-        }.recycle()
+        context.obtainStyledAttributes(attrs, R.styleable.CommonSettingsView, defStyleAttr, 0)
+            .apply {
+                titleTextView.text = getText(R.styleable.CommonSettingsView_title)
+                subtitleTextView.text = getText(R.styleable.CommonSettingsView_subtitle)
+                endTextView.text = getText(R.styleable.CommonSettingsView_end_text)
+                endIconView.isVisible = getBoolean(R.styleable.CommonSettingsView_showEndIcon, true)
+                iconView.setImageDrawable(getDrawable(R.styleable.CommonSettingsView_icon))
+            }.recycle()
     }
 
 }
