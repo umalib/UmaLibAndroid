@@ -66,7 +66,7 @@
     <string name="app_view_intro">简洁美观的阅读体验</string>
     <string name="app_view_description">可自由调整文章字号，段落间距，打造自定义的阅读体验。</string>
     <string name="app_tag_intro">自定义Tag搜索</string>
-    <string name="app_tag_description">它内置了一套较为完整的、以文章内容为主导的Tag系统，与一套支持按Tag关键词进行检索的搜索功能，便于用户对数据库中的作品进行自定义检索，以找到自己希望阅读的文章。</string>
+    <string name="app_tag_description">内置一套较为完整的、以文章内容为主导的Tag系统，与一套支持按Tag关键词进行检索的搜索功能，便于用户对数据库中的作品进行自定义检索，以找到自己希望阅读的文章。</string>
     <string name="app_func_intro">阅读功能完备</string>
     <string name="app_func_description">大书库安卓端功能移植自PC版，在保持功能的同时致力于提供舒适的使用体验。</string>
     <string name="update_log">更新日志</string>
