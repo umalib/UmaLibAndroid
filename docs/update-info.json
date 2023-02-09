@@ -1,10 +1,10 @@
 {
   "currentVersion": 1,
-  "currentVersionName": "1.0.7",
-  "currentDb": 20230111,
+  "currentVersionName": "2.0.0",
+  "currentDb": 20230121,
   "info": {
     "title": "！！如果遇到问题请卸载重装！！",
-    "message": "更新数据库"
+    "message": "现在内置数据库可以在线更新了；新年快乐！"
   },
   "button": {
     "text": "去下载新版",
