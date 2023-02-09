@@ -26,7 +26,7 @@ import cn.umafan.lib.android.databinding.ActivityMainBinding
 import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.MyBaseActivity
 import cn.umafan.lib.android.model.SearchBean
-import cn.umafan.lib.android.model.db.ArtInfoDao
+import cn.umafan.lib.android.model.db.ArtCreatorDao
 import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.model.db.Tag
 import cn.umafan.lib.android.model.db.TagDao
@@ -279,7 +279,7 @@ class MainActivity : MyBaseActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    fun exit() {
+    private fun exit() {
         if (!isExit) {
             isExit = true
             ToastUtil.info("再按一次返回键退出程序")
@@ -338,10 +338,10 @@ class MainActivity : MyBaseActivity() {
             daoSession = it.obj as DaoSession
             if (null != daoSession) {
                 with(daoSession!!) {
-                    val artInfoDao: ArtInfoDao = artInfoDao
+                    val artCreatorDao: ArtCreatorDao = artCreatorDao
                     val tagDao: TagDao = tagDao
                     // 获取创作者列表
-                    artInfoDao.queryBuilder().orderDesc(ArtInfoDao.Properties.Name).listLazy()
+                    artCreatorDao.queryBuilder().listLazy()
                         .forEach {
                             if (it.author.isNotBlank()) creatorList.add(it.author)
                             if (it.translator.isNotBlank()) creatorList.add(it.translator)

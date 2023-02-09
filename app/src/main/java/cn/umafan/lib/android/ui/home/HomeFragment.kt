@@ -228,12 +228,21 @@ class HomeFragment : Fragment() {
                 if (null != params) {
                     if (!params.isRandom) {
                         if (params.creator!!.isNotBlank()) {
-                            query.where(
-                                query.or(
-                                    ArtInfoDao.Properties.Author.eq(params.creator),
-                                    ArtInfoDao.Properties.Translator.eq(params.creator)
+                            if (params.creator!!.indexOf('/') != -1) {
+                                query.where(
+                                    query.or(
+                                        ArtInfoDao.Properties.Author.eq(params.creator),
+                                        ArtInfoDao.Properties.Translator.eq(params.creator)
+                                    )
                                 )
-                            )
+                            } else {
+                                query.where(
+                                    query.or(
+                                        ArtInfoDao.Properties.Author.like("%${params.creator}%"),
+                                        ArtInfoDao.Properties.Translator.like("%${params.creator}%")
+                                    )
+                                )
+                            }
                         }
                         if (params.keyword!!.isNotBlank()) {
                             query.where(
@@ -263,14 +272,13 @@ class HomeFragment : Fragment() {
                             )
                         }
                     } else {
-                        val q = query.limit(pageSize)
-                            .orderDesc(ArtInfoDao.Properties.UploadTime, ArtInfoDao.Properties.Id)
+                        val q = query.limit(11).orderRaw("RANDOM()")
                             .build().listLazy()
                         homeViewModel.loadArticles(q)
                         homeViewModel.pageLen.value = 1
                         with(homeViewModel.currentPage.value) {
                             binding.lastPageBtn.isEnabled = this!! > 1
-                            binding.nextPageBtn.isEnabled = this < homeViewModel.pageLen.value!!
+                            binding.nextPageBtn.isEnabled = false
                             binding.pageNumBtn.text = "$this/${homeViewModel.pageLen.value} 页"
                         }
                         return@DataBaseHandler
