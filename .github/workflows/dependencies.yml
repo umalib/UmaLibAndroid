@@ -1,0 +1,23 @@
+name: gradle-dependency-detection
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  gradle-dependency-detection:
+    runs-on: ubuntu-latest
+    # The Dependency Submission API requires write permission
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Analyze dependencies
+        uses: mikepenz/gradle-dependency-submission@v0.8.4
+        with:
+          gradle-build-module: |-
+            :app
+            :preference
+          gradle-build-configuration: |-
+            debugCompileClasspath
