@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
       - name: set up JDK 11
@@ -31,7 +33,7 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
           zipAlign: true
       - name: Move
-        run: mv ${{ steps.sign_app.outputs.signedReleaseFile }} './umalib-android-${{ github.ref_name }}.apk'
+        run: mv ${{ steps.sign_app.outputs.signedReleaseFile }} ./umalib-android-${{ github.ref_name }}.apk
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
