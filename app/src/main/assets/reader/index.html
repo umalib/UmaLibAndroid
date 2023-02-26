@@ -23,7 +23,11 @@
             </el-tag>
         </el-descriptions-item>
         <el-descriptions-item v-if="article.source" label="来源">
-            {{ article.source }}
+            <div v-if="article.source">
+                <div :key="`src-${index}`" v-for="(src, index) in article.source.split(' ')">
+                    {{ src }}
+                </div>
+            </div>
         </el-descriptions-item>
         <el-descriptions-item label="备注">{{ article.note }}</el-descriptions-item>
     </el-descriptions>
