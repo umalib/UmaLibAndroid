@@ -22,7 +22,7 @@ object UpdateUtil {
     /**
      * 所有的网络请求都统一经过这个函数
      */
-    suspend fun <T> catchError(block: suspend () -> T): T? {
+    private suspend fun <T> catchError(block: suspend () -> T): T? {
         return try {
             val result = withContext(Dispatchers.IO) { block() }
             result

@@ -18,7 +18,6 @@ import com.mingle.widget.ShapeLoadingDialog
 
 
 open class MyBaseActivity : AppCompatActivity() {
-
     var shapeLoadingDialog: ShapeLoadingDialog? = null
 
     private var _baseViewModel: MyBaseViewModel? = null
@@ -78,16 +77,14 @@ open class MyBaseActivity : AppCompatActivity() {
                     .setMessage(message)
                     .setPositiveButton(buttonText, buttonAction)
                     .create().show()
-            } else {
-                if (it.initiative) {
-                    MaterialAlertDialogBuilder(
-                        this@MyBaseActivity,
-                        com.google.android.material.R.style.MaterialAlertDialog_Material3
-                    ).setTitle(it.info.title)
-                        .setMessage(message)
-                        .setPositiveButton(buttonText, null)
-                        .create().show()
-                }
+            } else if (it.initiative) {
+                MaterialAlertDialogBuilder(
+                    this@MyBaseActivity,
+                    com.google.android.material.R.style.MaterialAlertDialog_Material3
+                ).setTitle(it.info.title)
+                    .setMessage(message)
+                    .setPositiveButton(buttonText, null)
+                    .create().show()
             }
         }
     }

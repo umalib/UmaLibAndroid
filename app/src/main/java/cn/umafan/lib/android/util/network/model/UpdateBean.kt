@@ -7,5 +7,5 @@ data class UpdateBean(
     val info: UpdateInfoBean,
     var show: Boolean = false,
     var initiative: Boolean = false,
-    var currentDb: Long = 0L
+    var currentDb: Int = 0
 )

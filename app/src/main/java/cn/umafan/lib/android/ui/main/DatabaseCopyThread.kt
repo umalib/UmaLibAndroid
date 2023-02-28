@@ -13,6 +13,8 @@ import java.io.*
 
 class DatabaseCopyThread : Thread() {
     val context = MyApplication.context
+    private val verFile = context.getDatabasePath("version")
+    private var version: Int = 0
     private lateinit var handler: Handler
 
     companion object {
@@ -57,73 +59,75 @@ class DatabaseCopyThread : Thread() {
         }
     }
 
+    fun getVersion(): Int {
+        verFile.parentFile?.mkdirs()
+        if (!verFile.exists()) {
+            val bw = BufferedWriter(FileWriter(verFile))
+            bw.write(this.version.toString())
+            bw.close()
+            return this.version
+        }
+        if (this.version == 0) {
+            val br = BufferedReader(FileReader(verFile))
+            this.version = Integer.parseInt(br.readLine())
+            br.close()
+        }
+        return this.version
+    }
+
+    fun setVersion(version: Int) {
+        this.version = version
+    }
+
     private fun copyDatabase(name: String? = null) {
+        val dbFile: File = context.getDatabasePath("main.db")
         try {
-            val versionFile = context.getDatabasePath("version")
-            var copy = true
-            if (versionFile.exists()) {
-                val br = BufferedReader(FileReader(versionFile))
-                val version = br.readLine()
-                br.close()
-                Log.i(this.javaClass.simpleName, "db version: $version")
-                if (version >= MyApplication.getVersion().name) {
-                    copy = false
+            dbFile.parentFile?.mkdirs()
+            if (null !== name) {
+                if (!dbFile.exists()) {
+                    dbFile.createNewFile()
                 }
-            }
-
-            if (copy) {
-                if (name !== null) {
-                    val outputFile: File = context.getDatabasePath("main.db")
-                    if (!outputFile.exists()) {
-                        outputFile.createNewFile()
-                    }
-                    val output: String = outputFile.parent!! + "/"
-                    val input: String = context.getDatabasePath(name).path
-                    val unzippedFileName = ZipUtil.unzip(input, output)
-                    val unzippedFile = context.getDatabasePath(unzippedFileName)
-                    if (unzippedFile.exists()) {
-                        unzippedFile.renameTo(context.getDatabasePath("main.db"))
-                        // 删除压缩包
-                        context.getDatabasePath(name).delete()
-                    } else {
-                        return
-                    }
+                val output: String = dbFile.parent!! + "/"
+                val input: String = context.getDatabasePath(name).path
+                val unzippedFileName = ZipUtil.unzip(input, output)
+                val unzippedFile = context.getDatabasePath(unzippedFileName)
+                if (unzippedFile.exists()) {
+                    unzippedFile.renameTo(context.getDatabasePath("main.db"))
+                    // 删除压缩包
+                    context.getDatabasePath(name).delete()
                 } else {
-                    val myInput: InputStream = context.assets.open("db/main.db")
-                    val outFile: File = context.getDatabasePath("main.db")
-
-                    outFile.parentFile?.mkdirs()
-                    val myOutput: OutputStream = FileOutputStream(outFile)
-                    val buffer = ByteArray(5)
-                    var length: Int = myInput.read(buffer)
-                    val total = myInput.available()
-                    var count = 0
-
-                    while (length > 0) {
-                        if (count % 12000 == 0) {
-                            val progress = count * length / total.toDouble() * 100
-                            val message = handler.obtainMessage()
-                            message.what = MyApplication.DATABASE_LOADING
-                            message.obj = progress
-                            handler.sendMessage(message)
-                        }
-                        myOutput.write(buffer, 0, length)
-                        length = myInput.read(buffer)
-                        count++
-                    }
-                    myOutput.flush()
-                    myOutput.close()
-                    myInput.close()
+                    return
                 }
-                val bw = BufferedWriter(FileWriter(versionFile))
-                bw.write(MyApplication.getVersion().name)
-                bw.close()
+                Log.i(this.javaClass.simpleName, "unzip database done!")
+            } else if (!dbFile.exists()) {
+                val inputStream: InputStream = context.assets.open("db/main.db")
+                val outputStream: OutputStream = FileOutputStream(dbFile)
+                val buffer = ByteArray(5)
+                var length: Int = inputStream.read(buffer)
+                val total = inputStream.available()
+                var count = 0
+
+                while (length > 0) {
+                    if (count % 12000 == 0) {
+                        val progress = count * length / total.toDouble() * 100
+                        val message = handler.obtainMessage()
+                        message.what = MyApplication.DATABASE_LOADING
+                        message.obj = progress
+                        handler.sendMessage(message)
+                    }
+                    outputStream.write(buffer, 0, length)
+                    length = inputStream.read(buffer)
+                    count++
+                }
+                outputStream.flush()
+                outputStream.close()
+                inputStream.close()
+                Log.i(this.javaClass.simpleName, "copy database done!")
             }
-            Log.i(this.javaClass.simpleName, "copy database done!")
         } catch (e: Exception) {
             e.printStackTrace()
-            if (context.getDatabasePath("main.db").exists()) {
-                context.getDatabasePath("main.db").delete()
+            if (dbFile.exists()) {
+                dbFile.delete()
             }
         }
     }

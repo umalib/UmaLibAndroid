@@ -44,7 +44,10 @@ object ZipUtil {
                     val dataByte = ByteArray(BUFFER)
                     val fos = FileOutputStream(zipDir + entry.name)
                     bufferedOutputStream = BufferedOutputStream(fos, BUFFER)
-                    while (bufferedInputStream.read(dataByte, 0, BUFFER).also { count = it } != -1) {
+                    while (
+                        bufferedInputStream.read(dataByte, 0, BUFFER)
+                            .also { count = it } != -1
+                    ) {
                         bufferedOutputStream.write(dataByte, 0, count)
                     }
                     bufferedOutputStream.flush()
