@@ -1,10 +1,10 @@
 {
   "currentVersion": 1,
-  "currentVersionName": "2.0.0",
-  "currentDb": 20230121,
+  "currentVersionName": "2.1.0",
+  "currentDb": 20230228,
   "info": {
     "title": "！！如果遇到问题请卸载重装！！",
-    "message": "现在内置数据库可以在线更新了；新年快乐！"
+    "message": "现在手气不错功能能够重新返回随机作品列表了；作品阅读界面显示多来源"
   },
   "button": {
     "text": "去下载新版",
