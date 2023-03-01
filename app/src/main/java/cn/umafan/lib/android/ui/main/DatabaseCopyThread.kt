@@ -13,14 +13,13 @@ import java.io.*
 
 class DatabaseCopyThread : Thread() {
     val context = MyApplication.context
-    private val verFile = context.getDatabasePath("version")
-    private var version: Int = 0
     private lateinit var handler: Handler
 
     companion object {
         private var daoSession: DaoSession? = null
         private val queue = mutableListOf<Pair<Handler, String?>>()
         private val lock = Object()
+        var reloadFlag = false
 
         fun addHandler(_handler: Handler, fileName: String? = null) {
             queue.add(Pair(_handler, fileName))
@@ -59,26 +58,6 @@ class DatabaseCopyThread : Thread() {
         }
     }
 
-    fun getVersion(): Int {
-        verFile.parentFile?.mkdirs()
-        if (!verFile.exists()) {
-            val bw = BufferedWriter(FileWriter(verFile))
-            bw.write(this.version.toString())
-            bw.close()
-            return this.version
-        }
-        if (this.version == 0) {
-            val br = BufferedReader(FileReader(verFile))
-            this.version = Integer.parseInt(br.readLine())
-            br.close()
-        }
-        return this.version
-    }
-
-    fun setVersion(version: Int) {
-        this.version = version
-    }
-
     private fun copyDatabase(name: String? = null) {
         val dbFile: File = context.getDatabasePath("main.db")
         try {
@@ -99,7 +78,7 @@ class DatabaseCopyThread : Thread() {
                     return
                 }
                 Log.i(this.javaClass.simpleName, "unzip database done!")
-            } else if (!dbFile.exists()) {
+            } else if (!dbFile.exists() or reloadFlag) {
                 val inputStream: InputStream = context.assets.open("db/main.db")
                 val outputStream: OutputStream = FileOutputStream(dbFile)
                 val buffer = ByteArray(5)
@@ -123,6 +102,7 @@ class DatabaseCopyThread : Thread() {
                 outputStream.close()
                 inputStream.close()
                 Log.i(this.javaClass.simpleName, "copy database done!")
+                reloadFlag = false
             }
         } catch (e: Exception) {
             e.printStackTrace()

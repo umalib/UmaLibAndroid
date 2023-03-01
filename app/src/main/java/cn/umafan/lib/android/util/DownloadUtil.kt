@@ -12,6 +12,7 @@ import androidx.core.graphics.drawable.IconCompat
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.MyBaseActivity
+import cn.umafan.lib.android.model.MyBaseViewModel
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.util.network.UpdateUtil
 import cn.umafan.lib.android.util.network.model.UpdateBean
@@ -29,7 +30,6 @@ import java.util.*
 
 object DownloadUtil {
     private const val TAG = "downloadF"
-
     private const val BASE_URL = "https://umalib.github.io/UmaLibAndroid/"
 
     private lateinit var fetch: Fetch
@@ -44,7 +44,7 @@ object DownloadUtil {
     private var progressNotification: Int? = null
 
     private fun getLocalFilePath(fileName: String): String {
-        Log.d("downloadF", "getLocalFilePath: ${context.getDatabasePath(fileName).path}")
+        Log.d(TAG, "getLocalFilePath: ${context.getDatabasePath(fileName).path}")
         return context.getDatabasePath(fileName).path
     }
 
@@ -59,7 +59,7 @@ object DownloadUtil {
                 if (null != this) {
                     updateInfo = this
                     // 根据版本号下载db
-                    download("${updateInfo!!.currentDb}.zip", activity)
+                    download(updateInfo!!.currentDb, activity)
                 } else {
                     ToastUtil.error("获取更新失败，请检查网络！")
                 }
@@ -67,13 +67,14 @@ object DownloadUtil {
         }
     }
 
-    private fun download(name: String, activity: MyBaseActivity) {
+    private fun download(dbVersion: Int, activity: MyBaseActivity) {
         if (isDownloading) return
         val fetchConfiguration: FetchConfiguration = FetchConfiguration.Builder(context)
             .setDownloadConcurrentLimit(1)
             .build()
         fetch = Fetch.Impl.getInstance(fetchConfiguration)
 
+        val name = "${dbVersion}.zip"
         val request = Request(BASE_URL + name, getLocalFilePath(name))
         request.priority = Priority.HIGH
         request.networkType = NetworkType.ALL
@@ -133,7 +134,7 @@ object DownloadUtil {
                     .setPositiveButton(R.string.confirm) { _, _ ->
                         // 删除原有数据库
                         context.getDatabasePath("main.db").delete()
-                        context.getDatabasePath("version").delete()
+                        MyBaseViewModel.setDbVersion(dbVersion)
                         DatabaseCopyThread.clearDb()
                         // 覆盖应用新数据库
                         DatabaseCopyThread.addHandler(object : Handler(Looper.getMainLooper()) {
@@ -209,10 +210,10 @@ object DownloadUtil {
         fetch.addListener(fetchListener)
         fetch.enqueue(request,
             { req: Request? ->
-                Log.d("downloadF", "download: $req")
+                Log.d(TAG, "download: $req")
             }
         ) { error: Error? ->
-            Log.d("downloadF", "error: $error")
+            Log.d(TAG, "error: $error")
         }
     }
 

@@ -10,7 +10,9 @@ import android.view.MenuItem
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ActivitySettingBinding
 import cn.umafan.lib.android.model.MyBaseActivity
+import cn.umafan.lib.android.model.MyBaseViewModel
 import cn.umafan.lib.android.ui.UpdateLogActivity
+import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.util.DownloadUtil
 import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,9 +21,7 @@ import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.liangguo.androidkit.app.ToastUtil
 import com.liangguo.androidkit.app.startNewActivity
-import java.io.BufferedWriter
 import java.io.FileNotFoundException
-import java.io.FileWriter
 import kotlin.system.exitProcess
 
 
@@ -37,8 +37,7 @@ class SettingActivity : MyBaseActivity() {
                 intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
             }
-            .setNegativeButton(R.string.later, null)
-            .create()
+            .setNegativeButton(R.string.later, null).create()
     }
 
     private val reopenDialog by lazy {
@@ -49,8 +48,7 @@ class SettingActivity : MyBaseActivity() {
                 finish()
                 exitProcess(0)
             }
-            .setNegativeButton(R.string.later, null)
-            .create()
+            .setNegativeButton(R.string.later, null).create()
     }
 
     private val handler by lazy {
@@ -171,31 +169,37 @@ class SettingActivity : MyBaseActivity() {
             }
             settingItemCheckUpdate.setOnClickListener {
                 this@SettingActivity.shapeLoadingDialog?.dialog?.show()
-                this@SettingActivity.baseViewModel.getUpdate(this@SettingActivity, true)
+                this@SettingActivity.baseViewModel
+                    .getUpdate(this@SettingActivity, true)
             }
             settingUpdateLog.setOnClickListener {
                 UpdateLogActivity::class.startNewActivity()
             }
             settingGetOnlineDb.setOnClickListener {
-                val activity = this@SettingActivity
-                DownloadUtil.getLatestDataBase(activity)
+                try {
+                    MaterialAlertDialogBuilder(this@SettingActivity)
+                        .setTitle(R.string.get_online_db_title)
+                        .setMessage(R.string.get_online_db_prompt)
+                        .setPositiveButton(R.string.confirm) { _, _ ->
+                            DownloadUtil.getLatestDataBase(this@SettingActivity)
+                        }
+                        .setNegativeButton(R.string.cancel, null).show()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    ToastUtil.error("加载失败！")
+                }
             }
             settingReloadDatabase.setOnClickListener {
                 try {
-                    MaterialAlertDialogBuilder(
-                        this@SettingActivity
-                    ).setTitle(R.string.reload_database_title)
+                    MaterialAlertDialogBuilder(this@SettingActivity)
+                        .setTitle(R.string.reload_database_title)
                         .setMessage(R.string.reload_database_prompt)
                         .setPositiveButton(R.string.confirm) { _, _ ->
-                            val versionFile = this@SettingActivity.getDatabasePath("version")
-                            val bw = BufferedWriter(FileWriter(versionFile))
-                            bw.write("0.0.0")
-                            bw.flush()
-                            bw.close()
+                            MyBaseViewModel.setDbVersion(0)
+                            DatabaseCopyThread.reloadFlag = true
                             reopenDialog.show()
                         }
-                        .setNegativeButton(R.string.cancel, null)
-                        .show()
+                        .setNegativeButton(R.string.cancel, null).show()
                 } catch (e: Exception) {
                     e.printStackTrace()
                     ToastUtil.error("加载失败！")
@@ -219,9 +223,7 @@ class SettingActivity : MyBaseActivity() {
             .setPositiveButton(R.string.confirm) { _, _ ->
                 if (SettingUtil.clearImageBackground(type)) restartDialog.show()
                 else ToastUtil.error(getString(R.string.set_fail))
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .create().show()
+            }.setNegativeButton(R.string.cancel, null).create().show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -231,10 +233,9 @@ class SettingActivity : MyBaseActivity() {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     try {
                         shapeLoadingDialog?.show()
-                        if (!SettingUtil.saveImageBackground(
-                                handler,
-                                SettingUtil.INDEX_BG,
-                                data.data!!
+                        if (
+                            !SettingUtil.saveImageBackground(
+                                handler, SettingUtil.INDEX_BG, data.data!!
                             )
                         ) ToastUtil.error(getString(R.string.set_fail))
                     } catch (e: FileNotFoundException) {
@@ -248,9 +249,7 @@ class SettingActivity : MyBaseActivity() {
                     try {
                         shapeLoadingDialog?.show()
                         if (!SettingUtil.saveImageBackground(
-                                handler,
-                                SettingUtil.APP_BAR_BG,
-                                data.data!!
+                                handler, SettingUtil.APP_BAR_BG, data.data!!
                             )
                         ) ToastUtil.error(getString(R.string.set_fail))
                     } catch (e: FileNotFoundException) {

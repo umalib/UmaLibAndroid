@@ -14,7 +14,6 @@ import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.MyApplication
 import java.io.*
 
-
 object SettingUtil {
     private const val fileName = "setting"
     const val INDEX_BG = "index_bg"
@@ -69,7 +68,7 @@ object SettingUtil {
 
     fun getTheme(): Int {
         return try {
-            return sharedPreferences.getInt("theme", R.style.Theme_UmaLibrary)
+            return sharedPreferences.getInt("theme", R.style.Theme_UmaLibrary_NGA)
         } catch (e: Exception) {
             R.style.Theme_UmaLibrary
         }

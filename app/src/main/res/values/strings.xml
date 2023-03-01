@@ -9,7 +9,7 @@
     <string name="nav_header_subtitle">Umamusume Doujinshi Library</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="home">大书库</string>
+    <string name="home">书海</string>
     <string name="my_favorites">个人文库</string>
     <string name="thanks">纪念碑</string>
     <string name="collections">总目表</string>
@@ -107,6 +107,7 @@
     <string name="other">其他</string>
     <string name="get_online_db_title">在线下载数据库</string>
     <string name="get_online_db">从github托管仓库获取最新数据库文件，此操作需要联网</string>
+    <string name="get_online_db_prompt">即将从github托管仓库获取最新数据库文件并覆盖当前数据库，此操作无法恢复。是否确定继续？</string>
     <string name="reload_database_title">重新加载数据库</string>
     <string name="reload_database">重新加载并覆盖当前数据库，以修复数据库版本不一致等问题</string>
     <string name="reload_database_prompt">即将重新加载并覆盖当前数据库，此操作无法恢复。是否确定继续？</string>

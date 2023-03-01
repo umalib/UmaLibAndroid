@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.ViewModelProvider
 import cn.umafan.lib.android.R
+import cn.umafan.lib.android.util.DownloadUtil
 import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -61,7 +62,7 @@ open class MyBaseActivity : AppCompatActivity() {
             var message = getString(R.string.no_update)
             var buttonText = getString(R.string.confirm)
             val buttonAction: DialogInterface.OnClickListener?
-            if (it.show) {
+            if (2 == it.show) {
                 message = it.info.message
                 buttonText = it.button.text
                 buttonAction = DialogInterface.OnClickListener { _, _ ->
@@ -73,7 +74,21 @@ open class MyBaseActivity : AppCompatActivity() {
                     this@MyBaseActivity,
                     com.google.android.material.R.style.MaterialAlertDialog_Material3
                 )
-                    .setTitle("${it.currentVersionName} ${it.info.title}")
+                    .setTitle("新应用版本${it.currentVersionName}")
+                    .setMessage(message)
+                    .setPositiveButton(buttonText, buttonAction)
+                    .create().show()
+            } else if (1 == it.show) {
+                message = "版本 ${MyBaseViewModel.getDbVersion()} < ${it.currentDb}"
+                buttonText = it.button.text
+                buttonAction = DialogInterface.OnClickListener { _, _ ->
+                    DownloadUtil.getLatestDataBase(this@MyBaseActivity)
+                }
+                MaterialAlertDialogBuilder(
+                    this@MyBaseActivity,
+                    com.google.android.material.R.style.MaterialAlertDialog_Material3
+                )
+                    .setTitle("新数据库版本${it.currentDb}")
                     .setMessage(message)
                     .setPositiveButton(buttonText, buttonAction)
                     .create().show()

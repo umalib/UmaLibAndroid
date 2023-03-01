@@ -5,7 +5,7 @@ data class UpdateBean(
     val currentVersionName: String = "",
     val currentVersion: Int = 0,
     val info: UpdateInfoBean,
-    var show: Boolean = false,
+    var show: Int = 0,
     var initiative: Boolean = false,
     var currentDb: Int = 0
 )
