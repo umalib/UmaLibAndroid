@@ -24,9 +24,7 @@ import io.karn.notify.Notify
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.jetbrains.annotations.NotNull
 import java.util.*
-
 
 object DownloadUtil {
     private const val TAG = "downloadF"
@@ -35,15 +33,11 @@ object DownloadUtil {
     private lateinit var fetch: Fetch
     private lateinit var fetchListener: FetchListener
 
-    private val context = MyApplication.context
     private var isDownloading = false
-
-    private val notificationManager =
-        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
     private var progressNotification: Int? = null
 
     private fun getLocalFilePath(fileName: String): String {
+        val context = MyApplication.context
         Log.d(TAG, "getLocalFilePath: ${context.getDatabasePath(fileName).path}")
         return context.getDatabasePath(fileName).path
     }
@@ -69,6 +63,7 @@ object DownloadUtil {
 
     private fun download(dbVersion: Int, activity: MyBaseActivity) {
         if (isDownloading) return
+        val context = MyApplication.context
         val fetchConfiguration: FetchConfiguration = FetchConfiguration.Builder(context)
             .setDownloadConcurrentLimit(1)
             .build()
@@ -94,16 +89,19 @@ object DownloadUtil {
                 showProgress(total = download.total / 1024 / 1024)
             }
 
-            override fun onQueued(@NotNull download: Download, waitingOnNetwork: Boolean) {
+            override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
                 Log.d(TAG, "onQueued: $download")
             }
 
-            override fun onCompleted(@NotNull download: Download) {
+            override fun onCompleted(download: Download) {
                 Log.d(TAG, "onCompleted: ")
                 isDownloading = false
                 activity.runOnUiThread {
                     activity.shapeLoadingDialog?.dialog?.hide()
                 }
+                val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
                 // 发送通知
                 notificationManager.createNotificationChannel(
                     NotificationChannel(
@@ -150,7 +148,7 @@ object DownloadUtil {
             }
 
             override fun onProgress(
-                @NotNull download: Download,
+                download: Download,
                 etaInMilliSeconds: Long,
                 downloadedBytesPerSecond: Long
             ) {
@@ -187,23 +185,23 @@ object DownloadUtil {
                 Log.d(TAG, "onAdded: ")
             }
 
-            override fun onPaused(@NotNull download: Download) {
+            override fun onPaused(download: Download) {
                 Log.d(TAG, "onPaused: ")
             }
 
-            override fun onResumed(@NotNull download: Download) {
+            override fun onResumed(download: Download) {
                 Log.d(TAG, "onResumed: ")
             }
 
-            override fun onCancelled(@NotNull download: Download) {
+            override fun onCancelled(download: Download) {
                 Log.d(TAG, "onCancelled: ")
             }
 
-            override fun onRemoved(@NotNull download: Download) {
+            override fun onRemoved(download: Download) {
                 Log.d(TAG, "onRemoved: ")
             }
 
-            override fun onDeleted(@NotNull download: Download) {
+            override fun onDeleted(download: Download) {
                 Log.d(TAG, "onDeleted: ")
             }
         }
@@ -218,6 +216,7 @@ object DownloadUtil {
     }
 
     private fun showProgress(progress: Int = 0, speed: Long = 0, total: Long = 0) {
+        val context = MyApplication.context
         if (progressNotification === null) {
             progressNotification = Notify
                 .with(context)
@@ -233,20 +232,21 @@ object DownloadUtil {
                 }
                 .show()
         } else {
-            notificationManager.notify(
-                progressNotification!!, Notify
-                    .with(context)
-                    .asBigText {
-                        title = "下载数据库($speed kB/s  共 $total MB)  $progress%"
-                        expandedText = "正在下载数据库，请耐心等待"
-                        bigText = "$speed kB/s  共 $total MB"
-                    }
-                    .progress {
-                        showProgress = true
-                        enablePercentage = true
-                        progressPercent = progress
-                    }.asBuilder().build()
-            )
+            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                .notify(
+                    progressNotification!!, Notify
+                        .with(context)
+                        .asBigText {
+                            title = "下载数据库($speed kB/s  共 $total MB)  $progress%"
+                            expandedText = "正在下载数据库，请耐心等待"
+                            bigText = "$speed kB/s  共 $total MB"
+                        }
+                        .progress {
+                            showProgress = true
+                            enablePercentage = true
+                            progressPercent = progress
+                        }.asBuilder().build()
+                )
         }
     }
 
