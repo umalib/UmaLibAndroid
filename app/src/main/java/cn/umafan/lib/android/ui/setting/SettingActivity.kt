@@ -151,8 +151,9 @@ class SettingActivity : MyBaseActivity() {
                 val selectedId = themesId.indexOf(SettingUtil.getTheme())
                 MaterialAlertDialogBuilder(this@SettingActivity)
                     .setTitle(R.string.change_theme)
-                    .setSingleChoiceItems(themes, selectedId) { _, i ->
+                    .setSingleChoiceItems(themes, selectedId) { dialog, i ->
                         SettingUtil.saveTheme(themesId[i])
+                        dialog.dismiss()
                         restartDialog.show()
                     }.create().show()
             }
