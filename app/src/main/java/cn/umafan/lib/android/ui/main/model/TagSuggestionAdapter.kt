@@ -9,6 +9,7 @@ import android.widget.Filterable
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.model.MyApplication
 import cn.umafan.lib.android.model.db.Tag
+import cn.umafan.lib.android.util.AliasUtil
 import cn.umafan.lib.android.util.PinyinUtil
 import com.google.android.material.textview.MaterialTextView
 import java.util.*
@@ -25,7 +26,7 @@ class TagSuggestionAdapter(
     private var filterTags: List<Tag> = tags
 
     override fun getFilter(): Filter {
-        if (mArrayFilter == null) {
+        if (null == mArrayFilter) {
             mArrayFilter = ArrayFilter(tags, this)
         }
         return mArrayFilter!!
@@ -56,7 +57,7 @@ class TagSuggestionAdapter(
             viewHolder = mConvertView.tag as ViewHolder
         }
         val tag = filterTags[positon]
-        viewHolder.tagName?.text = tag.name
+        viewHolder.tagName?.text = AliasUtil.getAlias(tag.name)
 
         return mConvertView!!
     }

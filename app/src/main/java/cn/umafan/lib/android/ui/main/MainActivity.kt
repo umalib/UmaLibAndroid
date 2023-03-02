@@ -360,7 +360,9 @@ class MainActivity : MyBaseActivity() {
         @Throws(FileNotFoundException::class)
         fun getBitmapFromUri(uri: Uri, activity: MainActivity): Bitmap {
             val parcelFileDescriptor = activity.contentResolver.openFileDescriptor(uri, "r")
-            return BitmapFactory.decodeFileDescriptor(parcelFileDescriptor?.fileDescriptor)
+            val ret = BitmapFactory.decodeFileDescriptor(parcelFileDescriptor?.fileDescriptor)
+            parcelFileDescriptor?.close()
+            return ret
         }
     }
 }
