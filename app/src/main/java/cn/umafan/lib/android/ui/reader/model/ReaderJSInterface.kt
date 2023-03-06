@@ -64,9 +64,7 @@ class ReaderJSInterface(
                     .filterIndexed { i, _ -> i != annotationArr.size - 1 }
                     .forEach { key ->
                         dict[key.substring(1)] = value
-                        Log.d(this.javaClass.simpleName, key)
                     }
-                Log.d(this.javaClass.simpleName, value)
             }
         } while (null != result)
         if (dict.isNotEmpty()) {
