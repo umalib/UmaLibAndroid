@@ -58,7 +58,8 @@ class ReaderJSInterface(
             result = regex.find(content)
             if (null != result) {
                 content = content.substring(0, result.range.first)
-                val annotationArr = result.value.replace(elTagRegex, "").split(']')
+                val annotationArr =
+                    result.value.replace(elTagRegex, "").split(']')
                 val value = annotationArr[annotationArr.size - 1]
                 annotationArr
                     .filterIndexed { i, _ -> i != annotationArr.size - 1 }
@@ -73,7 +74,9 @@ class ReaderJSInterface(
             dict.forEach { (key, value) ->
                 content = content.replace(
                     "[$key]",
-                    " <span onclick='if(this.className){this.className=\"\"}else{this.className=\"key\"}'>[<a href='javascript:void(0)'>$key</a>]</span><span class='annotation'>$value</span> "
+                    " <span onclick='if(this.className){this.className=\"\"}" +
+                            "else{this.className=\"key\"}'>[<a href='javascript:void(0)'>" +
+                            "$key</a>]</span><span class='annotation'>$value</span> "
                 )
             }
         }

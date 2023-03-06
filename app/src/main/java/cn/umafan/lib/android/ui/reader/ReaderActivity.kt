@@ -77,7 +77,8 @@ class ReaderActivity : MyBaseActivity() {
 
     @SuppressLint("InflateParams")
     private fun initView() {
-        readerSettingView = LayoutInflater.from(this).inflate(R.layout.dialog_reader_setting, null)
+        readerSettingView = LayoutInflater.from(this)
+            .inflate(R.layout.dialog_reader_setting, null)
         fontSizeSlider = readerSettingView?.findViewById(R.id.font_size_slider)
         fontSizeSlider?.value = when (mViewModel.fontSize.value) {
             "small" -> 1F
@@ -94,18 +95,30 @@ class ReaderActivity : MyBaseActivity() {
         fontSizeSlider?.addOnChangeListener { _, value, _ ->
             when (value.toInt()) {
                 1 -> {
-                    textPreview1!!.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-                    textPreview2!!.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
+                    textPreview1!!.setTextAppearance(
+                        com.google.android.material.R.style.TextAppearance_Material3_TitleMedium
+                    )
+                    textPreview2!!.setTextAppearance(
+                        com.google.android.material.R.style.TextAppearance_Material3_TitleMedium
+                    )
                     mViewModel.fontSize.value = "small"
                 }
                 2 -> {
-                    textPreview1!!.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleLarge)
-                    textPreview2!!.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleLarge)
+                    textPreview1!!.setTextAppearance(
+                        com.google.android.material.R.style.TextAppearance_Material3_TitleLarge
+                    )
+                    textPreview2!!.setTextAppearance(
+                        com.google.android.material.R.style.TextAppearance_Material3_TitleLarge
+                    )
                     mViewModel.fontSize.value = "normal"
                 }
                 3 -> {
-                    textPreview1!!.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_DisplaySmall)
-                    textPreview2!!.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_DisplaySmall)
+                    textPreview1!!.setTextAppearance(
+                        com.google.android.material.R.style.TextAppearance_Material3_DisplaySmall
+                    )
+                    textPreview2!!.setTextAppearance(
+                        com.google.android.material.R.style.TextAppearance_Material3_DisplaySmall
+                    )
                     mViewModel.fontSize.value = "large"
                 }
             }
@@ -138,7 +151,10 @@ class ReaderActivity : MyBaseActivity() {
             if (null != daoSession) {
                 val articleDao = daoSession!!.articleDao
                 val query = articleDao.queryBuilder()
-                    .where(ArticleDao.Properties.Id.eq(intent.getIntExtra("id", 1)))
+                    .where(
+                        ArticleDao.Properties.Id
+                            .eq(intent.getIntExtra("id", 1))
+                    )
                     .build()
                 article = query.unique()
                 binding.toolbar.title = article?.name
