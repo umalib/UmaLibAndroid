@@ -197,7 +197,7 @@ class SettingActivity : MyBaseActivity() {
                         .setMessage(R.string.reload_database_prompt)
                         .setPositiveButton(R.string.confirm) { _, _ ->
                             MyBaseViewModel.setDbVersion(0)
-                            DatabaseCopyThread.reloadFlag = true
+                            DatabaseCopyThread.reload()
                             reopenDialog.show()
                         }
                         .setNegativeButton(R.string.cancel, null).show()

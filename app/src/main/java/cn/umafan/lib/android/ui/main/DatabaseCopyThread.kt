@@ -8,7 +8,10 @@ import cn.umafan.lib.android.model.db.DaoMaster
 import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.util.ZipUtil
 import org.greenrobot.greendao.database.Database
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 
 class DatabaseCopyThread : Thread() {
@@ -19,7 +22,6 @@ class DatabaseCopyThread : Thread() {
         private var daoSession: DaoSession? = null
         private val queue = mutableListOf<Pair<Handler, String?>>()
         private val lock = Object()
-        var reloadFlag = false
 
         fun addHandler(_handler: Handler, fileName: String? = null) {
             queue.add(Pair(_handler, fileName))
@@ -30,6 +32,10 @@ class DatabaseCopyThread : Thread() {
 
         fun clearDb() {
             daoSession = null
+        }
+
+        fun reload() {
+            MyApplication.context.getDatabasePath("main.db").delete()
         }
     }
 
@@ -78,7 +84,7 @@ class DatabaseCopyThread : Thread() {
                     return
                 }
                 Log.i(this.javaClass.simpleName, "unzip database done!")
-            } else if (!dbFile.exists() or reloadFlag) {
+            } else if (!dbFile.exists()) {
                 val inputStream: InputStream = context.assets.open("db/main.db")
                 val outputStream: OutputStream = FileOutputStream(dbFile)
                 val buffer = ByteArray(5)
@@ -102,7 +108,6 @@ class DatabaseCopyThread : Thread() {
                 outputStream.close()
                 inputStream.close()
                 Log.i(this.javaClass.simpleName, "copy database done!")
-                reloadFlag = false
             }
         } catch (e: Exception) {
             e.printStackTrace()

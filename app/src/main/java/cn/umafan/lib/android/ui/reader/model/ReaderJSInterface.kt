@@ -43,12 +43,45 @@ class ReaderJSInterface(
         val callback = mJson.optString("callback") //解析js回调方法
 
         val json = JSONObject()
-        json.put("content", article.content)
         json.put("name", article.name)
         json.put("source", article.source)
         json.put("note", article.note)
         json.put("translator", article.translator)
         json.put("author", article.author)
+
+        var content = article.content
+        val regex = Regex("<p>\\[[^]]+][^<]*</p>\$")
+        val elTagRegex = Regex("<[^>]*>")
+        val dict = mutableMapOf<String, String>()
+        var result: MatchResult?
+        do {
+            result = regex.find(content)
+            if (null != result) {
+                content = content.substring(0, result.range.first)
+                val annotationArr = result.value.replace(elTagRegex, "").split(']')
+                val value = annotationArr[annotationArr.size - 1]
+                annotationArr
+                    .filterIndexed { i, _ -> i != annotationArr.size - 1 }
+                    .forEach { key ->
+                        dict[key.substring(1)] = value
+                        Log.d(this.javaClass.simpleName, key)
+                    }
+                Log.d(this.javaClass.simpleName, value)
+            }
+        } while (null != result)
+        if (dict.isNotEmpty()) {
+            val emptyElRegex = Regex("<p>\\s*<br\\s*/?\\s*>\\s*</p>")
+            content = content.replace(emptyElRegex, "")
+            dict.forEach { (key, value) ->
+                content = content.replace(
+                    "[$key]",
+                    " <span onclick='if(this.className){this.className=\"\"}else{this.className=\"key\"}'>[<a href='javascript:void(0)'>$key</a>]</span><span class='annotation'>$value</span> "
+                )
+            }
+        }
+        json.put("content", content)
+
+
         val tagList = JSONArray(article.taggedList.sortedWith { a, b ->
             if (a.tag.type == b.tag.type)
                 a.tag.name.compareTo(b.tag.name)
