@@ -30,7 +30,7 @@ class MyBaseViewModel : ViewModel() {
                     dbVersion = Integer.parseInt(br.readLine())
                     br.close()
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.e("MyBaseViewModel", e.message!!)
                     flag = true
                 }
             }
