@@ -1,7 +1,7 @@
 {
   "currentVersion": 1,
   "currentVersionName": "2.2.0",
-  "currentDb": 20230417,
+  "currentDb": 20230603,
   "info": {
     "title": "！！如果遇到问题请卸载重装！！",
     "message": "增加马娘别名系统；增加行内注释系统；优化了数据库下载逻辑；修复若干问题"
