@@ -155,6 +155,7 @@ class MainActivity : MyBaseActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home,
+                R.id.nav_recommend,
                 R.id.nav_favorites,
                 R.id.nav_history,
                 R.id.nav_thanks,
