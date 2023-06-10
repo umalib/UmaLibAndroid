@@ -14,6 +14,7 @@
     <string name="thanks">纪念碑</string>
     <string name="collections">总目表</string>
     <string name="search">搜索</string>
+    <string name="recommend">推荐</string>
     <string name="open_menu">打开菜单</string>
     <string name="next_page">下一页</string>
     <string name="last_page">上一页</string>
@@ -119,4 +120,9 @@
     <string name="template_upload_time">我是时间</string>
     <string name="template_note">我是简介</string>
     <string name="template_tag">我是标签</string>
+
+    <string name="creator_recommend">作者/译者</string>
+    <string name="collection_recommend">长篇/合集</string>
+    <string name="series_recommend_description">系列</string>
+    <string name="single_work_recommend_description">单篇作品</string>
 </resources>
