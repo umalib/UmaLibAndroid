@@ -60,12 +60,17 @@ class RecTabItem(
                 var jumpMap: JSONObject? = null
                 // 判断是否需要多重跳转，需要则不显示单独按钮
                 if (recInfo.others.isNotEmpty() && recInfo.others != "{}") {
-                    viewModel.notShowJumpButtonList[itemPosition] = true
                     jumpButton.visibility = View.GONE
                     driverDown2.visibility = View.VISIBLE
                     jumpButtonRecyclerView.visibility = View.VISIBLE
 
                     jumpMap = JSONObject(recInfo.others)
+                    try {
+                        jumpMap.getJSONArray("join")
+                        viewModel.notShowJumpButtonList[itemPosition] = false
+                    } catch (e: Exception) {
+                        viewModel.notShowJumpButtonList[itemPosition] = true
+                    }
                 }
 
                 // 判断是否展开
