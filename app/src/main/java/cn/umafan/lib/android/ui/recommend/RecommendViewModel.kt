@@ -7,6 +7,8 @@ import cn.umafan.lib.android.model.PageSelectorViewModel
 import cn.umafan.lib.android.model.db.ArtInfo
 import cn.umafan.lib.android.ui.home.model.ArticleInfoItem
 import cn.umafan.lib.android.ui.home.model.PageItem
+import cn.umafan.lib.android.ui.recommend.model.RecInfo
+import cn.umafan.lib.android.ui.recommend.model.RecTabItem
 import com.angcyo.dsladapter.DslAdapter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -17,21 +19,21 @@ class RecommendViewModel : PageSelectorViewModel() {
     }
     val text: LiveData<String> = _text
 
-    private val articleData = MutableStateFlow(listOf<ArtInfo>())
+    private val recData = MutableStateFlow(listOf<RecInfo>())
 
     val currentPage = MutableLiveData(1)
 
     val type = MutableLiveData(0)
 
-    val articleDataAdapter = DslAdapter()
+    val recDataAdapter = DslAdapter()
 
     init {
         viewModelScope.launch {
-            articleData.collect {
-                articleDataAdapter.changeDataItems { adapterItems ->
+            recData.collect {
+                recDataAdapter.changeDataItems { adapterItems ->
                     adapterItems.clear()
                     it.forEach {
-                        adapterItems.add(ArticleInfoItem(it))
+                        adapterItems.add(RecTabItem(it, true))
                     }
                 }
             }
@@ -39,15 +41,15 @@ class RecommendViewModel : PageSelectorViewModel() {
     }
 
     /**
-     * 异步加载文章
+     * 异步加载推荐数据
      */
-    fun loadArticles(list: List<ArtInfo>?) {
+    fun loadRecs(list: List<RecInfo>?) {
         viewModelScope.launch {
             var data = list
             if (null == data) {
                 data = mutableListOf()
             }
-            articleData.emit(data)
+            recData.emit(data)
         }
     }
 }

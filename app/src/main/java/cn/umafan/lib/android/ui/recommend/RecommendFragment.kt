@@ -15,20 +15,22 @@ import cn.umafan.lib.android.model.DataBaseHandler
 import cn.umafan.lib.android.model.db.DaoSession
 import cn.umafan.lib.android.model.db.Dict
 import cn.umafan.lib.android.model.db.DictDao
+import cn.umafan.lib.android.model.db.Rec
+import cn.umafan.lib.android.model.db.RecDao
 import cn.umafan.lib.android.ui.main.DatabaseCopyThread
 import cn.umafan.lib.android.ui.main.MainActivity
+import cn.umafan.lib.android.ui.recommend.model.RecInfo
 import cn.umafan.lib.android.util.SettingUtil
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.liangguo.androidkit.app.ToastUtil
 import org.greenrobot.greendao.query.QueryBuilder
-import kotlin.math.log
 
 val typeMap = listOf(
-    listOf(1, 2),
-    listOf(3, 4),
-    listOf(5),
-    listOf(6)
+    listOf(0, 1),
+    listOf(2, 3),
+    listOf(4),
+    listOf(5)
 )
 
 @SuppressLint("InflateParams")
@@ -88,6 +90,8 @@ class RecommendFragment : Fragment() {
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             })
+            recyclerView.adapter = recommendViewModel.recDataAdapter
+//            expandableListView.adapter = recommendViewModel.recDataAdapter
         }
     }
 
@@ -96,24 +100,43 @@ class RecommendFragment : Fragment() {
      */
     @SuppressLint("SetTextI18n")
     private fun loadRec(type: Int) {
-        Log.d("RecommendFragment", "loadRec: $type")
         val handler = DataBaseHandler(activity as MainActivity) {
             daoSession = it.obj as DaoSession
             val count: Long
             if (null != daoSession) {
-                val dictDao: DictDao = daoSession!!.dictDao
-                val query: QueryBuilder<Dict> = dictDao.queryBuilder()
-                count = query.count()
+                val recDao: RecDao = daoSession!!.recDao
 
+                val query: QueryBuilder<Rec> = recDao.queryBuilder()
+                query.where(RecDao.Properties.Type.`in`(typeMap[type]))
+                // 子查询
+
+                count = query.count()
+                Log.d("RecommendFragment", "loadRec: $count")
                 if (count == 0L) {
                     ToastUtil.info(getString(R.string.no_data))
                 }
                 val list = query.build().listLazy()
 
-//                recommendViewModel.loadArticles(list)
+                val map = mutableMapOf<Long, RecInfo>()
+                list.map { rec ->
+                    if (map.containsKey(rec.refId)) {
+                        map[rec.refId]?.data = map[rec.refId]?.data?.apply {
+                            add(rec)
+                        } ?: mutableListOf(rec)
+                    } else {
+                        val recInfo = RecInfo.fromRec(rec, mutableListOf(rec))
+                        map[rec.refId]
+                    }
+                }
+
+                val data = mutableListOf<RecInfo>()
+                map.forEach { (_, u) ->
+                    data.add(u)
+                }
+                recommendViewModel.loadRecs(data)
                 list.close()
             } else {
-                recommendViewModel.loadArticles(null)
+                recommendViewModel.loadRecs(null)
             }
         }
         (activity as MainActivity).shapeLoadingDialog?.show()
@@ -131,8 +154,8 @@ class RecommendFragment : Fragment() {
             if (null != daoSession) {
                 val dictDao: DictDao = daoSession!!.dictDao
                 val query: QueryBuilder<Dict> = dictDao.queryBuilder()
-                count = query.count()
 
+                count = query.count()
                 if (count == 0L) {
                     ToastUtil.info(getString(R.string.no_data))
                 }
@@ -141,7 +164,7 @@ class RecommendFragment : Fragment() {
 //                recommendViewModel.loadArticles(list)
                 list.close()
             } else {
-                recommendViewModel.loadArticles(null)
+                recommendViewModel.loadRecs(null)
             }
         }
         (activity as MainActivity).shapeLoadingDialog?.show()

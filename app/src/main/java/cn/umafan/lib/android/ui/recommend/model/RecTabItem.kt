@@ -3,8 +3,12 @@ package cn.umafan.lib.android.ui.recommend.model
 import androidx.databinding.DataBindingUtil
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ItemArticleCardBinding
+import cn.umafan.lib.android.databinding.ItemRecCardBinding
 import cn.umafan.lib.android.model.db.ArtInfo
+import cn.umafan.lib.android.model.db.Rec
+import cn.umafan.lib.android.model.db.Tagged
 import cn.umafan.lib.android.ui.reader.ReaderActivity
+import com.angcyo.dsladapter.DslAdapter
 import com.angcyo.dsladapter.DslAdapterItem
 import com.angcyo.dsladapter.DslViewHolder
 import com.google.android.material.snackbar.Snackbar
@@ -13,13 +17,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class RecTabItem(
-    private val articleInfo: ArtInfo
+    private val recInfo: RecInfo,
+    private val t: Boolean
 ) : DslAdapterItem() {
-    override var itemLayoutId = R.layout.item_article_card
-    private val timeStampFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
-
+    override var itemLayoutId = R.layout.item_rec_card
     init {
-        itemData = articleInfo
+        itemData = recInfo
         thisAreContentsTheSame = { fromItem, newItem, _, _ ->
             fromItem?.itemData == newItem.itemData
         }
@@ -35,41 +38,22 @@ class RecTabItem(
         payloads: List<Any>
     ) {
         super.onItemBind(itemHolder, itemPosition, adapterItem, payloads)
-        itemHolder.view(R.id.item_article_card)?.let {
-            DataBindingUtil.bind<ItemArticleCardBinding>(it)?.apply {
-                articleName.text = articleInfo.name
-                articleNote.text = articleInfo.note
-                if (articleInfo.translator.isNotEmpty()) {
-                    articleAuthor.text = articleInfo.author
-                    articleTranslator.text = String.format("译者：%s", articleInfo.translator)
-                } else {
-                    articleAuthor.text = ""
-                    articleTranslator.text = articleInfo.author
-                }
+        itemHolder.view(R.id.item_rec_card)?.let {
+            DataBindingUtil.bind<ItemRecCardBinding>(it)?.apply {
+                articleName.text = recInfo.name
+//                articleAuthor.visibility = android.view.View.GONE
+                if (t) {
+                    val adapter = DslAdapter()
 
-                articleUploadTime.text = articleInfo.uploadTime.let { date ->
-                    timeStampFormatter.format(date.toLong() * 1000)
-                }
-                articleTags.text =
-                    articleInfo.taggedList.map { tagged -> tagged.tag }
-                        .sortedWith { a, b ->
-                            if (a.type == b.type)
-                                a.name.compareTo(b.name)
-                            else
-                                b.type.compareTo(a.type)
-                        }.joinToString(" | ") { tag -> tag.name }
-                itemArticleCardBox.setOnClickListener {
-                    ReaderActivity::class.startNewActivity {
-                        putExtra("id", articleInfo.id.toInt())
+                    adapter.changeDataItems { adapterItems ->
+                        adapterItems.clear()
+                        adapterItems.add(RecTabItem(recInfo, false))
+                        adapterItems.add(RecTabItem(recInfo, false))
+                        adapterItems.add(RecTabItem(recInfo, false))
+
                     }
-                }
-                itemArticleCardBox.setOnLongClickListener { view ->
-                    Snackbar.make(
-                        view,
-                        "[ID${articleInfo.id}]${articleInfo.name}",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                    false
+                    recyclerView.adapter = adapter
+
                 }
                 invalidateAll()
             }
