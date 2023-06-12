@@ -13,6 +13,7 @@ import cn.umafan.lib.android.ui.recommend.RecommendViewModel
 import com.angcyo.dsladapter.DslAdapter
 import com.angcyo.dsladapter.DslAdapterItem
 import com.angcyo.dsladapter.DslViewHolder
+import org.json.JSONObject
 
 class RecTabItem(
     private val recInfo: RecInfo,
@@ -53,15 +54,29 @@ class RecTabItem(
                     }
                 }
                 recyclerView.adapter = adapter
+                val jumpAdapter = DslAdapter()
+                jumpButtonRecyclerView.adapter = jumpAdapter
 
+                var jumpMap: JSONObject? = null
                 // 判断是否需要多重跳转，需要则不显示单独按钮
                 if (recInfo.others.isNotEmpty() && recInfo.others != "{}") {
                     viewModel.notShowJumpButtonList[itemPosition] = true
                     jumpButton.visibility = View.GONE
+                    driverDown2.visibility = View.VISIBLE
+                    jumpButtonRecyclerView.visibility = View.VISIBLE
+
+                    jumpMap = JSONObject(recInfo.others)
                 }
 
                 // 判断是否展开
                 with(viewModel) {
+                    val multiJump = notShowJumpButtonList[itemPosition].let { notShow ->
+                        if (!notShow) {
+                            View.GONE
+                        } else {
+                            View.VISIBLE
+                        }
+                    }
                     jumpButton.visibility = notShowJumpButtonList[itemPosition].let { notShow ->
                         if (notShow) {
                             View.GONE
@@ -69,9 +84,14 @@ class RecTabItem(
                             View.VISIBLE
                         }
                     }
-                    recyclerView.visibility = if (collapsedList[itemPosition]) View.GONE else View.VISIBLE
+                    driverDown2.visibility = multiJump
+                    jumpButtonRecyclerView.visibility = multiJump
+
+                    recyclerView.visibility =
+                        if (collapsedList[itemPosition]) View.GONE else View.VISIBLE
                     foldButton.setIconResource(if (collapsedList[itemPosition]) R.drawable.baseline_menu_open_24 else R.drawable.baseline_menu_24)
-                    foldButton.text = MyApplication.context.getString(if (collapsedList[itemPosition]) R.string.recommend_unfold_comment else R.string.recommend_fold_comment)
+                    foldButton.text =
+                        MyApplication.context.getString(if (collapsedList[itemPosition]) R.string.recommend_unfold_comment else R.string.recommend_fold_comment)
                 }
 
 
@@ -79,8 +99,37 @@ class RecTabItem(
                 if (recInfo.classType == 0) {
                     searchBean.creator = recInfo.title
                 } else if (recInfo.classType == 1 || recInfo.classType == 2) {
-                    if (recInfo.others.isNotEmpty() && recInfo.others != "{}") {
-                        // TODO 处理others
+                    if (jumpMap != null) {
+                        val keysIterable = jumpMap.keys()
+                        val keys = mutableListOf<String>()
+                        var isJoin = false
+                        keysIterable.forEach { key ->
+                            keys.add(key)
+                            if ("join" == key) {
+                                isJoin = true
+                            }
+                        }
+
+                        if (isJoin) {
+                            // TODO join
+                        } else {
+                            jumpAdapter.changeDataItems { adapterItems ->
+                                adapterItems.clear()
+                                keys.forEach { key ->
+                                    val tag = Tag(
+                                        key.toLong(),
+                                        jumpMap.getString(key),
+                                        0,
+                                        "",
+                                        ""
+                                    )
+                                    // 防止共用一个searchBean导致数据相同
+                                    val intSearchBean = SearchBean()
+                                    intSearchBean.tags = mutableSetOf(tag)
+                                    adapterItems.add(RecJumpItem(tag.name, intSearchBean, activity))
+                                }
+                            }
+                        }
                     } else {
                         val tag = Tag(
                             recInfo.refId,
@@ -92,8 +141,36 @@ class RecTabItem(
                         searchBean.tags = mutableSetOf(tag)
                     }
                 } else if (recInfo.classType == 3) {
-                    if (recInfo.others.isNotEmpty() && recInfo.others != "{}") {
-                        // TODO 处理others
+                    if (jumpMap != null) {
+                        val keysIterable = jumpMap.keys()
+                        val keys = mutableListOf<String>()
+                        var isJoin = false
+                        keysIterable.forEach { key ->
+                            keys.add(key)
+                            if ("join" == key) {
+                                isJoin = true
+                            }
+                        }
+
+                        if (isJoin) {
+                            // TODO join
+                        } else {
+                            jumpAdapter.changeDataItems { adapterItems ->
+                                adapterItems.clear()
+                                // 单篇作品需要将recInfo本身也加入跳转列表
+                                val intSelfSearchBean = SearchBean()
+                                val selfName = recInfo.title
+                                intSelfSearchBean.keyword = selfName
+                                adapterItems.add(RecJumpItem(selfName, intSelfSearchBean, activity))
+                                keys.forEach { key ->
+                                    // 防止共用一个searchBean导致数据相同
+                                    val intSearchBean = SearchBean()
+                                    val name = jumpMap.getString(key)
+                                    intSearchBean.keyword = name
+                                    adapterItems.add(RecJumpItem(name, intSearchBean, activity))
+                                }
+                            }
+                        }
                     } else {
                         searchBean.keyword = recInfo.title
                     }
@@ -110,7 +187,8 @@ class RecTabItem(
                     viewModel.collapsedList[itemPosition] = isCollapsed
                     recyclerView.visibility = if (isCollapsed) View.GONE else View.VISIBLE
                     foldButton.setIconResource(if (isCollapsed) R.drawable.baseline_menu_open_24 else R.drawable.baseline_menu_24)
-                    foldButton.text = MyApplication.context.getString(if (isCollapsed) R.string.recommend_unfold_comment else R.string.recommend_fold_comment)
+                    foldButton.text =
+                        MyApplication.context.getString(if (isCollapsed) R.string.recommend_unfold_comment else R.string.recommend_fold_comment)
                 }
 
                 invalidateAll()

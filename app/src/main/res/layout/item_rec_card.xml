@@ -119,6 +119,28 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/driver_down" />
 
+                <View
+                    android:id="@+id/driver_down2"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="15dp"
+                    android:layout_marginVertical="5dp"
+                    android:alpha="0.5"
+                    android:background="@color/grey"
+                    app:layout_constraintTop_toBottomOf="@id/foldButton" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/jumpButtonRecyclerView"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/driver_down2"
+                    tools:listitem="@layout/item_jump_button" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
