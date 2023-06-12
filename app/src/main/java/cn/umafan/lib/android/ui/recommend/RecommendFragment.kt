@@ -46,8 +46,6 @@ class RecommendFragment : Fragment() {
 
     private var daoSession: DaoSession? = null
 
-    private var isShowing = false
-
     @SuppressLint("SetTextI18n", "UseRequireInsteadOfGet")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +55,7 @@ class RecommendFragment : Fragment() {
 
         _recommendViewModel =
             ViewModelProvider(this)[RecommendViewModel::class.java]
+        recommendViewModel.activity = activity as MainActivity
 
         _binding = FragmentRecommendBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -91,7 +90,6 @@ class RecommendFragment : Fragment() {
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             })
             recyclerView.adapter = recommendViewModel.recDataAdapter
-//            expandableListView.adapter = recommendViewModel.recDataAdapter
         }
     }
 
@@ -108,15 +106,21 @@ class RecommendFragment : Fragment() {
 
                 val query: QueryBuilder<Rec> = recDao.queryBuilder()
                 query.where(RecDao.Properties.Type.`in`(typeMap[type]))
-                // 子查询
 
                 count = query.count()
-                Log.d("RecommendFragment", "loadRec: $count")
                 if (count == 0L) {
                     ToastUtil.info(getString(R.string.no_data))
                 }
-                val list = query.build().listLazy()
 
+                // 重置保存列表渲染状态的数组
+                recommendViewModel.collapsedList.clear()
+                recommendViewModel.notShowJumpButtonList.clear()
+                for (i in 0 until count) {
+                    recommendViewModel.collapsedList.add(true)
+                    recommendViewModel.notShowJumpButtonList.add(false)
+                }
+
+                val list = query.build().listLazy()
                 val map = mutableMapOf<Long, RecInfo>()
                 list.map { rec ->
                     if (map.containsKey(rec.refId)) {
