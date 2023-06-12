@@ -317,6 +317,24 @@ class MainActivity : MyBaseActivity() {
     }
 
     /**
+     * 自定义搜索
+     */
+    fun searchByOption(searchBean: SearchBean) {
+
+        with(mViewModel) {
+            viewModelScope.launch {
+                searchParams.value = searchBean
+                selectedTags.emit(searchBean.tags)
+                selectedExceptTags.emit(searchBean.exceptedTags)
+            }
+        }
+        tagTextView?.setText("")
+        tagExceptTextView?.setText("")
+        creatorTextView?.setText(searchBean.creator)
+        search()
+    }
+
+    /**
      * 执行搜索
      */
     @SuppressLint("RestrictedApi")
