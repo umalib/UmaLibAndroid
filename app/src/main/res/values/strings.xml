@@ -125,4 +125,8 @@
     <string name="collection_recommend">长篇/合集</string>
     <string name="series_recommend_description">系列</string>
     <string name="single_work_recommend_description">单篇作品</string>
+    <string name="recommend_jump_button_text">查看</string>
+    <string name="recommend_unfold_comment">展开评价</string>
+    <string name="recommend_fold_comment">折叠评价</string>
+
 </resources>

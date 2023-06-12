@@ -169,7 +169,7 @@ class MainActivity : MyBaseActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.appBarMain.toolbarLayout.title = destination.label
             binding.appBarMain.refresh.isVisible =
-                !(null != destination.label && destination.label!! == getString(R.string.thanks))
+                !(null != destination.label && (destination.label!! == getString(R.string.thanks) || destination.label!! == getString(R.string.recommend)))
         }
 
         with(binding) {
