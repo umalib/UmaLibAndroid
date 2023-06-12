@@ -124,8 +124,8 @@ class RecommendFragment : Fragment() {
                             add(rec)
                         } ?: mutableListOf(rec)
                     } else {
-                        val recInfo = RecInfo.fromRec(rec, mutableListOf(rec))
-                        map[rec.refId]
+                        val recInfo = RecInfo.fromRec(rec, mutableListOf(rec), type)
+                        map[rec.refId] = recInfo
                     }
                 }
 

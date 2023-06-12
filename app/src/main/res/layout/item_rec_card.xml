@@ -13,7 +13,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/item_article_card_box"
+            android:id="@+id/item_rec_card_box"
             style="@style/Widget.Material3.CardView.Elevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/article_name"
+                    android:id="@+id/rec_name"
                     style="@style/TextAppearance.Material3.TitleMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/article_author"
+                    android:id="@+id/rec_type"
                     style="@style/TextAppearance.Material3.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -62,22 +62,65 @@
                     android:ellipsize="end"
                     android:maxEms="6"
                     android:paddingHorizontal="15dp"
+                    android:paddingBottom="10dp"
                     android:singleLine="true"
                     android:text="@string/template_author"
                     android:textColor="@color/grey"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/rec_name"
+                    tools:listitem="@layout/item_rec_comment" />
+
+                <View
+                    android:id="@+id/driver_down"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="15dp"
+                    android:layout_marginVertical="10dp"
+                    android:alpha="0.5"
+                    android:background="@color/grey"
+                    app:layout_constraintTop_toBottomOf="@id/recyclerView" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/foldButton"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:textColor="?attr/colorPrimary"
+                    android:alpha="0.5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recommend_unfold_comment"
+                    android:textSize="16dp"
+                    android:clickable="false"
+                    android:enabled="false"
+                    app:iconGravity="start"
+                    app:icon="@drawable/baseline_menu_open_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/driver_down" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/jumpButton"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recommend_jump_button_text"
+                    android:textSize="16dp"
+                    android:textFontWeight="900"
+                    app:iconGravity="end"
+                    app:icon="@drawable/baseline_arrow_right_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/driver_down" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/item_article_card_box"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_rec_card" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

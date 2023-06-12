@@ -4,9 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import cn.umafan.lib.android.model.PageSelectorViewModel
-import cn.umafan.lib.android.model.db.ArtInfo
-import cn.umafan.lib.android.ui.home.model.ArticleInfoItem
-import cn.umafan.lib.android.ui.home.model.PageItem
 import cn.umafan.lib.android.ui.recommend.model.RecInfo
 import cn.umafan.lib.android.ui.recommend.model.RecTabItem
 import com.angcyo.dsladapter.DslAdapter
@@ -33,7 +30,7 @@ class RecommendViewModel : PageSelectorViewModel() {
                 recDataAdapter.changeDataItems { adapterItems ->
                     adapterItems.clear()
                     it.forEach {
-                        adapterItems.add(RecTabItem(it, true))
+                        adapterItems.add(RecTabItem(it))
                     }
                 }
             }
