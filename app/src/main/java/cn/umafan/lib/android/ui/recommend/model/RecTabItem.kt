@@ -116,7 +116,28 @@ class RecTabItem(
                         }
 
                         if (isJoin) {
-                            // TODO join
+                            searchBean.tags = mutableSetOf()
+                            // 获取join的数据
+                            val joinArray = jumpMap.getJSONArray("join")
+                            for (i in 0 until joinArray.length()) {
+                                val tag = Tag(
+                                    joinArray.getLong(i),
+                                    "",
+                                    0,
+                                    "",
+                                    ""
+                                )
+                                searchBean.tags.add(tag)
+                            }
+                            searchBean.tags.add(
+                                Tag(
+                                    recInfo.refId,
+                                    "",
+                                    0,
+                                    "",
+                                    ""
+                                )
+                            )
                         } else {
                             jumpAdapter.changeDataItems { adapterItems ->
                                 adapterItems.clear()
@@ -158,7 +179,7 @@ class RecTabItem(
                         }
 
                         if (isJoin) {
-                            // TODO join
+                            // TODO join 貌似没有单篇作品的join，暂且不做处理
                         } else {
                             jumpAdapter.changeDataItems { adapterItems ->
                                 adapterItems.clear()
