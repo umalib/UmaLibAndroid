@@ -128,5 +128,6 @@
     <string name="recommend_jump_button_text">查看</string>
     <string name="recommend_unfold_comment">展开评价</string>
     <string name="recommend_fold_comment">折叠评价</string>
+    <string name="recommend_dict">用语解释</string>
 
 </resources>

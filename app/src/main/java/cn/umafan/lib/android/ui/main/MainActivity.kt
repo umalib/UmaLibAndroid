@@ -45,6 +45,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.liangguo.androidkit.app.ToastUtil
 import com.liangguo.androidkit.app.startNewActivity
 import kotlinx.coroutines.launch
+import org.greenrobot.greendao.query.QueryBuilder
 import java.io.FileNotFoundException
 import kotlin.system.exitProcess
 
@@ -169,7 +170,11 @@ class MainActivity : MyBaseActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.appBarMain.toolbarLayout.title = destination.label
             binding.appBarMain.refresh.isVisible =
-                !(null != destination.label && (destination.label!! == getString(R.string.thanks) || destination.label!! == getString(R.string.recommend)))
+                !(null != destination.label && (destination.label!! == getString(R.string.thanks)))
+            if (destination.label == getString(R.string.recommend)) {
+                binding.appBarMain.refresh.setImageResource(R.drawable.baseline_help_outline_24)
+                binding.appBarMain.refresh.tooltipText = getString(R.string.recommend_dict)
+            }
         }
 
         with(binding) {
@@ -320,18 +325,53 @@ class MainActivity : MyBaseActivity() {
      * 自定义搜索
      */
     fun searchByOption(searchBean: SearchBean) {
+        val handler = DataBaseHandler(this@MainActivity) {
+            daoSession = it.obj as DaoSession
+            val count: Long
 
-        with(mViewModel) {
-            viewModelScope.launch {
-                searchParams.value = searchBean
-                selectedTags.emit(searchBean.tags)
-                selectedExceptTags.emit(searchBean.exceptedTags)
+            // 获取名字为空的tag
+            val emptyTags = searchBean.tags.filter { tag ->
+                tag.name.isNullOrEmpty()
             }
+
+            if (null != daoSession) {
+                val tagDao: TagDao = daoSession!!.tagDao
+
+                val query: QueryBuilder<Tag> = tagDao.queryBuilder()
+                query.where(TagDao.Properties.Id.`in`(emptyTags.map { tag -> tag.id }))
+
+                count = query.count()
+                if (count == 0L) {
+                    ToastUtil.info(getString(R.string.no_data))
+                }
+
+                val list = query.build().listLazy()
+                val tagList = mutableListOf<Tag>()
+
+                list.forEach { tag ->
+                    tagList.add(tag)
+                }
+
+                searchBean.tags.removeAll(emptyTags.toSet())
+                searchBean.tags.addAll(tagList)
+
+                list.close()
+            }
+
+            with(mViewModel) {
+                viewModelScope.launch {
+                    searchParams.value = searchBean
+                    Log.d("searchParams", "searchParams: ${searchBean.tags.map { tag -> tag.name}}")
+                    selectedTags.emit(searchBean.tags)
+                    selectedExceptTags.emit(searchBean.exceptedTags)
+                }
+            }
+            tagTextView?.setText("")
+            tagExceptTextView?.setText("")
+            creatorTextView?.setText(searchBean.creator)
+            search()
         }
-        tagTextView?.setText("")
-        tagExceptTextView?.setText("")
-        creatorTextView?.setText(searchBean.creator)
-        search()
+        DatabaseCopyThread.addHandler(handler)
     }
 
     /**
