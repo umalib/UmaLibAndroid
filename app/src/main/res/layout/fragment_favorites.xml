@@ -80,10 +80,11 @@
         android:tooltipText="@string/page_num"
         app:backgroundTint="?attr/colorSecondary"
         app:cornerRadius="20dp"
+        app:iconTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_navigate_before_24">
-
-    </com.google.android.material.button.MaterialButton>
+        app:rippleColor="@null"
+        app:srcCompat="@drawable/ic_baseline_navigate_before_24"
+        app:strokeColor="@null" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

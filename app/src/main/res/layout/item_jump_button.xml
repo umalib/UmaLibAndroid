@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -9,26 +8,29 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_jump_button"
-        android:layout_marginHorizontal="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/jumpButton"
             style="@style/Widget.Material3.Button.TextButton.Icon"
-            android:textColor="?attr/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/recommend_jump_button_text"
-            android:textSize="16dp"
+            android:textColor="?attr/colorPrimary"
             android:textFontWeight="900"
-            app:iconGravity="end"
+            android:textSize="16dp"
+            app:backgroundTint="?attr/colorSecondary"
             app:icon="@drawable/baseline_arrow_right_24"
+            app:iconGravity="end"
+            app:iconTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:rippleColor="@null"
+            app:strokeColor="@null" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -92,32 +92,40 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/foldButton"
                     style="@style/Widget.Material3.Button.TextButton.Icon"
-                    android:textColor="?attr/colorPrimary"
-                    android:alpha="0.5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/recommend_unfold_comment"
-                    android:textSize="16dp"
+                    android:alpha="0.5"
                     android:clickable="false"
                     android:enabled="false"
-                    app:iconGravity="start"
+                    android:text="@string/recommend_unfold_comment"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="16dp"
+                    app:backgroundTint="?attr/colorSecondary"
                     app:icon="@drawable/baseline_menu_open_24"
+                    app:iconGravity="start"
+                    app:iconTint="@null"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/driver_down" />
+                    app:layout_constraintTop_toBottomOf="@+id/driver_down"
+                    app:rippleColor="@null"
+                    app:strokeColor="@null" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/jumpButton"
                     style="@style/Widget.Material3.Button.TextButton.Icon"
-                    android:textColor="?attr/colorPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/recommend_jump_button_text"
-                    android:textSize="16dp"
+                    android:textColor="?attr/colorPrimary"
                     android:textFontWeight="900"
-                    app:iconGravity="end"
+                    android:textSize="16dp"
+                    app:backgroundTint="?attr/colorSecondary"
                     app:icon="@drawable/baseline_arrow_right_24"
+                    app:iconGravity="end"
+                    app:iconTint="@null"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/driver_down" />
+                    app:layout_constraintTop_toBottomOf="@+id/driver_down"
+                    app:rippleColor="@null"
+                    app:strokeColor="@null" />
 
                 <View
                     android:id="@+id/driver_down2"
