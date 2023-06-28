@@ -71,26 +71,25 @@ class RecTabItem(
                     }
                 }
                 recName.text =
-                if (viewModel.notShowJumpButtonList[itemPosition]) {
-                    "${recInfo.title} 等"
-                } else {
-                    recInfo.title
-                }
+                    if (viewModel.notShowJumpButtonList[itemPosition]) {
+                        "${recInfo.title} 等"
+                    } else {
+                        recInfo.title
+                    }
 
                 // 判断是否展开
                 with(viewModel) {
-                    val multiJump = notShowJumpButtonList[itemPosition].let { notShow ->
-                        if (!notShow) {
-                            View.GONE
-                        } else {
-                            View.VISIBLE
+                    if (collapsedList[itemPosition]) {
+                        recyclerView.visibility = View.GONE
+                        driverDown2.visibility = View.GONE
+                        jumpButtonRecyclerView.visibility = View.GONE
+                    } else {
+                        recyclerView.visibility = View.VISIBLE
+                        if (viewModel.notShowJumpButtonList[itemPosition]) {
+                            driverDown2.visibility = View.VISIBLE
+                            jumpButtonRecyclerView.visibility = View.VISIBLE
                         }
                     }
-                    driverDown2.visibility = multiJump
-                    jumpButtonRecyclerView.visibility = multiJump
-
-                    recyclerView.visibility =
-                        if (collapsedList[itemPosition]) View.GONE else View.VISIBLE
                     foldButton.setIconResource(if (collapsedList[itemPosition]) R.drawable.baseline_menu_open_24 else R.drawable.baseline_menu_24)
                     foldButton.text =
                         MyApplication.context.getString(if (collapsedList[itemPosition]) R.string.recommend_unfold_comment else R.string.recommend_fold_comment)
@@ -236,6 +235,10 @@ class RecTabItem(
                     isCollapsed = !isCollapsed
                     viewModel.collapsedList[itemPosition] = isCollapsed
                     recyclerView.visibility = if (isCollapsed) View.GONE else View.VISIBLE
+                    val isJumpShown =
+                        if (!isCollapsed && viewModel.notShowJumpButtonList[itemPosition]) View.VISIBLE else View.GONE
+                    jumpButtonRecyclerView.visibility = isJumpShown
+                    driverDown2.visibility = isJumpShown
                     foldButton.setIconResource(if (isCollapsed) R.drawable.baseline_menu_open_24 else R.drawable.baseline_menu_24)
                     foldButton.text =
                         MyApplication.context.getString(if (isCollapsed) R.string.recommend_unfold_comment else R.string.recommend_fold_comment)
