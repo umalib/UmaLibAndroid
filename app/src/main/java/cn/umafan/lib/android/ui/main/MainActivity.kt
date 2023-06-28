@@ -241,6 +241,11 @@ class MainActivity : MyBaseActivity() {
                         val selectedTagRecyclerView =
                             searchFilterView!!.findViewById<RecyclerView>(R.id.selected_tags_recycler_view)
                         selectedTagRecyclerView.adapter = DslAdapter(tagSelectedList)
+                    } else {
+                        searchFilterDialog.create()
+                        val selectedTagRecyclerView =
+                            searchFilterView!!.findViewById<RecyclerView>(R.id.selected_tags_recycler_view)
+                        selectedTagRecyclerView.adapter = DslAdapter(tagSelectedList)
                     }
                 }
             }
@@ -251,6 +256,11 @@ class MainActivity : MyBaseActivity() {
                         tagSelectedList.add(TagSelectedItem(tag, mViewModel, false))
                     }
                     if (null != searchFilterView) {
+                        val selectedExceptTagRecyclerView =
+                            searchFilterView!!.findViewById<RecyclerView>(R.id.selected_except_tags_recycler_view)
+                        selectedExceptTagRecyclerView.adapter = DslAdapter(tagSelectedList)
+                    } else {
+                        searchFilterDialog.create()
                         val selectedExceptTagRecyclerView =
                             searchFilterView!!.findViewById<RecyclerView>(R.id.selected_except_tags_recycler_view)
                         selectedExceptTagRecyclerView.adapter = DslAdapter(tagSelectedList)
@@ -327,7 +337,6 @@ class MainActivity : MyBaseActivity() {
     fun searchByOption(searchBean: SearchBean) {
         val handler = DataBaseHandler(this@MainActivity) {
             daoSession = it.obj as DaoSession
-            val count: Long
 
             // 获取名字为空的tag
             val emptyTags = searchBean.tags.filter { tag ->
@@ -339,11 +348,6 @@ class MainActivity : MyBaseActivity() {
 
                 val query: QueryBuilder<Tag> = tagDao.queryBuilder()
                 query.where(TagDao.Properties.Id.`in`(emptyTags.map { tag -> tag.id }))
-
-                count = query.count()
-                if (count == 0L) {
-                    ToastUtil.info(getString(R.string.no_data))
-                }
 
                 val list = query.build().listLazy()
                 val tagList = mutableListOf<Tag>()

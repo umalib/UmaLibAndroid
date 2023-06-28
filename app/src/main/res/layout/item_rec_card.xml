@@ -33,7 +33,9 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                >
 
                 <TextView
                     android:id="@+id/rec_name"
@@ -69,16 +71,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:visibility="gone"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/rec_name"
-                    tools:listitem="@layout/item_rec_comment" />
-
                 <View
                     android:id="@+id/driver_down"
                     android:layout_width="match_parent"
@@ -87,7 +79,7 @@
                     android:layout_marginVertical="10dp"
                     android:alpha="0.5"
                     android:background="@color/grey"
-                    app:layout_constraintTop_toBottomOf="@id/recyclerView" />
+                    app:layout_constraintTop_toBottomOf="@id/rec_name" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/foldButton"
@@ -98,12 +90,13 @@
                     android:clickable="false"
                     android:enabled="false"
                     android:text="@string/recommend_unfold_comment"
+                    android:layout_marginStart="10dp"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="16dp"
-                    app:backgroundTint="?attr/colorSecondary"
+                    app:backgroundTint="?attr/cardBackgroundColor"
                     app:icon="@drawable/baseline_menu_open_24"
                     app:iconGravity="start"
-                    app:iconTint="@null"
+                    app:iconTint="?attr/colorPrimary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/driver_down"
                     app:rippleColor="@null"
@@ -115,13 +108,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/recommend_jump_button_text"
+                    android:layout_marginEnd="10dp"
                     android:textColor="?attr/colorPrimary"
                     android:textFontWeight="900"
                     android:textSize="16dp"
                     app:backgroundTint="?attr/colorSecondary"
                     app:icon="@drawable/baseline_arrow_right_24"
                     app:iconGravity="end"
-                    app:iconTint="@null"
+                    app:iconTint="?attr/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/driver_down"
                     app:rippleColor="@null"
@@ -138,7 +132,6 @@
                     android:background="@color/grey"
                     app:layout_constraintTop_toBottomOf="@id/foldButton" />
 
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/jumpButtonRecyclerView"
                     android:layout_width="match_parent"
@@ -148,6 +141,17 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/driver_down2"
                     tools:listitem="@layout/item_jump_button" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/jumpButtonRecyclerView"
+                    tools:listitem="@layout/item_rec_comment" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>

@@ -58,9 +58,8 @@ class RecTabItem(
                 jumpButtonRecyclerView.adapter = jumpAdapter
 
                 var jumpMap: JSONObject? = null
-                // 判断是否需要多重跳转，需要则不显示单独按钮
+                // 判断是否需要多重跳转，需要则显示多重跳转按钮
                 if (recInfo.others.isNotEmpty() && recInfo.others != "{}") {
-                    jumpButton.visibility = View.GONE
                     driverDown2.visibility = View.VISIBLE
                     jumpButtonRecyclerView.visibility = View.VISIBLE
 
@@ -77,13 +76,6 @@ class RecTabItem(
                 with(viewModel) {
                     val multiJump = notShowJumpButtonList[itemPosition].let { notShow ->
                         if (!notShow) {
-                            View.GONE
-                        } else {
-                            View.VISIBLE
-                        }
-                    }
-                    jumpButton.visibility = notShowJumpButtonList[itemPosition].let { notShow ->
-                        if (notShow) {
                             View.GONE
                         } else {
                             View.VISIBLE
@@ -155,6 +147,16 @@ class RecTabItem(
                                     adapterItems.add(RecJumpItem(tag.name, intSearchBean, activity))
                                 }
                             }
+                            searchBean.tags =
+                                mutableSetOf(
+                                    Tag(
+                                        recInfo.refId,
+                                        recInfo.title,
+                                        0,
+                                        "",
+                                        ""
+                                    )
+                                )
                         }
                     } else {
                         val tag = Tag(
