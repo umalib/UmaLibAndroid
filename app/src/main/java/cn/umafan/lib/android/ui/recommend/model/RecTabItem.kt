@@ -1,6 +1,5 @@
 package cn.umafan.lib.android.ui.recommend.model
 
-import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import cn.umafan.lib.android.R
@@ -42,7 +41,6 @@ class RecTabItem(
         super.onItemBind(itemHolder, itemPosition, adapterItem, payloads)
         itemHolder.view(R.id.item_rec_card)?.let {
             DataBindingUtil.bind<ItemRecCardBinding>(it)?.apply {
-                recName.text = recInfo.title
                 recType.text =
                     listOf("译者", "作者", "短篇合集", "长篇小说", "系列", "短篇作品")[recInfo.type]
 
@@ -69,7 +67,14 @@ class RecTabItem(
                         viewModel.notShowJumpButtonList[itemPosition] = false
                     } catch (e: Exception) {
                         viewModel.notShowJumpButtonList[itemPosition] = true
+                        jumpButton.visibility = View.INVISIBLE
                     }
+                }
+                recName.text =
+                if (viewModel.notShowJumpButtonList[itemPosition]) {
+                    "${recInfo.title} 等"
+                } else {
+                    recInfo.title
                 }
 
                 // 判断是否展开
@@ -133,6 +138,23 @@ class RecTabItem(
                         } else {
                             jumpAdapter.changeDataItems { adapterItems ->
                                 adapterItems.clear()
+                                val intSelfSearchBean = SearchBean()
+                                intSelfSearchBean.tags = mutableSetOf(
+                                    Tag(
+                                        recInfo.refId,
+                                        recInfo.title,
+                                        0,
+                                        "",
+                                        ""
+                                    )
+                                )
+                                adapterItems.add(
+                                    RecJumpItem(
+                                        recInfo.title,
+                                        intSelfSearchBean,
+                                        activity
+                                    )
+                                )
                                 keys.forEach { key ->
                                     val tag = Tag(
                                         key.toLong(),

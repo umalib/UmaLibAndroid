@@ -34,8 +34,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                >
+                android:paddingBottom="5dp">
 
                 <TextView
                     android:id="@+id/rec_name"
@@ -81,66 +80,26 @@
                     android:background="@color/grey"
                     app:layout_constraintTop_toBottomOf="@id/rec_name" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/foldButton"
-                    style="@style/Widget.Material3.Button.TextButton.Icon"
-                    android:layout_width="wrap_content"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/jumpButtonRecyclerView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:alpha="0.5"
-                    android:clickable="false"
-                    android:enabled="false"
-                    android:text="@string/recommend_unfold_comment"
-                    android:layout_marginStart="10dp"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="16dp"
-                    app:backgroundTint="?attr/cardBackgroundColor"
-                    app:icon="@drawable/baseline_menu_open_24"
-                    app:iconGravity="start"
-                    app:iconTint="?attr/colorPrimary"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/driver_down"
-                    app:rippleColor="@null"
-                    app:strokeColor="@null" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/jumpButton"
-                    style="@style/Widget.Material3.Button.TextButton.Icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/recommend_jump_button_text"
-                    android:layout_marginEnd="10dp"
-                    android:textColor="?attr/colorPrimary"
-                    android:textFontWeight="900"
-                    android:textSize="16dp"
-                    app:backgroundTint="?attr/colorSecondary"
-                    app:icon="@drawable/baseline_arrow_right_24"
-                    app:iconGravity="end"
-                    app:iconTint="?attr/colorPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/driver_down"
-                    app:rippleColor="@null"
-                    app:strokeColor="@null" />
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/driver_down"
+                    tools:listitem="@layout/item_jump_button" />
 
                 <View
                     android:id="@+id/driver_down2"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="15dp"
                     android:layout_marginVertical="5dp"
                     android:alpha="0.5"
                     android:background="@color/grey"
-                    app:layout_constraintTop_toBottomOf="@id/foldButton" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/jumpButtonRecyclerView"
-                    android:layout_width="match_parent"
                     android:visibility="gone"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/driver_down2"
-                    tools:listitem="@layout/item_jump_button" />
+                    app:layout_constraintTop_toBottomOf="@id/jumpButtonRecyclerView" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
@@ -149,8 +108,48 @@
                     android:layout_marginTop="10dp"
                     android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/jumpButtonRecyclerView"
+                    app:layout_constraintTop_toBottomOf="@id/driver_down2"
                     tools:listitem="@layout/item_rec_comment" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/foldButton"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:alpha="0.5"
+                    android:clickable="false"
+                    android:enabled="false"
+                    android:text="@string/recommend_unfold_comment"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="16dp"
+                    app:backgroundTint="?attr/cardBackgroundColor"
+                    app:icon="@drawable/baseline_menu_open_24"
+                    app:iconGravity="start"
+                    app:iconTint="?attr/colorPrimary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+                    app:rippleColor="@null"
+                    app:strokeColor="@null" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/jumpButton"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/recommend_jump_button_text"
+                    android:textColor="?attr/colorPrimary"
+                    android:textFontWeight="900"
+                    android:textSize="16dp"
+                    app:backgroundTint="?attr/colorSecondary"
+                    app:icon="@drawable/baseline_arrow_right_24"
+                    app:iconGravity="end"
+                    app:iconTint="?attr/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+                    app:rippleColor="@null"
+                    app:strokeColor="@null" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

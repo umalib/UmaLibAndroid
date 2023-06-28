@@ -1,6 +1,5 @@
 package cn.umafan.lib.android.ui.recommend.model
 
-import android.util.Log
 import androidx.databinding.DataBindingUtil
 import cn.umafan.lib.android.R
 import cn.umafan.lib.android.databinding.ItemRecCommentBinding
@@ -16,9 +15,10 @@ import com.angcyo.dsladapter.DslViewHolder
  * @createTime 2023年 06月12日 15:34
  **/
 class RecCommentItem(
-    val recInfo: Rec
+    private val recInfo: Rec
 ) : DslAdapterItem() {
     override var itemLayoutId = R.layout.item_rec_comment
+
     init {
         itemData = recInfo
         thisAreContentsTheSame = { fromItem, newItem, _, _ ->
