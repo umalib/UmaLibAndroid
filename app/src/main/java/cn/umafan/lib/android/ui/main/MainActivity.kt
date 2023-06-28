@@ -44,6 +44,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.liangguo.androidkit.app.ToastUtil
 import com.liangguo.androidkit.app.startNewActivity
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import org.greenrobot.greendao.query.QueryBuilder
 import java.io.FileNotFoundException
@@ -125,6 +126,27 @@ class MainActivity : MyBaseActivity() {
         creatorTextView =
             searchFilterView!!.findViewById(R.id.creator_textView)
         creatorTextView?.setAdapter(creatorAdapter)
+
+        // 初始化已输入的搜索信息
+        with(mViewModel) {
+            val tagSelectedList = mutableListOf<TagSelectedItem>()
+            selectedTags.value.forEach { tag ->
+                tagSelectedList.add(TagSelectedItem(tag, mViewModel, true))
+            }
+            val selectedTagRecyclerView =
+                searchFilterView!!.findViewById<RecyclerView>(R.id.selected_tags_recycler_view)
+            selectedTagRecyclerView.adapter = DslAdapter(tagSelectedList)
+
+            val tagExceptSelectedList = mutableListOf<TagSelectedItem>()
+            selectedExceptTags.value.forEach { tag ->
+                tagExceptSelectedList.add(TagSelectedItem(tag, mViewModel, false))
+            }
+            val selectedTagExceptRecyclerView =
+                searchFilterView!!.findViewById<RecyclerView>(R.id.selected_except_tags_recycler_view)
+            selectedTagExceptRecyclerView.adapter = DslAdapter(tagExceptSelectedList)
+
+            creatorTextView?.setText(searchParams.value?.creator)
+        }
 
         MaterialAlertDialogBuilder(
             this
@@ -259,11 +281,6 @@ class MainActivity : MyBaseActivity() {
                         val selectedTagRecyclerView =
                             searchFilterView!!.findViewById<RecyclerView>(R.id.selected_tags_recycler_view)
                         selectedTagRecyclerView.adapter = DslAdapter(tagSelectedList)
-                    } else {
-                        searchFilterDialog.create()
-                        val selectedTagRecyclerView =
-                            searchFilterView!!.findViewById<RecyclerView>(R.id.selected_tags_recycler_view)
-                        selectedTagRecyclerView.adapter = DslAdapter(tagSelectedList)
                     }
                 }
             }
@@ -274,11 +291,6 @@ class MainActivity : MyBaseActivity() {
                         tagSelectedList.add(TagSelectedItem(tag, mViewModel, false))
                     }
                     if (null != searchFilterView) {
-                        val selectedExceptTagRecyclerView =
-                            searchFilterView!!.findViewById<RecyclerView>(R.id.selected_except_tags_recycler_view)
-                        selectedExceptTagRecyclerView.adapter = DslAdapter(tagSelectedList)
-                    } else {
-                        searchFilterDialog.create()
                         val selectedExceptTagRecyclerView =
                             searchFilterView!!.findViewById<RecyclerView>(R.id.selected_except_tags_recycler_view)
                         selectedExceptTagRecyclerView.adapter = DslAdapter(tagSelectedList)
