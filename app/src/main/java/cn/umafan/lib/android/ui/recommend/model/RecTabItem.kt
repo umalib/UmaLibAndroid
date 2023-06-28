@@ -67,7 +67,6 @@ class RecTabItem(
                         viewModel.notShowJumpButtonList[itemPosition] = false
                     } catch (e: Exception) {
                         viewModel.notShowJumpButtonList[itemPosition] = true
-                        jumpButton.visibility = View.INVISIBLE
                     }
                 }
                 recName.text =
@@ -77,7 +76,9 @@ class RecTabItem(
                         recInfo.title
                     }
 
-                // 判断是否展开
+                // 因为安卓的recyclerView的item在离开屏幕后会被回收，所以需要在这里缓存是否展开的状态
+                // 便于重渲染的时候不会出现展开的item被折叠或者折叠的item被展开的情况
+                // collapsedList和notShowJumpButtonList都是同样的缓存目的
                 with(viewModel) {
                     if (collapsedList[itemPosition]) {
                         recyclerView.visibility = View.GONE
@@ -104,9 +105,11 @@ class RecTabItem(
                         val keysIterable = jumpMap.keys()
                         val keys = mutableListOf<String>()
                         var isJoin = false
+
                         keysIterable.forEach { key ->
                             keys.add(key)
                             if ("join" == key) {
+                                // 存在join则为join类型单独处理
                                 isJoin = true
                             }
                         }
@@ -125,6 +128,7 @@ class RecTabItem(
                                 )
                                 searchBean.tags.add(tag)
                             }
+                            // join类型还需要加上自身的tag
                             searchBean.tags.add(
                                 Tag(
                                     recInfo.refId,

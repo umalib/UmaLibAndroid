@@ -59,6 +59,9 @@ class MainActivity : MyBaseActivity() {
     val mViewModel get() = _mViewModel!!
     private var daoSession: DaoSession? = null
 
+    // 是否可以返回
+    private var canPressBack = false
+
     //是否退出的flag
     private var isExit = false
     private val mHandler = Handler(Looper.getMainLooper()) {
@@ -171,9 +174,20 @@ class MainActivity : MyBaseActivity() {
             binding.appBarMain.toolbarLayout.title = destination.label
             binding.appBarMain.refresh.isVisible =
                 !(null != destination.label && (destination.label!! == getString(R.string.thanks)))
+
+            // 为了方便回退继续查看评价，当从推荐页面跳转至文章页面时，可以直接返回
+            val pre = navController.previousBackStackEntry
+            if (pre?.destination?.label == getString(R.string.recommend)) {
+                this.canPressBack = true
+            }
+
+            // 当前页面是推荐页面时，刷新按钮显示为用语解释
             if (destination.label == getString(R.string.recommend)) {
                 binding.appBarMain.refresh.setImageResource(R.drawable.baseline_help_outline_24)
                 binding.appBarMain.refresh.tooltipText = getString(R.string.recommend_dict)
+            } else {
+                binding.appBarMain.refresh.setImageResource(R.drawable.ic_baseline_refresh_24)
+                binding.appBarMain.refresh.tooltipText = getString(R.string.refresh)
             }
         }
 
@@ -198,6 +212,7 @@ class MainActivity : MyBaseActivity() {
             })
             //重置搜索选项
             appBarMain.refresh.setOnClickListener {
+                // 搜索按钮根据不同的页面有不同的功能
                 when (navController.currentDestination?.label) {
                     getString(R.string.home) -> {
                         with(mViewModel) {
@@ -217,6 +232,9 @@ class MainActivity : MyBaseActivity() {
                     }
                     getString(R.string.history) -> {
                         navController.navigate(R.id.nav_history)
+                    }
+                    getString(R.string.recommend) -> {
+                        // TODO 用语解释页面逻辑
                     }
                 }
             }
@@ -289,6 +307,12 @@ class MainActivity : MyBaseActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 若可以返回则返回上一个fragment
+            if (this.canPressBack) {
+                navController.navigateUp()
+                this.canPressBack = false
+                return false
+            }
             exit()
             return false
         }
@@ -386,11 +410,10 @@ class MainActivity : MyBaseActivity() {
         shapeLoadingDialog?.show()
         val bundle = Bundle()
         bundle.putSerializable("searchParams", mViewModel.searchParams.value)
-        while (navController.backStack.size >= 2) {
-            navController.popBackStack()
-        }
+//        while (navController.backStack.size >= 2) {
+//            navController.popBackStack()
+//        }
         navController.navigate(R.id.nav_home, bundle)
-        Log.d(this.javaClass.simpleName, navController.backStack.last.destination.label.toString())
     }
 
     /**
