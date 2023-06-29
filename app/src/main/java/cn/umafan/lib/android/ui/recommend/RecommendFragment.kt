@@ -1,6 +1,7 @@
 package cn.umafan.lib.android.ui.recommend
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -173,5 +174,11 @@ class RecommendFragment : Fragment() {
         }
         (activity as MainActivity).shapeLoadingDialog?.show()
         DatabaseCopyThread.addHandler(handler)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 恢复选中的tab
+        binding.recTab.selectTab(binding.recTab.getTabAt(recommendViewModel.type.value!!))
     }
 }

@@ -2,6 +2,7 @@ package cn.umafan.lib.android.ui.reader
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -210,4 +211,5 @@ class ReaderActivity : MyBaseActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }
