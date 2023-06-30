@@ -195,7 +195,11 @@ class MainActivity : MyBaseActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.appBarMain.toolbarLayout.title = destination.label
             binding.appBarMain.refresh.isVisible =
-                !(null != destination.label && (destination.label!! == getString(R.string.thanks)))
+                !(null != destination.label && (
+                        destination.label!! == getString(R.string.thanks)
+                                // 暂时隐藏推荐页面按钮
+                        || destination.label!! == getString(R.string.recommend
+                )))
 
             // 为了方便回退继续查看评价，当从推荐页面跳转至文章页面时，可以直接返回
             val pre = navController.previousBackStackEntry
