@@ -1,10 +1,10 @@
 {
   "currentVersion": 1,
-  "currentVersionName": "2.2.0",
-  "currentDb": 20230603,
+  "currentVersionName": "3.0.0",
+  "currentDb": 20230702,
   "info": {
     "title": "！！如果遇到问题请卸载重装！！",
-    "message": "增加马娘别名系统；增加行内注释系统；优化了数据库下载逻辑；修复若干问题"
+    "message": "增加作品推荐功能；马娘别名迁移到数据库"
   },
   "button": {
     "text": "去下载新版",
