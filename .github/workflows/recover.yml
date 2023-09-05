@@ -20,19 +20,19 @@ jobs:
     steps:
        - name: recover KEY_ALIAS
          run: shell echo ${KEY_ALIAS} | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k ${MY_OPENSSL_PASSWORD}
-         with:
+         env:
           MY_OPENSSL_ITER: 5
           MY_OPENSSL_PASSWORD: ${{ secrets.MY_OPENSSL_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
        - name: recover KEY_PASSWORD
          run: shell echo ${KEY_PASSWORD} | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k ${MY_OPENSSL_PASSWORD}
-         with:
+         env:
           MY_OPENSSL_ITER: 5
           MY_OPENSSL_PASSWORD: ${{ secrets.MY_OPENSSL_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
        - name: recover STORE_PASSWORD
          run: shell echo ${STORE_PASSWORD} | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k ${MY_OPENSSL_PASSWORD}
-         with:
+         env:
           MY_OPENSSL_ITER: 5
           MY_OPENSSL_PASSWORD: ${{ secrets.MY_OPENSSL_PASSWORD }}
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
