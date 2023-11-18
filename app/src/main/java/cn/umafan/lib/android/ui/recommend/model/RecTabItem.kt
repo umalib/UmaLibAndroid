@@ -57,7 +57,7 @@ class RecTabItem(
 
                 var jumpMap: JSONObject? = null
                 // 判断是否需要多重跳转，需要则显示多重跳转按钮
-                if (recInfo.others.isNotEmpty() && recInfo.others != "{}") {
+                if (null != recInfo.others && recInfo.others.isNotEmpty() && "{}" != recInfo.others) {
                     driverDown2.visibility = View.VISIBLE
                     jumpButtonRecyclerView.visibility = View.VISIBLE
 
@@ -184,14 +184,15 @@ class RecTabItem(
                                 )
                         }
                     } else {
-                        val tag = Tag(
-                            recInfo.refId,
-                            recInfo.title,
-                            0,
-                            "",
-                            ""
+                        searchBean.tags = mutableSetOf(
+                            Tag(
+                                recInfo.refId,
+                                recInfo.title,
+                                0,
+                                "",
+                                ""
+                            )
                         )
-                        searchBean.tags = mutableSetOf(tag)
                     }
                 } else if (recInfo.classType == 3) {
                     if (jumpMap != null) {
@@ -223,6 +224,7 @@ class RecTabItem(
                                     adapterItems.add(RecJumpItem(name, intSearchBean, activity))
                                 }
                             }
+                            searchBean.keyword = recInfo.title
                         }
                     } else {
                         searchBean.keyword = recInfo.title
