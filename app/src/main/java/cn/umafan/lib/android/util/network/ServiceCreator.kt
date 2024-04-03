@@ -7,7 +7,7 @@ import java.net.Proxy
 
 object ServiceCreator {
 
-    private const val BASE_URL = "https://umalib.github.io/"
+    private const val BASE_URL = "https://umalib.gitgud.site/"
 
     private val okHttpClient = OkHttpClient.Builder()
         .proxy(Proxy.NO_PROXY)

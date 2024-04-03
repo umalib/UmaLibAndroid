@@ -28,7 +28,7 @@ import java.util.*
 
 object DownloadUtil {
     private const val TAG = "downloadF"
-    private const val BASE_URL = "https://umalib.github.io/UmaLibAndroid/"
+    private const val BASE_URL = "https://umalib.gitgud.site/UmaLibAndroid/"
 
     private lateinit var fetch: Fetch
     private lateinit var fetchListener: FetchListener
