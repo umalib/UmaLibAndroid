@@ -53,15 +53,16 @@ object DownloadUtil {
                 if (null != this) {
                     updateInfo = this
                     // 根据版本号下载db
-                    download(updateInfo!!.currentDb, activity)
+                    download(updateInfo!!.currentDb, activity, updateInfo?.downloadUrl)
                 } else {
-                    ToastUtil.error("获取更新失败，请检查网络！")
+//                    ToastUtil.error("获取更新失败，请检查网络！")
                 }
             }
         }
     }
 
-    private fun download(dbVersion: Int, activity: MyBaseActivity) {
+    private fun download(dbVersion: Int, activity: MyBaseActivity, url: String?) {
+        val baseUrl = url ?: BASE_URL
         if (isDownloading) return
         val context = MyApplication.context
         val fetchConfiguration: FetchConfiguration = FetchConfiguration.Builder(context)
@@ -70,7 +71,7 @@ object DownloadUtil {
         fetch = Fetch.Impl.getInstance(fetchConfiguration)
 
         val name = "${dbVersion}.zip"
-        val request = Request(BASE_URL + name, getLocalFilePath(name))
+        val request = Request(baseUrl + name, getLocalFilePath(name))
         request.priority = Priority.HIGH
         request.networkType = NetworkType.ALL
 

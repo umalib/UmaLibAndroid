@@ -7,5 +7,6 @@ data class UpdateBean(
     val info: UpdateInfoBean,
     var show: Int = 0,
     var initiative: Boolean = false,
-    var currentDb: Int = 0
+    var currentDb: Int = 0,
+    var downloadUrl: String = ""
 )
