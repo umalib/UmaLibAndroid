@@ -62,7 +62,6 @@ object DownloadUtil {
     }
 
     private fun download(dbVersion: Int, activity: MyBaseActivity, url: String?) {
-        val baseUrl = url ?: BASE_URL
         if (isDownloading) return
         val context = MyApplication.context
         val fetchConfiguration: FetchConfiguration = FetchConfiguration.Builder(context)
@@ -71,7 +70,7 @@ object DownloadUtil {
         fetch = Fetch.Impl.getInstance(fetchConfiguration)
 
         val name = "${dbVersion}.zip"
-        val request = Request(baseUrl + name, getLocalFilePath(name))
+        val request = Request(url ?: (BASE_URL + name), getLocalFilePath(name))
         request.priority = Priority.HIGH
         request.networkType = NetworkType.ALL
 
