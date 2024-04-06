@@ -8,7 +8,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import {RootStackParamList} from "./src/types/pages.ts";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {ReaderPage} from "./src/pages/common/ReaderPage.tsx";
-import {ThemeContext, useTheme} from "./src/utils/themes.ts";
+import {ThemeContext, useTheme} from "./src/hooks/themes.ts";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

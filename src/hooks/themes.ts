@@ -1,24 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {createContext, useEffect, useState} from "react";
-
-
-export enum ThemesEnum {
-    NGA,
-    ELUI,
-    CYAN,
-    TEIO,
-    PURPLE,
-    BLACK,
-    GREEN,
-    EXHENTAI,
-    PINK,
-    PORN,
-}
+import {createContext, useContext, useEffect, useState} from "react";
+import {ThemesEnum, THEME_TITLES, THEMES_BASE_COLORS} from "../config/themes.ts";
+import {generateColors} from "../utils/color.ts";
 
 export const ThemeContext = createContext({
     theme: ThemesEnum.NGA,
+    colors: generateColors(useThemeBaseColors(ThemesEnum.NGA)),
     setTheme: (theme: ThemesEnum) => {},
 });
+
+/**
+ * 通用hook方法，获取响应式主题类型和setter
+ */
 export function useTheme() {
     const [theme, setTheme] = useState(ThemesEnum.NGA);
     const setThemeFunc = async (theme: ThemesEnum) => {
@@ -44,10 +37,29 @@ export function useTheme() {
     };
     useEffect(() => {
        getTheme().then();
-    });
+    }, []);
 
     return {
         theme,
+        colors: generateColors(useThemeBaseColors(theme)),
         setTheme: setThemeFunc,
     };
+}
+
+export function useThemeType() {
+    const context = useContext(ThemeContext);
+    return context.theme;
+}
+
+export function useThemeColors() {
+    const context = useContext(ThemeContext);
+    return context.colors;
+}
+
+export function useThemeTitle(theme: ThemesEnum) {
+    return THEME_TITLES[theme];
+}
+
+export function useThemeBaseColors(theme: ThemesEnum) {
+    return THEMES_BASE_COLORS[theme];
 }

@@ -1,4 +1,4 @@
-import {Button, FlatList, Text, View} from "react-native";
+import {FlatList, Text, View} from "react-native";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {HomeTabParamList, RootStackParamList} from "../../types/pages.ts";
 import {useCallback, useContext, useEffect, useState} from "react";
@@ -7,7 +7,9 @@ import {NavigationProp, useNavigation} from "@react-navigation/native";
 import {ArticleItem} from "../../components/ArticleItem.tsx";
 import {Article} from "../../types/article.ts";
 import {styles} from "../../style/main.ts";
-import {ThemeContext} from "../../utils/themes.ts";
+import {ThemeContext} from "../../hooks/themes.ts";
+import {ThemesEnum} from "../../config/themes.ts";
+import {Button} from "react-native-paper";
 
 type Props = NativeStackScreenProps<HomeTabParamList, 'Main'>;
 
@@ -29,13 +31,13 @@ export function MainScreen({ }: Props) {
     const nav = useNavigation<NavigationProp<RootStackParamList>>();
     return (
         <View style={{ flex: 1, alignItems: 'center' }}>
-            <Text>Main Screen{theme.theme}</Text>
+            <Text>Main Screen</Text>
             <Button
-                title={"test"}
                 onPress={() => {
-                    nav.navigate('Reader', {id: 'from main'});
+                    // nav.navigate('Reader', {id: 'from main'});
+                    theme.setTheme(ThemesEnum.PORN)
                 }}
-            />
+            >111</Button>
             <FlatList
                 style={styles.list}
                 data={articles}

@@ -1,4 +1,4 @@
-package com.reactnativedemo
+package cn.umafan.lib.android
 
 import android.app.Application
 import com.facebook.react.PackageList
