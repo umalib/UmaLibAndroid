@@ -17,7 +17,9 @@ function App(): React.JSX.Element {
     return (
         <ThemeContext.Provider value={theme}>
             <NavigationContainer>
-                <SafeAreaView style={{flex: 1}}>
+                <SafeAreaView style={{
+                    flex: 1,
+                }}>
                     <Stack.Navigator
                         initialRouteName="Home"
                         screenOptions={{

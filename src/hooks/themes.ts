@@ -35,6 +35,7 @@ export function useTheme() {
             console.error(error);
         }
     };
+
     useEffect(() => {
        getTheme().then();
     }, []);

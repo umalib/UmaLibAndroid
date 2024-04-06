@@ -45,9 +45,18 @@ function transferColor(hsl: {h: number, s: number, l: number}, transfer?: {h?: n
 export function generateColors(colors: string[]) {
     const primaryOrigin = rgb2hsl(colors[0]);
     const secondaryOrigin = rgb2hsl(colors[1]);
+    console.log(transferColor(primaryOrigin));
     return {
         primary: transferColor(primaryOrigin),
         secondary: transferColor(secondaryOrigin),
         primaryLight: transferColor(primaryOrigin, { l: 1.1 }),
+        secondaryLight: transferColor(secondaryOrigin, { l: 1.1 }),
+        primaryDark: transferColor(primaryOrigin, { l: 0.9 }),
+        secondaryDark: transferColor(secondaryOrigin, { l: 0.9 }),
+        primaryDeepLight: transferColor(primaryOrigin, { l: 1.2 }),
+        secondaryDeepLight: transferColor(secondaryOrigin, { l: 1.2 }),
+        primaryDeepDark: transferColor(primaryOrigin, { l: 0.8 }),
+        secondaryDeepDark: transferColor(secondaryOrigin, { l: 0.8 }),
+        primaryFade: transferColor(primaryOrigin, { s: 0.8 }),
     };
 }

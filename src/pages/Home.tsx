@@ -7,6 +7,7 @@ import React from "react";
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 import {HistoryScreen} from "./home/HistoryScreen.tsx";
 import {SettingScreen} from "./home/SettingScreen.tsx";
+import {useThemeColors} from "../hooks/themes.ts";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 const HomeTab = createMaterialBottomTabNavigator<HomeTabParamList>();
@@ -20,14 +21,15 @@ const IconMap = {
 };
 
 export function HomePage({navigation, route}: Props) {
+    const theme = useThemeColors();
     return (
         <HomeTab.Navigator
             initialRouteName="Main"
             screenOptions={({route}) => ({
-                headerStyle: {
-                    backgroundColor: '#f4511e',
-                },
-                headerTintColor: '#fff',
+                // headerStyle: {
+                //     backgroundColor: '#f4511e',
+                // },
+                // headerTintColor: '#fff',
                 headerTitleStyle: {
                     fontWeight: 'bold',
                 },
@@ -35,6 +37,10 @@ export function HomePage({navigation, route}: Props) {
                     return <Icon name={IconMap[route.name]} color={color} size={20}/>;
                 },
             })}
+            activeIndicatorStyle={{backgroundColor: theme.secondary}}
+            activeColor={theme.primary}
+            inactiveColor={theme.primaryDark}
+            barStyle={{backgroundColor: theme.secondaryDeepLight}}
             shifting={true}
         >
             <HomeTab.Screen

@@ -5,7 +5,7 @@ export interface Article {
     content: string;
     author: string;
     translator: string;
-    updateTime: number;
+    uploadTime: number;
     source: string;
     taggedList?: Tagged[];
 }

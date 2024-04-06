@@ -6,8 +6,7 @@ import {getArticles, useDatabase} from "../../hooks/database.ts";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
 import {ArticleItem} from "../../components/ArticleItem.tsx";
 import {Article} from "../../types/article.ts";
-import {styles} from "../../style/main.ts";
-import {ThemeContext} from "../../hooks/themes.ts";
+import {ThemeContext, useThemeColors, useThemeTitle} from "../../hooks/themes.ts";
 import {ThemesEnum} from "../../config/themes.ts";
 import {Button} from "react-native-paper";
 
@@ -27,19 +26,26 @@ export function MainScreen({ }: Props) {
     useEffect(() => {
         main();
     }, []);
-    const theme = useContext(ThemeContext);
+    const theme = useThemeColors();
     const nav = useNavigation<NavigationProp<RootStackParamList>>();
     return (
-        <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={{
+            flex: 1,
+            alignItems: 'center',
+            backgroundColor: theme.primaryLight,
+        }}>
             <Text>Main Screen</Text>
             <Button
                 onPress={() => {
                     // nav.navigate('Reader', {id: 'from main'});
-                    theme.setTheme(ThemesEnum.PORN)
+                    // theme.setTheme(ThemesEnum.NGA)
                 }}
             >111</Button>
             <FlatList
-                style={styles.list}
+                style={{
+                    padding: 15,
+                    width: '100%',
+                }}
                 data={articles}
                 renderItem={({ item }) => <ArticleItem info={item}/>}
             />
