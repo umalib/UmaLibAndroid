@@ -1,7 +1,7 @@
 import {ThemesEnum} from './themes.ts';
 
 const TITLES = {
-    [ThemesEnum.NAG]: '那我呢',
+    [ThemesEnum.NGA]: '那我呢',
     [ThemesEnum.ELUI]: '特别白',
     [ThemesEnum.CYAN]: '铃鹿青',
     [ThemesEnum.TEIO]: '帝王蓝',

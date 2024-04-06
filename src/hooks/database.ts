@@ -10,10 +10,10 @@ export async function useDatabase() {
     });
 }
 
-export const getArticles = async (db: SQLiteDatabase): Promise<Article[]> => {
+export const getArticles = async (db: SQLiteDatabase, current: number, pageSize: number): Promise<Article[]> => {
     try {
         const items: Article[] = [];
-        const results = await db.executeSql(`SELECT id, name FROM article`);
+        const results = await db.executeSql(`SELECT id, name FROM article LIMIT ${pageSize} OFFSET ${(current - 1) * pageSize}`);
         results.forEach(result => {
             for (let index = 0; index < result.rows.length; index++) {
                 items.push(result.rows.item(index))
