@@ -1,3 +1,5 @@
+import {ThemesEnum} from "../config/themes.ts";
+import MaterialColors from "../config/colors.json";
 
 export function rgb2hsl(rgb: string) {
     const r = parseInt(rgb.slice(1, 3), 16) / 255;
@@ -35,17 +37,28 @@ export function rgb2hsl(rgb: string) {
 
 function transferColor(hsl: {h: number, s: number, l: number}, transfer?: {h?: number, s?: number, l?: number}) {
     const result = transfer ? {
-        h: hsl.h * (transfer.h || 1),
-        s: hsl.s * (transfer.s || 1),
-        l: hsl.l * (transfer.l || 1),
-    } : { ...hsl };
+        h: Math.floor(hsl.h * (transfer.h || 1)),
+        s: Math.floor(hsl.s * (transfer.s || 1)),
+        l: Math.floor(hsl.l * (transfer.l || 1)),
+    } : {
+        h: Math.floor(hsl.h),
+        s: Math.floor(hsl.s),
+        l: Math.floor(hsl.l),
+    };
     return `hsl(${result.h}, ${result.s}%, ${result.l}%)`;
+}
+
+function reverseColor(hsl: {h: number, s: number, l: number}) {
+    return {
+        h: hsl.h,
+        s: hsl.s,
+        l: 100 - hsl.l,
+    };
 }
 
 export function generateColors(colors: string[]) {
     const primaryOrigin = rgb2hsl(colors[0]);
     const secondaryOrigin = rgb2hsl(colors[1]);
-    console.log(transferColor(primaryOrigin));
     return {
         primary: transferColor(primaryOrigin),
         secondary: transferColor(secondaryOrigin),
@@ -58,5 +71,12 @@ export function generateColors(colors: string[]) {
         primaryDeepDark: transferColor(primaryOrigin, { l: 0.8 }),
         secondaryDeepDark: transferColor(secondaryOrigin, { l: 0.8 }),
         primaryFade: transferColor(primaryOrigin, { s: 0.8 }),
+        primaryDeepFade: transferColor(primaryOrigin, { s: 0.8, l: 0.9 }),
+        fade: transferColor(primaryOrigin, { s: 0.2, l: 0.8 }),
+        primaryReverse: transferColor(reverseColor(primaryOrigin)),
     };
+}
+
+export function getMaterialColors(theme: ThemesEnum) {
+    return MaterialColors[theme];
 }

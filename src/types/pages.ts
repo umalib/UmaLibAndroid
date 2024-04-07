@@ -1,6 +1,6 @@
 export type RootStackParamList = {
     Home: { id: string };
-    Reader: { id: string };
+    Reader: { id: number };
 }
 
 export type HomeTabParamList = {

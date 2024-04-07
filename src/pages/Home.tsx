@@ -26,10 +26,10 @@ export function HomePage({navigation, route}: Props) {
         <HomeTab.Navigator
             initialRouteName="Main"
             screenOptions={({route}) => ({
-                // headerStyle: {
-                //     backgroundColor: '#f4511e',
-                // },
-                // headerTintColor: '#fff',
+                headerStyle: {
+                    backgroundColor: '#f4511e',
+                },
+                headerTintColor: '#fff',
                 headerTitleStyle: {
                     fontWeight: 'bold',
                 },

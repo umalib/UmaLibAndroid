@@ -47,6 +47,10 @@ export function useTheme() {
     };
 }
 
+export function useThemeContext() {
+    return useContext(ThemeContext);
+}
+
 export function useThemeType() {
     const context = useContext(ThemeContext);
     return context.theme;
