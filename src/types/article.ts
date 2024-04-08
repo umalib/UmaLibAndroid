@@ -7,7 +7,7 @@ export interface Article {
     translator: string;
     uploadTime: number;
     source: string;
-    taggedList?: Tagged[];
+    tagList?: Tag[];
 }
 
 export interface Tagged {
@@ -22,7 +22,14 @@ export interface Tag {
     id: number;
     name: string;
     type: number;
-    cover: string;
-    description: string;
+    cover?: string;
+    description?: string;
     taggedList?: Tagged[];
+}
+
+export interface QueryOptions {
+    creators?: string[];
+    keyword?: string;
+    tags?: string[];
+    excludeTags?: string[];
 }

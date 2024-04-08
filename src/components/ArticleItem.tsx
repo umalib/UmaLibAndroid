@@ -77,6 +77,7 @@ export function ArticleItem({ info }: ArticleItemProps) {
                     <Divider style={{
                         marginTop: 5,
                     }}/>
+                    <Text>{info?.tagList?.toString()}</Text>
                 </Card.Content>
                 <Card.Actions>
                     <Text
