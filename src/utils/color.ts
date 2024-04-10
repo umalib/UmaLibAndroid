@@ -71,9 +71,12 @@ export function generateColors(colors: string[]) {
         primaryDeepDark: transferColor(primaryOrigin, { l: 0.8 }),
         secondaryDeepDark: transferColor(secondaryOrigin, { l: 0.8 }),
         primaryFade: transferColor(primaryOrigin, { s: 0.8 }),
+        secondaryFade: transferColor(secondaryOrigin, { s: 0.8 }),
         primaryDeepFade: transferColor(primaryOrigin, { s: 0.8, l: 0.9 }),
+        secondaryDeepFade: transferColor(secondaryOrigin, { s: 0.8, l: 0.9 }),
         fade: transferColor(primaryOrigin, { s: 0.2, l: 0.8 }),
         primaryReverse: transferColor(reverseColor(primaryOrigin)),
+        secondaryReverse: transferColor(reverseColor(secondaryOrigin)),
     };
 }
 

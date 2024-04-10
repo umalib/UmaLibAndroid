@@ -1,5 +1,5 @@
 import {Article} from "../types/article.ts";
-import {Card, Button, Text, IconButton, Divider, Snackbar} from "react-native-paper";
+import {Card, Button, Text, IconButton, Divider, Snackbar, Chip} from "react-native-paper";
 import dayjs from "dayjs";
 import {useThemeColors} from "../hooks/themes.ts";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
@@ -12,7 +12,7 @@ interface ArticleItemProps {
     info: Article;
 }
 
-export function ArticleItem({ info }: ArticleItemProps) {
+export function ArticleItem({info}: ArticleItemProps) {
     const themeColors = useThemeColors();
     const nav = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -22,7 +22,7 @@ export function ArticleItem({ info }: ArticleItemProps) {
 
     const goToReader = () => {
         nav.navigate('Reader', {id: info.id});
-    }
+    };
 
     return (
         <>
@@ -30,7 +30,7 @@ export function ArticleItem({ info }: ArticleItemProps) {
                 accessible={true}
                 style={{
                     backgroundColor: themeColors.primary,
-                    marginTop: 10,
+                    marginVertical: 5,
                     marginHorizontal: 5,
                 }}
                 onPress={() => {
@@ -77,7 +77,39 @@ export function ArticleItem({ info }: ArticleItemProps) {
                     <Divider style={{
                         marginTop: 5,
                     }}/>
-                    <Text>{info?.tagList?.toString()}</Text>
+                    <View style={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        gap: 2,
+                        marginTop: 5,
+                    }}>
+                        {
+                            info?.tagList?.map((tag, index) => (
+                                <Chip
+                                    key={tag.id}
+                                    compact={true}
+                                    textStyle={{
+                                        marginVertical: 0,
+                                        color: themeColors.primary,
+                                        fontSize: 10,
+                                    }}
+                                    style={{
+                                        backgroundColor: themeColors.secondary,
+                                        height: 20,
+                                        justifyContent: 'center',
+                                        padding: 0,
+                                        margin: 0,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                    onPress={() => {
+                                    }}
+                                >
+                                    {tag.name}
+                                </Chip>
+                            ))
+                        }
+                    </View>
                 </Card.Content>
                 <Card.Actions>
                     <Text
@@ -93,7 +125,8 @@ export function ArticleItem({ info }: ArticleItemProps) {
                         icon="star-outline"
                         iconColor={themeColors.secondary}
                         containerColor={themeColors.primaryDark}
-                        onPress={() => {}}
+                        onPress={() => {
+                        }}
                     />
                     <IconButton
                         icon="book-open-variant"

@@ -51,7 +51,7 @@ export async function getArticleTags(target: number | Article) {
  * @param pageSize
  * @param query
  */
-export const getArticles = async (current: number, pageSize: number, query: QueryOptions = {}): Promise<Article[]> => {
+export async function getArticles(current: number, pageSize: number, query: QueryOptions = {}): Promise<Article[]> {
     const db = await useDatabase();
     try {
         const items: Article[] = [];
@@ -101,7 +101,7 @@ export const getArticles = async (current: number, pageSize: number, query: Quer
     }
 };
 
-export const getArticle = async (id: number): Promise<Article> => {
+export async function getArticle(id: number): Promise<Article> {
     const db = await useDatabase();
     try {
         const results = await db.executeSql(`
@@ -118,6 +118,23 @@ export const getArticle = async (id: number): Promise<Article> => {
     } catch (error) {
         console.error(error);
         throw Error('Failed to get Article !!!');
+    }
+}
+
+export async function getArticleCount() {
+    const db = await useDatabase();
+    try {
+        const results = await db.executeSql(`
+            SELECT COUNT(*) as count FROM article
+        `);
+        const data = results.length && results[0].rows.length && results[0].rows.item(0);
+        if (data) {
+            return data.count;
+        }
+        throw Error('Article not found !!!');
+    } catch (error) {
+        console.error(error);
+        throw Error('Failed to get Article\'s Count !!!');
     }
 }
 

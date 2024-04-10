@@ -1,22 +1,21 @@
-import {FlatList, Text, View} from "react-native";
+import {FlatList, View} from "react-native";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
-import {HomeTabParamList, RootStackParamList} from "../../types/pages.ts";
-import {useCallback, useContext, useEffect, useState} from "react";
-import {getArticles, useDatabase} from "../../hooks/database.ts";
-import {NavigationProp, useNavigation} from "@react-navigation/native";
+import {HomeTabParamList} from "../../types/pages.ts";
+import {useCallback, useEffect, useState} from "react";
+import {getArticleCount, getArticles} from "../../hooks/database.ts";
 import {ArticleItem} from "../../components/ArticleItem.tsx";
 import {Article} from "../../types/article.ts";
 import {useThemeColors, useThemeContext} from "../../hooks/themes.ts";
-import {Button} from "react-native-paper";
-import {ThemesEnum} from "../../config/themes.ts";
+import {Banner, Button, IconButton, Text} from "react-native-paper";
 
 type Props = NativeStackScreenProps<HomeTabParamList, 'Main'>;
 
 export function MainScreen({}: Props) {
     const [articles, setArticles] = useState<Article[]>([]);
+    const [total, setTotal] = useState(0);
+    const [searchVisible, setSearchVisible] = useState(false);
     const [pagination, setPagination] = useState({
         current: 1,
-        total: 0,
         pageSize: 10,
     });
 
@@ -24,13 +23,19 @@ export function MainScreen({}: Props) {
         const articlesList = await getArticles(pagination.current, pagination.pageSize);
         setArticles(articlesList);
     }, []);
+    const loadTotal = useCallback(async () => {
+        const total = await getArticleCount();
+        setTotal(total);
+    }, []);
 
     useEffect(() => {
         loadArticles().then();
     }, [pagination]);
+    useEffect(() => {
+        loadTotal().then();
+    }, []);
 
     const theme = useThemeColors();
-    const nav = useNavigation<NavigationProp<RootStackParamList>>();
 
     return (
         <View style={{
@@ -38,17 +43,9 @@ export function MainScreen({}: Props) {
             alignItems: 'center',
             backgroundColor: theme.primaryDeepFade,
         }}>
-            <Button
-                onPress={() => {
-                    // nav.navigate('Reader', {id: 'from main'});
-                    // theme.setTheme(ThemesEnum.NGA)
-                }}
-            >
-                111
-            </Button>
             <FlatList
                 style={{
-                    padding: 15,
+                    paddingHorizontal: 15,
                     width: '100%',
                 }}
                 data={articles}
@@ -56,6 +53,58 @@ export function MainScreen({}: Props) {
                     ({item}) => <ArticleItem info={item}/>
                 }
             />
+
+            {/* 搜索按钮 */}
+            <IconButton
+                style={{
+                    position: 'absolute',
+                    right: 10,
+                    bottom: 80,
+                }}
+                size={30}
+                mode="contained"
+                icon="magnify"
+                iconColor={theme.primaryLight}
+                containerColor={theme.secondaryDeepFade}
+                onPress={() => setSearchVisible(!searchVisible)}
+            />
+
+            <View
+                style={{
+                    position: 'absolute',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    right: 10,
+                    bottom: 20,
+                    backgroundColor: theme.secondaryDeepFade,
+                }}
+            >
+                <IconButton
+                    icon="menu-left"
+                    disabled={pagination.current <= 1}
+                    onPress={() => {
+                        if (pagination.current > 1) {
+                            setPagination({
+                                ...pagination,
+                                current: pagination.current - 1,
+                            });
+                        }
+                    }}
+                />
+                <Text>{pagination.current}/{total}</Text>
+                <IconButton
+                    icon="menu-right"
+                    disabled={pagination.current >= total}
+                    onPress={() => {
+                        if (pagination.current < total) {
+                            setPagination({
+                                ...pagination,
+                                current: pagination.current + 1,
+                            });
+                        }
+                    }}
+                />
+            </View>
         </View>
     )
 }
