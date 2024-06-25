@@ -8,7 +8,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import {RootStackParamList} from "./src/types/pages.ts";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {ReaderPage} from "./src/pages/common/ReaderPage.tsx";
-import {ThemeContext, useTheme} from "./src/hooks/themes.ts";
+import {ThemeContext, useMaterialColors, useTheme} from "./src/hooks/themes.ts";
 import {DefaultTheme, PaperProvider} from "react-native-paper";
 import Toast from "react-native-toast-message";
 
@@ -16,6 +16,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
     const theme = useTheme();
+    const themeMaterialColors = useMaterialColors();
+
     const materialTheme = {
         ...DefaultTheme,
         // Specify custom property
@@ -24,7 +26,7 @@ function App(): React.JSX.Element {
         colors: {
             ...DefaultTheme.colors,
             // ...theme.colors,
-            onSurface: theme.colors.primaryReverse,
+            ...themeMaterialColors,
         },
     };
     return (

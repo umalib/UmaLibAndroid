@@ -1,16 +1,17 @@
 import {FlatList, View} from "react-native";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {HomeTabParamList} from "../../types/pages.ts";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {getArticleCount, getArticles} from "../../hooks/database.ts";
 import {ArticleItem} from "../../components/ArticleItem.tsx";
 import {Article} from "../../types/article.ts";
 import {useThemeColors, useThemeContext} from "../../hooks/themes.ts";
-import {Banner, Button, IconButton, Text} from "react-native-paper";
+import {ActivityIndicator, Banner, Button, IconButton, Text} from "react-native-paper";
 
 type Props = NativeStackScreenProps<HomeTabParamList, 'Main'>;
 
 export function MainScreen({}: Props) {
+    const [isLoading, setIsLoading] = useState(false);
     const [articles, setArticles] = useState<Article[]>([]);
     const [total, setTotal] = useState(0);
     const [searchVisible, setSearchVisible] = useState(false);
@@ -19,10 +20,15 @@ export function MainScreen({}: Props) {
         pageSize: 10,
     });
 
+    const flatListRef = useRef<FlatList<Article>>(null);
+
     const loadArticles = useCallback(async () => {
+        setIsLoading(true);
         const articlesList = await getArticles(pagination.current, pagination.pageSize);
+        setIsLoading(false);
+        flatListRef.current?.scrollToOffset({offset: 0});
         setArticles(articlesList);
-    }, []);
+    }, [pagination]);
     const loadTotal = useCallback(async () => {
         const total = await getArticleCount();
         setTotal(total);
@@ -43,7 +49,24 @@ export function MainScreen({}: Props) {
             alignItems: 'center',
             backgroundColor: theme.primaryDeepFade,
         }}>
+            <View style={{
+                position: 'absolute',
+                display: isLoading ? 'flex' : 'none',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 99,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            }}>
+                <ActivityIndicator
+                    animating={true}
+                    color={theme.primaryLight}
+                    size="large"
+                />
+            </View>
             <FlatList
+                ref={flatListRef}
                 style={{
                     paddingHorizontal: 15,
                     width: '100%',
@@ -52,6 +75,18 @@ export function MainScreen({}: Props) {
                 renderItem={
                     ({item}) => <ArticleItem info={item}/>
                 }
+                ListFooterComponent={() => (
+                    <View style={{
+                        height: 120,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        <Text style={{
+                            color: theme.secondary,
+                        }}>已经到底了~</Text>
+                    </View>
+                )}
             />
 
             {/* 搜索按钮 */}
@@ -60,6 +95,7 @@ export function MainScreen({}: Props) {
                     position: 'absolute',
                     right: 10,
                     bottom: 80,
+                    zIndex: 100,
                 }}
                 size={30}
                 mode="contained"
@@ -77,10 +113,14 @@ export function MainScreen({}: Props) {
                     right: 10,
                     bottom: 20,
                     backgroundColor: theme.secondaryDeepFade,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    zIndex: 100,
                 }}
             >
                 <IconButton
                     icon="menu-left"
+                    iconColor={theme.primaryLight}
                     disabled={pagination.current <= 1}
                     onPress={() => {
                         if (pagination.current > 1) {
@@ -91,9 +131,15 @@ export function MainScreen({}: Props) {
                         }
                     }}
                 />
-                <Text>{pagination.current}/{total}</Text>
+                <Text
+                    style={{
+                        padding: 5,
+                        color: theme.primaryLight,
+                    }}
+                >{pagination.current}/{total}</Text>
                 <IconButton
                     icon="menu-right"
+                    iconColor={theme.primaryLight}
                     disabled={pagination.current >= total}
                     onPress={() => {
                         if (pagination.current < total) {

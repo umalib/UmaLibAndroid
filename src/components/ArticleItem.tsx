@@ -1,11 +1,10 @@
 import {Article} from "../types/article.ts";
 import {Card, Button, Text, IconButton, Divider, Snackbar, Chip} from "react-native-paper";
 import dayjs from "dayjs";
-import {useThemeColors} from "../hooks/themes.ts";
+import {useMaterialColors, useThemeColors} from "../hooks/themes.ts";
 import {NavigationProp, useNavigation} from "@react-navigation/native";
 import {RootStackParamList} from "../types/pages.ts";
 import {View} from "react-native";
-import Toast from "react-native-toast-message";
 import {useState} from "react";
 
 interface ArticleItemProps {
@@ -140,10 +139,7 @@ export function ArticleItem({info}: ArticleItemProps) {
                 visible={visible}
                 onDismiss={onDismissSnackBar}
                 action={{
-                    label: 'Undo',
-                    onPress: () => {
-                        // Do something
-                    },
+                    label: '关闭',
                 }}
                 style={{
                     backgroundColor: themeColors.primaryDark,

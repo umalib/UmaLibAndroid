@@ -99,7 +99,7 @@ export async function getArticles(current: number, pageSize: number, query: Quer
         console.error(error);
         throw Error('Failed to get Articles !!!');
     }
-};
+}
 
 export async function getArticle(id: number): Promise<Article> {
     const db = await useDatabase();

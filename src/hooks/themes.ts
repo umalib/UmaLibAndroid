@@ -1,11 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {createContext, useContext, useEffect, useState} from "react";
 import {ThemesEnum, THEME_TITLES, THEMES_BASE_COLORS} from "../config/themes.ts";
-import {generateColors} from "../utils/color.ts";
+import {generateColors, getMaterialColors} from "../utils/color.ts";
 
 export const ThemeContext = createContext({
     theme: ThemesEnum.NGA,
     colors: generateColors(useThemeBaseColors(ThemesEnum.NGA)),
+    materialColors: getMaterialColors(ThemesEnum.NGA),
     setTheme: (theme: ThemesEnum) => {},
 });
 
@@ -43,6 +44,7 @@ export function useTheme() {
     return {
         theme,
         colors: generateColors(useThemeBaseColors(theme)),
+        materialColors: getMaterialColors(theme),
         setTheme: setThemeFunc,
     };
 }
@@ -67,4 +69,9 @@ export function useThemeTitle(theme: ThemesEnum) {
 
 export function useThemeBaseColors(theme: ThemesEnum) {
     return THEMES_BASE_COLORS[theme];
+}
+
+export function useMaterialColors() {
+    const context = useContext(ThemeContext);
+    return context.materialColors;
 }
