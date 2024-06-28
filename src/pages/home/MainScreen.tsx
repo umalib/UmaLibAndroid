@@ -7,6 +7,7 @@ import {ArticleItem} from "../../components/ArticleItem.tsx";
 import {Article} from "../../types/article.ts";
 import {useThemeColors, useThemeContext} from "../../hooks/themes.ts";
 import {ActivityIndicator, Banner, Button, IconButton, Text} from "react-native-paper";
+import {PageSelector} from "../../components/PageSelector.tsx";
 
 type Props = NativeStackScreenProps<HomeTabParamList, 'Main'>;
 
@@ -19,6 +20,7 @@ export function MainScreen({}: Props) {
         current: 1,
         pageSize: 10,
     });
+    const [pageSelectorVisible, setPageSelectorVisible] = useState(false);
 
     const flatListRef = useRef<FlatList<Article>>(null);
 
@@ -49,12 +51,30 @@ export function MainScreen({}: Props) {
             alignItems: 'center',
             backgroundColor: theme.primaryDeepFade,
         }}>
+
+            <PageSelector
+                visible={pageSelectorVisible}
+                page={pagination.current}
+                totalPages={total}
+                onSelect={(page) => {
+                    setPagination({
+                        ...pagination,
+                        current: page,
+                    });
+                    setPageSelectorVisible(false);
+                }}
+                onCancel={() => {
+                    setPageSelectorVisible(false);
+                }}
+            />
+
+
             <View style={{
                 position: 'absolute',
                 display: isLoading ? 'flex' : 'none',
                 justifyContent: 'center',
                 alignItems: 'center',
-                zIndex: 99,
+                zIndex: 1,
                 width: '100%',
                 height: '100%',
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -95,7 +115,7 @@ export function MainScreen({}: Props) {
                     position: 'absolute',
                     right: 10,
                     bottom: 80,
-                    zIndex: 100,
+                    zIndex: 2,
                 }}
                 size={30}
                 mode="contained"
@@ -115,7 +135,7 @@ export function MainScreen({}: Props) {
                     backgroundColor: theme.secondaryDeepFade,
                     borderRadius: 20,
                     alignItems: 'center',
-                    zIndex: 100,
+                    zIndex: 2,
                 }}
             >
                 <IconButton
@@ -136,6 +156,7 @@ export function MainScreen({}: Props) {
                         padding: 5,
                         color: theme.primaryLight,
                     }}
+                    onPress={() => setPageSelectorVisible(true)}
                 >{pagination.current}/{total}</Text>
                 <IconButton
                     icon="menu-right"
