@@ -19,7 +19,7 @@ export function PageSelector(
         totalPages = 1,
         onSelect,
         onCancel,
-        groupSize = 100,
+        groupSize = 50,
     }: PageSelectorProps
 ) {
     const [selectedPage, setSelectedPage] = useState(page);

@@ -21,6 +21,7 @@ export function MainScreen({}: Props) {
         pageSize: 10,
     });
     const [pageSelectorVisible, setPageSelectorVisible] = useState(false);
+    const pageTotal = Math.ceil(total/pagination.pageSize);
 
     const flatListRef = useRef<FlatList<Article>>(null);
 
@@ -55,7 +56,7 @@ export function MainScreen({}: Props) {
             <PageSelector
                 visible={pageSelectorVisible}
                 page={pagination.current}
-                totalPages={total}
+                totalPages={pageTotal}
                 onSelect={(page) => {
                     setPagination({
                         ...pagination,
@@ -157,11 +158,11 @@ export function MainScreen({}: Props) {
                         color: theme.primaryLight,
                     }}
                     onPress={() => setPageSelectorVisible(true)}
-                >{pagination.current}/{total}</Text>
+                >{pagination.current}/{pageTotal}</Text>
                 <IconButton
                     icon="menu-right"
                     iconColor={theme.primaryLight}
-                    disabled={pagination.current >= total}
+                    disabled={pagination.current >= pageTotal}
                     onPress={() => {
                         if (pagination.current < total) {
                             setPagination({
